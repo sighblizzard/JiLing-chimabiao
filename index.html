@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>尺码表生成器</title>
+  <meta name="description" content="专业的 Finder 风格尺码表生成器桌面应用" />
+  
+  <!-- macOS 风格的 favicon -->
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  
+  <!-- 预加载关键字体 -->
+  <link rel="preload" href="./fonts/SF-Pro-Display.woff2" as="font" type="font/woff2" crossorigin />
+  
+  <style>
+    /* 初始加载样式 */
+    #root {
+      width: 100vw;
+      height: 100vh;
+      background: #F9FAFB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+    }
+    
+    /* 加载动画 */
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .loading-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid #E5E7EB;
+      border-top: 3px solid #007AFF;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    .loading-text {
+      color: #6B7280;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* 隐藏加载状态 */
+    .loaded .loading {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <div class="loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">加载中...</div>
+    </div>
+  </div>
+  
+  <script type="module" src="/src/main.jsx"></script>
+  
+  <script>
+    // 应用加载完成后隐藏加载动画
+    window.addEventListener('load', () => {
+      document.body.classList.add('loaded');
+    });
+    
+    // Electron 环境检测
+    if (typeof window !== 'undefined' && window.require) {
+      window.electron = {
+        closeWindow: () => window.require('electron').remote.getCurrentWindow().close(),
+        minimizeWindow: () => window.require('electron').remote.getCurrentWindow().minimize(),
+        toggleMaximizeWindow: () => {
+          const win = window.require('electron').remote.getCurrentWindow();
+          if (win.isMaximized()) {
+            win.unmaximize();
+          } else {
+            win.maximize();
+          }
+        }
+      };
+    }
+  </script>
+</body>
+</html>
