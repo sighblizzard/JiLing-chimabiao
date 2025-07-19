@@ -3,25 +3,32 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+package-lock.json
 
 # 构建输出
 dist/
 dist-electron/
 dist-electron-*/
 build/
+out/
 
 # 开发工具
-.vscode/
+.vscode/settings.json
+.vscode/launch.json
 .idea/
+*.swp
+*.swo
 
 # 系统文件
 .DS_Store
 Thumbs.db
 *.tmp
 *.temp
+desktop.ini
 
 # 日志文件
 *.log
+logs/
 
 # 环境变量
 .env
@@ -38,18 +45,42 @@ Thumbs.db
 # 测试覆盖率
 coverage/
 .nyc_output/
+.coverage/
 
 # ESLint 缓存
 .eslintcache
 
+# Prettier 缓存
+.prettierrc
+
 # 临时文件
 temp/
 tmp/
+.temp/
 
 # 打包文件
 *.tgz
 *.tar.gz
+*.zip
 
 # 调试文件
 debug.log
 electron-debug.log
+
+# 数据库文件
+*.db
+*.sqlite
+*.sqlite3
+
+# 备份文件
+*.bak
+*.backup
+
+# 缓存目录
+.cache/
+.parcel-cache/
+.vite/
+
+# 编辑器文件
+.vscode/extensions.json
+.vscode/tasks.json

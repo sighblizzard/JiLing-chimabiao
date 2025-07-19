@@ -200,8 +200,13 @@ class Application {
     } catch (error) {
       console.error('后端服务初始化失败:', error);
       
-      // 可以选择显示错误对话框或继续运行
-      // dialog.showErrorBox('初始化错误', '后端服务初始化失败，某些功能可能不可用。');
+      // 显示错误对话框，但不阻止应用启动
+      const { dialog } = require('electron');
+      dialog.showErrorBox(
+        '初始化警告', 
+        '后端服务初始化失败，某些功能可能不可用。\n\n' + 
+        '错误详情: ' + error.message
+      );
     }
   }
 
