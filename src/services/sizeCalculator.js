@@ -43,9 +43,16 @@ export const calculateSizeData = (sizeSettings, selectedCategories, mode = 'norm
     }
     
     // 使用自定义起始值或默认基础值
-    const startValue = categoryStartValues[category.id] !== undefined 
-      ? categoryStartValues[category.id] 
-      : category.baseValue;
+    const savedStartValue = categoryStartValues[category.id];
+    let startValue = category.baseValue; // 默认值
+    
+    if (savedStartValue !== undefined) {
+      // 如果有保存的值，确保它是有效数字
+      const numValue = typeof savedStartValue === 'string' ? parseFloat(savedStartValue) : savedStartValue;
+      if (!isNaN(numValue) && numValue > 0) {
+        startValue = numValue;
+      }
+    }
     
     // 计算每个尺码的数值
     const values = sizeSequence.map((size, index) => ({
@@ -89,7 +96,7 @@ export const validateSizeSettings = (sizeSettings) => {
 };
 
 /**
- * 格式化尺码表数据为表格格式
+ * 格式化尺码表数据为表格格式（正确格式：第一行是类别，第一列是尺码）
  * @param {Array} sizeData - 尺码数据
  * @returns {Object} 表格格式数据
  */
@@ -98,15 +105,26 @@ export const formatSizeDataForTable = (sizeData) => {
     return { headers: [], rows: [] };
   }
   
-  // 获取尺码序列作为表头
+  // 获取尺码序列和类别
   const sizes = sizeData[0]?.values?.map(v => v.size) || [];
-  const headers = ['部位', ...sizes];
+  const categories = sizeData.map(category => category.categoryName);
   
-  // 生成表格行数据
-  const rows = sizeData.map(category => [
-    category.categoryName,
-    ...category.values.map(v => `${v.value}cm`)
-  ]);
+  // 构建表头：第一个元素是"尺码"，后面是各个测量类别
+  const headers = ['尺码', ...categories];
+  
+  // 生成表格行数据：每行是一个尺码对应各个类别的数值
+  const rows = sizes.map(size => {
+    const row = [size]; // 第一列是尺码
+    
+    // 为每个类别添加对应尺码的数值
+    categories.forEach(categoryName => {
+      const category = sizeData.find(cat => cat.categoryName === categoryName);
+      const valueObj = category?.values?.find(v => v.size === size);
+      row.push(valueObj ? `${valueObj.value}` : '');
+    });
+    
+    return row;
+  });
   
   return { headers, rows };
 };

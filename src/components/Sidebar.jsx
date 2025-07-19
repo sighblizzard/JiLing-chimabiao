@@ -48,68 +48,106 @@ const SectionTitle = styled.h3`
 const CategoryList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px; /* 从4px增加到6px，增加视觉呼吸感 */
+  
+  /* 高质量渲染 */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  contain: layout style paint;
 `;
 
 const CategoryItemContainer = styled(motion.div)`
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: ${props => props.theme.borderRadius.md};
+  gap: 12px; /* 从8px增加到12px，给图标更多空间 */
+  padding: 10px 14px; /* 从8px 12px增加到10px 14px */
+  border-radius: ${props => props.theme.borderRadius.lg}; /* 使用更大的圆角 */
   cursor: pointer;
-  transition: all 0.15s ease-out;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); /* 更流畅的缓动 */
   user-select: none;
   position: relative;
+  
+  /* 高质量渲染基础 */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform, background-color;
 
   &:hover {
     background: ${props => props.theme.colors.gray[50]};
+    transform: translateY(-1px) translateZ(0); /* 轻微上浮效果 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   ${props => props.$selected && `
     background: ${props.theme.colors.primary};
     color: white;
+    box-shadow: 0 2px 12px rgba(0, 122, 255, 0.3);
     
     &:hover {
       background: ${props.theme.colors.primary}dd;
+      transform: translateY(-1px) translateZ(0);
+      box-shadow: 0 4px 16px rgba(0, 122, 255, 0.4);
     }
   `}
 
   &:active {
-    transform: scale(0.98);
+    transform: scale(0.98) translateZ(0);
+    transition-duration: 0.1s;
   }
 `;
 
 const CategoryIcon = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: ${props => props.theme.borderRadius.sm};
+  width: 28px;  /* 从20px增加到28px */
+  height: 28px;
+  border-radius: ${props => props.theme.borderRadius.md}; /* 稍微增大圆角 */
   background: ${props => {
     switch (props.$type) {
-      case 'chest': return '#FF6B6B';
-      case 'waist': return '#4ECDC4';
-      case 'hip': return '#45B7D1';
-      case 'shoulder': return '#96CEB4';
-      case 'sleeve': return '#FECA57';
-      case 'length': return '#FF9FF3';
-      default: return props.theme.colors.gray[400];
+      case 'chest': return 'linear-gradient(135deg, #FF6B6B, #FF5252)';
+      case 'waist': return 'linear-gradient(135deg, #4ECDC4, #26A69A)'; 
+      case 'hip': return 'linear-gradient(135deg, #45B7D1, #2196F3)';
+      case 'shoulder': return 'linear-gradient(135deg, #96CEB4, #66BB6A)';
+      case 'sleeve': return 'linear-gradient(135deg, #FECA57, #FFB300)';
+      case 'length': return 'linear-gradient(135deg, #FF9FF3, #E91E63)';
+      default: return `linear-gradient(135deg, ${props.theme.colors.gray[400]}, ${props.theme.colors.gray[500]})`;
     }
   }};
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: 12px; /* 从10px增加到12px */
   color: white;
-  font-weight: bold;
+  font-weight: 600; /* 增加字重 */
   flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 添加微妙阴影 */
+  
+  /* 高质量图标渲染 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  
+  /* 图标内容优化 */
+  font-family: 'MiSans', -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.02em;
   
   /* 预留图标扩展 */
   ${props => props.$iconUrl && `
     background-image: url(${props.$iconUrl});
     background-size: cover;
     background-position: center;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
   `}
-  flex-shrink: 0;
+  
+  /* 悬停效果 */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* 高DPI优化 */
+  @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+    transform: translateZ(0);
+  }
 `;
 
 const CategoryInfo = styled.div`
@@ -118,19 +156,48 @@ const CategoryInfo = styled.div`
 `;
 
 const CategoryName = styled.div`
-  font-size: 14px;
+  font-size: 15px; /* 从14px增加到15px */
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  
+  /* 高质量文字渲染 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "liga", "kern";
+  letter-spacing: 0.01em; /* 轻微增加字母间距 */
+  
+  /* 高DPI优化 */
+  @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
+    font-size: 16px;
+    font-weight: 500;
+    text-rendering: geometricPrecision;
+  }
+  
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    font-size: 17px;
+  }
 `;
 
 const CategoryMeta = styled.div`
-  font-size: 12px;
-  opacity: 0.7;
+  font-size: 13px; /* 从12px增加到13px */
+  opacity: 0.75; /* 从0.7增加到0.75，提高可读性 */
   display: flex;
   align-items: center;
   gap: 8px;
+  
+  /* 高质量文字渲染 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "tnum"; /* 表格数字 */
+  
+  /* 高DPI优化 */
+  @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
+    font-size: 14px;
+  }
 `;
 
 const CategoryBadge = styled.span`
@@ -174,12 +241,22 @@ const CategoryItem = ({ category, isSelected, onToggle, mode }) => {
     return increment;
   };
 
-  // 获取类别显示内容（暂时替代图标）
+  // 获取类别显示内容（优化的图标字符）
   const getCategoryDisplay = (category) => {
     if (category.iconUrl) {
       return null; // 如果有图标URL则不显示文字
     }
-    return category.name.charAt(0); // 显示首字母
+    
+    // 根据类别类型返回更清晰的图标字符
+    switch (category.type) {
+      case 'chest': return '胸';
+      case 'waist': return '腰';
+      case 'hip': return '臀';
+      case 'shoulder': return '肩';
+      case 'sleeve': return '袖';
+      case 'length': return '长';
+      default: return category.name.charAt(0); // 默认显示首字母
+    }
   };
 
   return (

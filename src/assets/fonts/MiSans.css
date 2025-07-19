@@ -1,0 +1,159 @@
+/**
+ * MiSans 字体配置
+ * 为尺码表生成器应用提供统一的字体支持
+ */
+
+/* MiSans Light (300) - 次要信息 */
+@font-face {
+  font-family: 'MiSans';
+  src: url('./MiSans/MiSans-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  /* 超高质量字体渲染 */
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+}
+
+/* MiSans Regular (400) - 正文内容 */
+@font-face {
+  font-family: 'MiSans';
+  src: url('./MiSans/MiSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  /* 超高质量字体渲染 */
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+}
+
+/* MiSans Medium (500) - 界面元素 */
+@font-face {
+  font-family: 'MiSans';
+  src: url('./MiSans/MiSans-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  /* 超高质量字体渲染 */
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+}
+
+/* MiSans SemiBold (600) - 半粗体 */
+@font-face {
+  font-family: 'MiSans';
+  src: url('./MiSans/MiSans-Semibold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  /* 超高质量字体渲染 */
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+}
+
+/* MiSans Bold (700) - 标题和强调 */
+@font-face {
+  font-family: 'MiSans';
+  src: url('./MiSans/MiSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  /* 超高质量字体渲染 */
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+}
+
+/* 全局字体变量 */
+:root {
+  --font-family-primary: 'MiSans', 
+    /* 系统中文字体备用 */
+    'Microsoft YaHei', '微软雅黑',
+    'PingFang SC', '苹方',
+    /* 通用备用字体 */
+    'Helvetica Neue', Arial, sans-serif;
+    
+  --font-family-ui: 'MiSans', 
+    'Microsoft YaHei UI', 'Microsoft YaHei',
+    'PingFang SC', 'Hiragino Sans GB',
+    'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* 字重工具类 */
+.font-light {
+  font-weight: 300; /* Light - 次要信息 */
+}
+
+.font-regular {
+  font-weight: 400; /* Regular - 正文内容 */
+}
+
+.font-medium {
+  font-weight: 500; /* Medium - 界面元素、重要信息 */
+}
+
+.font-bold {
+  font-weight: 700; /* Bold - 标题、强调内容 */
+}
+
+/* 应用级别的字体设置 */
+* {
+  font-family: var(--font-family-primary);
+}
+
+/* 特定组件的字体优化 */
+.size-table {
+  font-family: var(--font-family-primary);
+  font-weight: 400; /* Regular */
+}
+
+.size-table-header {
+  font-weight: 500; /* Medium */
+}
+
+.size-table-category {
+  font-weight: 500; /* Medium */
+}
+
+.size-table-value {
+  font-weight: 400; /* Regular */
+}
+
+.size-table-important {
+  font-weight: 700; /* Bold */
+}
+
+/* UI 组件字体 */
+.toolbar {
+  font-family: var(--font-family-ui);
+  font-weight: 400;
+}
+
+.button {
+  font-family: var(--font-family-ui);
+  font-weight: 500;
+}
+
+.title {
+  font-family: var(--font-family-primary);
+  font-weight: 700;
+}
+
+.subtitle {
+  font-family: var(--font-family-primary);
+  font-weight: 500;
+}
+
+.text-secondary {
+  font-family: var(--font-family-primary);
+  font-weight: 300;
+}

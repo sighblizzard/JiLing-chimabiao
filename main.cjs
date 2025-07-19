@@ -96,13 +96,20 @@ class Application {
   createWindow() {
     // 创建浏览器窗口
     this.mainWindow = new BrowserWindow({
-      width: 1200,
-      height: 800,
+      width: 800,               // 改为最小宽度
+      height: 600,              // 改为最小高度
       minWidth: 800,
       minHeight: 600,
       show: false, // 初始不显示，等加载完成后显示
       backgroundColor: '#F9FAFB',
       icon: path.join(__dirname, 'assets', 'icon.png'), // 应用图标
+      frame: false,              // 移除系统标题栏和边框
+      titleBarStyle: 'hidden',   // macOS 兼容
+      titleBarOverlay: false,    // 禁用标题栏覆盖
+      transparent: false,        // 保持非透明（避免性能问题）
+      resizable: true,           // 确保窗口可调整大小
+      maximizable: true,         // 确保窗口可最大化
+      minimizable: true,         // 确保窗口可最小化
       webPreferences: {
         nodeIntegration: false, // 禁用 Node.js 集成
         contextIsolation: true, // 启用上下文隔离
@@ -112,6 +119,26 @@ class Application {
         allowRunningInsecureContent: isDev,
         experimentalFeatures: true
       }
+    });
+
+    // 重要：设置无边框标志供后续检测使用
+    this.mainWindow.isFrameless = true;
+
+    // 添加窗口状态事件监听
+    this.mainWindow.on('maximize', () => {
+      this.mainWindow.webContents.send('window-state-changed', { maximized: true });
+    });
+
+    this.mainWindow.on('unmaximize', () => {
+      this.mainWindow.webContents.send('window-state-changed', { maximized: false });
+    });
+
+    this.mainWindow.on('minimize', () => {
+      this.mainWindow.webContents.send('window-state-changed', { minimized: true });
+    });
+
+    this.mainWindow.on('restore', () => {
+      this.mainWindow.webContents.send('window-state-changed', { minimized: false });
     });
 
     // 加载应用
@@ -195,7 +222,8 @@ class Application {
    */
   initializeBackend() {
     try {
-      this.ipcHandler = new IPCHandler();
+      // 传递主窗口引用给IPCHandler
+      this.ipcHandler = new IPCHandler(this.mainWindow);
       console.log('后端服务初始化成功');
     } catch (error) {
       console.error('后端服务初始化失败:', error);

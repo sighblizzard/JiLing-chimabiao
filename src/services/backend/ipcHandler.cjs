@@ -18,10 +18,11 @@ const ExcelExporter = require('./excelExporter.cjs');
 const DataMigration = require('./dataMigration.cjs');
 
 class IPCHandler {
-  constructor() {
+  constructor(mainWindow = null) {
     this.database = new LocalDatabase();
     this.excelExporter = new ExcelExporter();
     this.dataMigration = new DataMigration(this.database);
+    this.mainWindow = mainWindow; // 接收主窗口引用
     this.isInitialized = false;
     
     this.setupIPCHandlers();
@@ -48,6 +49,9 @@ class IPCHandler {
     
     // 窗口操作处理程序
     this.setupWindowHandlers();
+    
+    // 无边框窗口控制处理程序
+    this.setupFramelessWindowHandlers();
     
     // 开发工具处理程序
     this.setupDevHandlers();
@@ -482,6 +486,28 @@ class IPCHandler {
       }
     });
 
+    // 选择文件夹
+    ipcMain.handle('file:selectDirectory', async (event, options = {}) => {
+      try {
+        const result = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
+          title: options.title || '选择文件夹',
+          properties: ['openDirectory']
+        });
+
+        return {
+          success: !result.canceled,
+          filePaths: result.filePaths || [],
+          canceled: result.canceled
+        };
+      } catch (error) {
+        return {
+          success: false,
+          message: '选择文件夹失败: ' + error.message,
+          error: error
+        };
+      }
+    });
+
     // 选择保存位置
     ipcMain.handle('file:selectSave', async (event, options = {}) => {
       try {
@@ -562,7 +588,33 @@ class IPCHandler {
       } catch (error) {
         return {
           success: false,
-          exists: false,
+          message: '检查文件失败: ' + error.message,
+          error: error
+        };
+      }
+    });
+
+    // 保存图片到指定路径
+    ipcMain.handle('file:saveImage', async (event, filePath, base64Data) => {
+      try {
+        const dir = path.dirname(filePath);
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir, { recursive: true });
+        }
+
+        // 将base64数据转换为Buffer
+        const buffer = Buffer.from(base64Data, 'base64');
+        fs.writeFileSync(filePath, buffer);
+        
+        return {
+          success: true,
+          path: filePath,
+          message: '图片保存成功'
+        };
+      } catch (error) {
+        return {
+          success: false,
+          message: '保存图片失败: ' + error.message,
           error: error
         };
       }
@@ -770,6 +822,91 @@ class IPCHandler {
         window.center();
       }
       return { success: true };
+    });
+  }
+
+  /**
+   * 获取主窗口的方法
+   */
+  getMainWindow() {
+    // 方法 1: 如果有传递的主窗口引用，优先使用
+    if (this.mainWindow) {
+      return this.mainWindow;
+    }
+    // 方法 2: 使用 BrowserWindow 静态方法（回退方案）
+    return BrowserWindow.getFocusedWindow() || BrowserWindow.getAllWindows()[0];
+  }
+
+  /**
+   * 设置无边框窗口控制处理程序
+   */
+  setupFramelessWindowHandlers() {
+    // 关闭窗口
+    ipcMain.handle('window-close', () => {
+      const mainWindow = this.getMainWindow();
+      if (mainWindow) mainWindow.close();
+    });
+
+    // 最小化窗口
+    ipcMain.handle('window-minimize', () => {
+      const mainWindow = this.getMainWindow();
+      if (mainWindow) mainWindow.minimize();
+    });
+
+    // 最大化窗口
+    ipcMain.handle('window-maximize', () => {
+      const mainWindow = this.getMainWindow();
+      if (mainWindow) mainWindow.maximize();
+    });
+
+    // 还原窗口
+    ipcMain.handle('window-unmaximize', () => {
+      const mainWindow = this.getMainWindow();
+      if (mainWindow) mainWindow.unmaximize();
+    });
+
+    // 切换最大化/还原
+    ipcMain.handle('window-toggle-maximize', () => {
+      const mainWindow = this.getMainWindow();
+      if (mainWindow) {
+        if (mainWindow.isMaximized()) {
+          mainWindow.unmaximize();
+        } else {
+          mainWindow.maximize();
+        }
+      }
+    });
+
+    // 检查是否最大化
+    ipcMain.handle('window-is-maximized', () => {
+      const mainWindow = this.getMainWindow();
+      return mainWindow ? mainWindow.isMaximized() : false;
+    });
+
+    // 检查是否最小化
+    ipcMain.handle('window-is-minimized', () => {
+      const mainWindow = this.getMainWindow();
+      return mainWindow ? mainWindow.isMinimized() : false;
+    });
+
+    // 设置窗口置顶
+    ipcMain.handle('window-set-always-on-top', (event, flag) => {
+      const mainWindow = this.getMainWindow();
+      if (mainWindow) mainWindow.setAlwaysOnTop(flag);
+    });
+
+    // 检测是否为无边框模式
+    ipcMain.handle('window-is-frameless', () => {
+      const mainWindow = this.getMainWindow();
+      if (mainWindow) {
+        return mainWindow.isFrameless === true;
+      }
+      return false;
+    });
+
+    // 获取平台信息
+    ipcMain.handle('get-platform', () => {
+      return process.platform; // 返回 'darwin', 'win32', 'linux' 等
     });
   }
 

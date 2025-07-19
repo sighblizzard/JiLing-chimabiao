@@ -114,7 +114,7 @@ const Button = styled(motion.button)`
 
 const ExportDialog = ({ isOpen, onClose, tableData }) => {
   const [filename, setFilename] = useState('size-chart');
-  const [tipText, setTipText] = useState('温馨提示：由于手工测量会存在1-3cm误差，属于正常范围');
+  const [tipText, setTipText] = useState('温馨提示:由于手工测量会存在1-3cm误差，属于正常范围');
   const [previewUrl, setPreviewUrl] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 

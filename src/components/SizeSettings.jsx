@@ -247,14 +247,26 @@ const SizeSettings = ({ appState, setAppState }) => {
 
   // 更新类别起始值
   const updateCategoryStartValue = useCallback((categoryId, value) => {
-    const numValue = parseFloat(value);
+    // 直接存储字符串值，允许用户输入过程中的中间状态
     const newStartValues = { ...categoryStartValues };
     
-    if (isNaN(numValue) || value === '') {
-      // 如果值无效或为空，删除自定义值，使用默认值
+    if (value === '') {
+      // 如果值为空，删除自定义值，使用默认值
       delete newStartValues[categoryId];
     } else {
-      newStartValues[categoryId] = numValue;
+      // 验证输入是否为有效的数字格式（包括中间状态如 "9." "9.5"）
+      const isValidInput = /^\d*\.?\d*$/.test(value) && value !== '.';
+      
+      if (isValidInput) {
+        // 如果是完整的有效数字，存储数值；否则保持字符串状态
+        const numValue = parseFloat(value);
+        if (!isNaN(numValue) && value.slice(-1) !== '.') {
+          newStartValues[categoryId] = numValue;
+        } else {
+          // 保持输入状态（如用户正在输入 "9." 这样的中间状态）
+          newStartValues[categoryId] = value;
+        }
+      }
     }
     
     setAppState(prev => ({
@@ -265,9 +277,17 @@ const SizeSettings = ({ appState, setAppState }) => {
 
   // 获取类别的当前起始值
   const getCategoryStartValue = useCallback((category) => {
-    return categoryStartValues[category.id] !== undefined 
-      ? categoryStartValues[category.id] 
-      : category.baseValue;
+    const savedValue = categoryStartValues[category.id];
+    if (savedValue !== undefined) {
+      // 如果是字符串类型（输入中间状态），直接返回
+      if (typeof savedValue === 'string') {
+        return savedValue;
+      }
+      // 如果是数字类型，返回数字
+      return savedValue;
+    }
+    // 没有自定义值时，返回默认值
+    return category.baseValue;
   }, [categoryStartValues]);
 
   // 获取类别图标文字
@@ -428,16 +448,6 @@ const SizeSettings = ({ appState, setAppState }) => {
           </ul>
         </ErrorMessage>
       )}
-
-      <ActionButtons>
-        <Button
-          variant="outline"
-          onClick={handleReset}
-          icon="🔄"
-        >
-          重置设置
-        </Button>
-      </ActionButtons>
     </PanelContainer>
   );
 };

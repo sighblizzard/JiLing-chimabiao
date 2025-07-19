@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import Button from './Button';
 import SegmentedControl from './SegmentedControl';
+import WindowControlsComponent from './WindowControls';
 
 const ToolbarContainer = styled.div`
   display: flex;
@@ -13,12 +14,18 @@ const ToolbarContainer = styled.div`
   border-bottom: 1px solid ${props => props.theme.colors.border.light};
   padding: 0 16px;
   gap: 16px;
+  -webkit-app-region: drag;  /* 允许拖拽整个工具栏 */
+  
+  &:not([data-no-drag]) {
+    -webkit-app-region: drag;
+  }
 `;
 
 const ToolbarSection = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+  -webkit-app-region: no-drag;  /* 按钮和控件区域禁止拖拽 */
 `;
 
 const ModeSelector = styled.div`
@@ -98,6 +105,7 @@ const Toolbar = ({
   appState,
   setAppState,
   onGenerate,
+  onSettings,
   className,
   ...props
 }) => {
@@ -141,9 +149,27 @@ const Toolbar = ({
   const canGenerate = selectedCategories.length > 0;
   const canExport = Boolean(chartData);
 
+  // 处理双击标题栏事件
+  const handleDoubleClick = (event) => {
+    // 确保双击事件不是在按钮或其他交互元素上触发
+    if (event.target.tagName === 'BUTTON' || event.target.closest('button')) {
+      return;
+    }
+    
+    if (window.electronAPI?.window?.toggleMaximize) {
+      window.electronAPI.window.toggleMaximize();
+    }
+  };
+
   return (
-    <ToolbarContainer className={className} {...props}>
-      <ToolbarSection>        
+    <ToolbarContainer 
+      className={className} 
+      onDoubleClick={handleDoubleClick}
+      {...props}
+    >
+      <ToolbarSection>
+        <WindowControlsComponent />  {/* 窗口控制按钮 */}
+        
         <ModeSelector>
           <ModeLabel>模式:</ModeLabel>
           <SegmentedControl
@@ -166,7 +192,15 @@ const Toolbar = ({
       </ToolbarSection>
 
       <ToolbarSection>
-        {/* 实时预览模式下不需要生成按钮 */}
+        {/* 右侧操作按钮 */}
+        <Button
+          variant="ghost"
+          size="small"
+          onClick={onSettings}
+          icon="⚙️"
+          title="设置"
+        >
+        </Button>
       </ToolbarSection>
     </ToolbarContainer>
   );

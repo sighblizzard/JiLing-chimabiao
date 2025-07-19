@@ -10,7 +10,8 @@ const MainContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   background: ${props => props.theme.colors.background.secondary};
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   min-width: 0;
 `;
 
@@ -32,7 +33,8 @@ const TabTitle = styled.h2`
 
 const ContentArea = styled.div`
   flex: 1;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   position: relative;
 `;
 

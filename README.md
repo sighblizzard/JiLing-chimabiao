@@ -1,22 +1,27 @@
 # 尺码表生成器
 
-一个基于 Electron + React + Vite 的桌面应用程序，用于生成服装尺码表。
+一个基于 Electron + React + Vite 的现代化桌面应用程序，用于生成高质量的服装尺码表。
 
-## 功能特性
+## ✨ 功能特性
 
-- 🎯 支持普通和毛衣两种模式
-- 📊 实时预览尺码表
-- 📋 支持多种尺码类别（上衣、裤子、内衣等）
-- 📁 Finder 风格的用户界面
-- 💾 本地数据库存储
-- 📤 支持导出功能
+- 🎯 **智能模式切换**: 支持普通和毛衣两种模式
+- 📊 **实时预览**: 高质量Canvas渲染，800x800像素输出
+- 📋 **多类别支持**: 上衣、裤子、内衣等多种尺码类别
+- 🎨 **Finder风格UI**: 现代化的用户界面设计
+- 💾 **数据持久化**: 本地SQLite数据库存储
+- 📤 **智能导出**: 自动递增文件名，支持自定义导出路径
+- ⌨️ **快捷键支持**: Ctrl+S快速导出
+- 🔤 **优质字体**: MiSans完整字重系列，动态缩放
+- 🎭 **Portal下拉菜单**: 解决overflow限制的UI组件
 
-## 技术栈
+## 🛠 技术栈
 
-- **前端**: React 18 + Vite 5
-- **桌面框架**: Electron 27
-- **样式**: Styled-components + Framer Motion
+- **前端框架**: React 18 + Vite 5
+- **桌面应用**: Electron 27
+- **样式方案**: Styled-components + Framer Motion  
+- **字体系统**: MiSans 完整字重系列
 - **数据库**: SQLite (better-sqlite3)
+- **Excel处理**: ExcelJS
 - **构建工具**: electron-builder
 
 ## 开发环境

@@ -1,19 +1,50 @@
+/* 导入 MiSans 字体 */
+@import url('../assets/fonts/MiSans.css');
+
 /* 全局重置样式 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  
+  /* 高质量渲染基础 */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  perspective: 1000;
 }
 
 html, body {
   height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  font-family: 'MiSans', 'Microsoft YaHei', '微软雅黑', 'PingFang SC', '苹方', 'Helvetica Neue', Arial, sans-serif;
   font-size: 14px;
   line-height: 1.5;
   color: #374151;
   background-color: #F9FAFB;
+  
+  /* 超高质量字体渲染 */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  
+  /* 增强DPI缩放优化 */
+  zoom: 1;
+  transform: translateZ(0) scale(1.0001); /* 微调缩放提升渲染精度 */
+  -webkit-transform: translateZ(0) scale(1.0001);
+  
+  /* 强化子像素渲染优化 */
+  -webkit-font-feature-settings: "liga", "kern", "calt";
+  font-feature-settings: "liga", "kern", "calt";
+  font-variant-ligatures: common-ligatures;
+  
+  /* 禁用系统字体缩放干扰并强制高精度 */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  
+  /* 强制硬件加速和图层优化 */
+  will-change: transform;
+  contain: layout style paint;
 }
 
 #root {
@@ -51,6 +82,201 @@ select:focus,
 textarea:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+}
+
+/* 高质量UI增强样式 */
+
+/* 增强高DPI支持 */
+@media (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
+  * {
+    /* 启用硬件加速 */
+    -webkit-transform: translateZ(0) scale(1.001);
+    transform: translateZ(0) scale(1.001);
+    will-change: transform;
+  }
+  
+  /* 优化边框渲染 */
+  .border-hairline {
+    border-width: 0.5px;
+  }
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
+  * {
+    /* 更强的硬件加速 */
+    -webkit-transform: translateZ(0) scale(1.002);
+    transform: translateZ(0) scale(1.002);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000px;
+    perspective: 1000px;
+  }
+  
+  html, body {
+    /* 超高DPI字体优化 */
+    -webkit-font-smoothing: subpixel-antialiased;
+    text-rendering: geometricPrecision;
+  }
+  
+  /* 超精细边框 */
+  .border-hairline {
+    border-width: 0.33px;
+  }
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  * {
+    /* 4K/Retina显示器优化 */
+    -webkit-transform: translateZ(0) scale(1.003);
+    transform: translateZ(0) scale(1.003);
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+  
+  html, body {
+    font-size: 15px; /* 在高DPI下略微增大基础字体 */
+  }
+  
+  /* 像素完美边框 */
+  .border-hairline {
+    border-width: 0.25px;
+  }
+}
+
+/* 精细化组件样式 */
+.precision-layout {
+  /* 子像素精度 */
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  
+  /* 优化渲染性能 */
+  will-change: transform;
+  contain: layout style paint;
+}
+
+/* 高质量按钮样式 */
+.high-quality-button {
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+  
+  /* 防止文本模糊 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.high-quality-button:hover {
+  transform: translateY(-1px) translateZ(0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.high-quality-button:active {
+  transform: translateY(0) translateZ(0);
+  transition-duration: 0.1s;
+}
+
+/* 高质量输入框样式 */
+.high-quality-input {
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  padding: 8px 12px;
+  transition: all 0.15s ease-in-out;
+  
+  /* 优化字体渲染 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.high-quality-input:focus {
+  border-color: #007AFF;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+  outline: none;
+}
+
+/* 高质量卡片样式 */
+.high-quality-card {
+  background: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  
+  /* 硬件加速 */
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.high-quality-card:hover {
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 2px 4px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px) translateZ(0);
+  transition: all 0.2s ease-out;
+}
+
+/* 优化表格渲染 */
+.high-quality-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.high-quality-table th,
+.high-quality-table td {
+  border-right: 1px solid #E5E7EB;
+  border-bottom: 1px solid #E5E7EB;
+  padding: 12px 16px;
+  
+  /* 优化文本渲染 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.high-quality-table th:last-child,
+.high-quality-table td:last-child {
+  border-right: none;
+}
+
+.high-quality-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* 微动画优化 */
+@keyframes subtle-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-animation {
+  animation: subtle-fade-in 0.3s ease-out;
+}
+
+/* 移动端高DPI优化 */
+@media (max-width: 768px) and (-webkit-min-device-pixel-ratio: 2) {
+  html {
+    font-size: 16px; /* 增加移动端基础字体大小 */
+  }
+  
+  .high-quality-button {
+    min-height: 44px; /* 触摸友好的按钮高度 */
+    padding: 12px 16px;
+  }
+  
+  .high-quality-input {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
 }
 
 /* 禁用选择样式 */

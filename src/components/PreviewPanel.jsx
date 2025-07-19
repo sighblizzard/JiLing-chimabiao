@@ -105,13 +105,13 @@ const PreviewPanel = ({ appState }) => {
   const [zoom, setZoom] = useState(100);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // 格式化图表数据为表格导出器期望的格式
+  // 格式化图表数据为表格导出器期望的格式（正确格式：第一列是尺码）
   const formatChartDataForExport = (chartData) => {
     if (!chartData || chartData.length === 0) return [];
     
     const { headers, rows } = formatSizeDataForTable(chartData);
     
-    // 转换为对象数组格式
+    // 转换为对象数组格式，确保第一列是尺码
     return rows.map(row => {
       const obj = {};
       headers.forEach((header, index) => {
@@ -128,14 +128,14 @@ const PreviewPanel = ({ appState }) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     
-    // 设置Canvas尺寸为600x600
-    canvas.width = 600;
-    canvas.height = 600;
+    // 设置Canvas尺寸为800x800
+    canvas.width = 800;
+    canvas.height = 800;
     
     try {
       // 将chartData转换为tableExporter期望的格式
       const tableData = formatChartDataForExport(chartData);
-      const tipText = mode === 'sweater' ? '毛衣模式：胸围等关键部位递进减半' : '此表格仅供参考，实际尺寸可能因面料和工艺而异';
+      const tipText = mode === 'sweater' ? '温馨提示:由于手工测量会存在1-3cm误差，属于正常范围' : '温馨提示:由于手工测量会存在1-3cm误差，属于正常范围';
       
       // 生成图片数据
       const imageDataUrl = exportSizeTableToImage(tableData, tipText);
@@ -143,23 +143,23 @@ const PreviewPanel = ({ appState }) => {
       // 在Canvas上显示图片
       const img = new Image();
       img.onload = () => {
-        ctx.clearRect(0, 0, 600, 600);
-        ctx.drawImage(img, 0, 0, 600, 600);
+        ctx.clearRect(0, 0, 800, 800);
+        ctx.drawImage(img, 0, 0, 800, 800);
       };
       img.src = imageDataUrl;
     } catch (error) {
       console.error('渲染预览失败:', error);
       
       // 降级到简单文本渲染
-      ctx.clearRect(0, 0, 600, 600);
+      ctx.clearRect(0, 0, 800, 800);
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, 600, 600);
+      ctx.fillRect(0, 0, 800, 800);
       
       ctx.fillStyle = '#333333';
       ctx.font = '16px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('预览生成失败', 300, 280);
-      ctx.fillText('请检查数据格式', 300, 310);
+      ctx.fillText('预览生成失败', 400, 380);
+      ctx.fillText('请检查数据格式', 400, 410);
     }
   };
 
@@ -174,9 +174,21 @@ const PreviewPanel = ({ appState }) => {
   useEffect(() => {
     if (selectedCategories.length === 0 && canvasRef.current) {
       const ctx = canvasRef.current.getContext('2d');
-      ctx.clearRect(0, 0, 600, 600);
+      ctx.clearRect(0, 0, 800, 800);
     }
   }, [selectedCategories]);
+
+  // 监听快捷键导出事件
+  useEffect(() => {
+    const handleExportShortcut = (event) => {
+      console.log('Export shortcut event received:', event.detail);
+      const { format } = event.detail;
+      handleExportImage(format);
+    };
+
+    window.addEventListener('export-shortcut', handleExportShortcut);
+    return () => window.removeEventListener('export-shortcut', handleExportShortcut);
+  }, [chartData, appState.exportPath]);
 
   // 导出为图片
   const handleExportImage = async (format = 'jpeg') => {
@@ -187,12 +199,19 @@ const PreviewPanel = ({ appState }) => {
 
     try {
       const tableData = formatChartDataForExport(chartData);
-      const tipText = mode === 'sweater' ? '毛衣模式：胸围等关键部位递进减半' : '此表格仅供参考，实际尺寸可能因面料和工艺而异';
+      const tipText = mode === 'sweater' ? '温馨提示:由于手工测量会存在1-3cm误差，属于正常范围' : '温馨提示:由于手工测量会存在1-3cm误差，属于正常范围';
       
       const imageDataUrl = exportSizeTableToImage(tableData, tipText);
-      const filename = `尺码表_${new Date().toISOString().slice(0, 10)}.${format}`;
       
-      downloadImage(imageDataUrl, filename);
+      // 如果设置了导出路径，直接保存；否则弹出下载对话框
+      if (appState.exportPath) {
+        console.log('使用设置的导出路径:', appState.exportPath);
+        await downloadImage(imageDataUrl, appState.exportPath, '尺码表');
+      } else {
+        console.log('未设置导出路径，使用传统下载方式');
+        const filename = `尺码表_${new Date().toISOString().slice(0, 10)}`;
+        downloadImage(imageDataUrl, null, filename);
+      }
     } catch (error) {
       console.error('导出图片失败:', error);
       alert('导出失败，请重试');
@@ -280,16 +299,9 @@ const PreviewPanel = ({ appState }) => {
             variant="outline"
             onClick={() => handleExportImage('jpeg')}
             disabled={!hasData}
+            data-export="image"
           >
             导出图片
-          </Button>
-          
-          <Button
-            variant="primary"
-            onClick={handleExportExcel}
-            disabled={!hasData}
-          >
-            导出Excel
           </Button>
         </Controls>
       </PanelHeader>
@@ -299,8 +311,8 @@ const PreviewPanel = ({ appState }) => {
           <Canvas
             ref={canvasRef}
             zoom={zoom}
-            width={600}
-            height={600}
+            width={800}
+            height={800}
           />
         ) : (
           <EmptyState>

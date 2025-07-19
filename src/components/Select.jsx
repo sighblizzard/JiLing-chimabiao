@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -90,11 +91,8 @@ const ChevronIcon = styled(motion.div)`
 `;
 
 const OptionsContainer = styled(motion.div)`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  z-index: 1000;
+  position: fixed;
+  z-index: 9999;
   background: ${props => props.theme.colors.background.primary};
   border: 1px solid ${props => props.theme.colors.border.medium};
   border-radius: ${props => props.theme.borderRadius.md};
@@ -102,6 +100,7 @@ const OptionsContainer = styled(motion.div)`
   max-height: 200px;
   overflow-y: auto;
   margin-top: 4px;
+  min-width: 120px;
 `;
 
 const Option = styled(motion.div)`
@@ -175,19 +174,88 @@ const Select = ({
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
   const containerRef = useRef(null);
+  const triggerRef = useRef(null);
+
+  // 计算下拉菜单位置
+  const calculatePosition = () => {
+    if (!triggerRef.current) return;
+    
+    const rect = triggerRef.current.getBoundingClientRect();
+    console.log('计算位置:', {
+      top: rect.bottom,
+      left: rect.left,
+      width: rect.width,
+      scrollY: window.scrollY,
+      scrollX: window.scrollX
+    });
+    
+    setDropdownPosition({
+      top: rect.bottom + window.scrollY + 4, // 添加4px间距
+      left: rect.left + window.scrollX,
+      width: rect.width
+    });
+  };
+
+  // 处理打开下拉菜单
+  const handleToggle = () => {
+    if (!disabled) {
+      if (!isOpen) {
+        // 先设置状态，然后在下一帧计算位置
+        setIsOpen(true);
+        requestAnimationFrame(() => {
+          calculatePosition();
+        });
+      } else {
+        setIsOpen(false);
+      }
+    }
+  };
+
+  // 处理窗口大小变化
+  useEffect(() => {
+    const handleResize = () => {
+      if (isOpen) {
+        calculatePosition();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleResize);
+    };
+  }, [isOpen]);
 
   // 处理点击外部关闭
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (containerRef.current && !containerRef.current.contains(event.target)) {
-        setIsOpen(false);
+        // 检查是否点击在Portal渲染的下拉菜单内
+        const dropdownElements = document.querySelectorAll('[data-dropdown-container]');
+        let clickedInDropdown = false;
+        
+        dropdownElements.forEach(element => {
+          if (element.contains(event.target)) {
+            clickedInDropdown = true;
+          }
+        });
+        
+        if (!clickedInDropdown) {
+          setIsOpen(false);
+        }
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [isOpen]);
 
   // 处理键盘事件
   useEffect(() => {
@@ -214,12 +282,6 @@ const Select = ({
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen]);
 
-  const handleToggle = () => {
-    if (!disabled) {
-      setIsOpen(!isOpen);
-    }
-  };
-
   const handleOptionClick = (option) => {
     if (!option.disabled) {
       onChange?.(option.value, option);
@@ -237,6 +299,7 @@ const Select = ({
       {label && <Label>{label}</Label>}
       
       <SelectTrigger
+        ref={triggerRef}
         $size={size}
         $error={Boolean(error)}
         $isOpen={isOpen}
@@ -253,9 +316,24 @@ const Select = ({
         />
       </SelectTrigger>
 
-      <AnimatePresence>
-        {isOpen && (
+      {isOpen && createPortal(
+        <AnimatePresence>
           <OptionsContainer
+            as={motion.div}
+            data-dropdown-container
+            style={{
+              position: 'fixed',
+              top: dropdownPosition.top,
+              left: dropdownPosition.left,
+              width: dropdownPosition.width,
+              zIndex: 9999,
+              backgroundColor: 'white',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              maxHeight: '200px',
+              overflowY: 'auto'
+            }}
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -281,8 +359,9 @@ const Select = ({
               </Option>
             )}
           </OptionsContainer>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>,
+        document.body
+      )}
 
       {error && (
         <ErrorMessage>

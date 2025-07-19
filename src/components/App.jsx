@@ -6,7 +6,6 @@ import { presetCategories, storage } from '../services/dataManager';
 import { calculateSizeData } from '../services/sizeCalculator';
 
 // 组件导入
-import TitleBar from './TitleBar';
 import Toolbar from './Toolbar';
 import Sidebar from './Sidebar';
 import MainContent from './MainContent';
@@ -15,6 +14,7 @@ import SettingsPanel from './SettingsPanel';
 
 // 全局样式导入
 import '../styles/globals.css';
+import { highQualityStyles } from '../styles/highQuality';
 
 const AppContainer = styled.div`
   width: 100vw;
@@ -23,12 +23,21 @@ const AppContainer = styled.div`
   flex-direction: column;
   background: ${props => props.theme.colors.background.secondary};
   font-family: ${props => props.theme.typography.fontFamily.sans.join(', ')};
+  
+  /* 应用高质量渲染基础 */
+  ${highQualityStyles.base}
+  ${highQualityStyles.highDPI}
+  
+  /* 确保整体布局精度 */
+  contain: layout style paint;
+  isolation: isolate;
 `;
 
 const ContentArea = styled.div`
   flex: 1;
   display: flex;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   width: 100%;
 `;
 
@@ -49,7 +58,8 @@ const App = () => {
     chartData: null,
     searchQuery: '',
     isGenerating: false,
-    isSettingsOpen: false // 设置面板状态
+    isSettingsOpen: false, // 设置面板状态
+    exportPath: '', // 导出路径设置
   });
 
   // 初始化数据
@@ -68,6 +78,31 @@ const App = () => {
       categoryStartValues: savedStartValues
     }));
   }, []);
+
+  // 添加键盘快捷键监听
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      // Ctrl + S 导出图片
+      if (event.ctrlKey && event.key === 's') {
+        event.preventDefault();
+        console.log('Ctrl+S pressed, chartData:', !!appState.chartData);
+        
+        // 触发图片导出 - 发送自定义事件
+        if (appState.chartData) {
+          console.log('Dispatching export-shortcut event');
+          window.dispatchEvent(new CustomEvent('export-shortcut', { 
+            detail: { format: 'jpeg' } 
+          }));
+        } else {
+          console.log('No chart data available');
+          alert('请先生成尺码表数据');
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [appState.chartData]);
 
   // 保存数据到本地存储
   useEffect(() => {
@@ -170,18 +205,10 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <AppContainer>
-        <TitleBar
-          title="尺码表生成器"
-          onClose={handleClose}
-          onMinimize={handleMinimize}
-          onMaximize={handleMaximize}
-          onSettings={handleSettings}
-          onHelp={handleHelp}
-        />
-        
         <Toolbar
           appState={appState}
           setAppState={setAppState}
+          onSettings={handleSettings}
         />
         
         <ContentArea>

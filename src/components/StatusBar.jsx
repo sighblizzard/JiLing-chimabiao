@@ -142,13 +142,6 @@ const StatusBar = ({ appState }) => {
               </span>
             </StatusItem>
 
-            <Separator />
-
-            <StatusItem>
-              <StatusIcon>📈</StatusIcon>
-              <span>平均递增 {stats.averageIncrement}cm</span>
-            </StatusItem>
-
             {stats.sizeRange && (
               <>
                 <Separator />
@@ -160,12 +153,6 @@ const StatusBar = ({ appState }) => {
             )}
           </>
         )}
-
-        {/* 版本信息 */}
-        <StatusItem>
-          <StatusIcon>ℹ️</StatusIcon>
-          <span>v1.0.0</span>
-        </StatusItem>
       </StatusSection>
     </StatusBarContainer>
   );

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>尺码表边框测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 800px;
+        }
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: block;
+            margin: 20px auto;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        button {
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        button:hover {
+            background: #005ECB;
+        }
+        .info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 尺码表边框线测试</h1>
+        
+        <div class="info">
+            <strong>测试目标：</strong>验证表格内部是否显示完整的边框线，包括：
+            <ul>
+                <li>✅ 外边框完整</li>
+                <li>✅ 垂直分割线清晰（不延伸到温馨提示行）</li>
+                <li>✅ 水平分割线清晰</li>
+                <li>✅ 温馨提示行为合并单元格（无内部垂直线）</li>
+                <li>✅ 单元格背景不覆盖边框</li>
+            </ul>
+        </div>
+
+        <div class="controls">
+            <button onclick="testTableExport()">🎯 生成测试表格</button>
+            <button onclick="downloadTest()">💾 下载测试图片</button>
+        </div>
+
+        <canvas id="testCanvas" width="600" height="600"></canvas>
+        
+        <div class="info">
+            <strong>测试数据：</strong><br>
+            <pre id="testData"></pre>
+        </div>
+    </div>
+
+    <script type="module">
+        // 模拟表格导出功能的核心逻辑
+        const CANVAS_CONFIG = {
+            width: 600,
+            height: 600,
+            backgroundColor: '#FFFFFF',
+            padding: 20 // 进一步减小边距，最大化表格空间
+        };
+
+        const CELL_CONFIG = {
+            aspectRatio: 10 / 6,
+            minWidth: 40,        // 进一步降低最小宽度要求
+            minHeight: 24,       // 进一步降低最小高度要求
+            borderWidth: 1,
+            borderColor: '#000000'
+        };
+
+        const STYLES = {
+            header: {
+                backgroundColor: '#000000',
+                textColor: '#FFFFFF',
+                fontSize: 24,
+                fontWeight: '600',
+                textAlign: 'center'
+            },
+            cell: {
+                backgroundColor: '#FFFFFF',
+                textColor: '#000000',
+                fontSize: 20,
+                fontWeight: '500',
+                textAlign: 'center'
+            },
+            firstColumn: {
+                backgroundColor: '#FFFFFF',
+                textColor: '#000000',
+                fontSize: 22,
+                fontWeight: '600',
+                textAlign: 'center'
+            },
+            footer: {
+                backgroundColor: '#f2f2f2',
+                textColor: '#000000',
+                fontSize: 20,
+                fontWeight: '500',
+                textAlign: 'center'
+            }
+        };
+
+        // 动态字体大小计算函数
+        function calculateDynamicFontSize(cellWidth, cellHeight, baseFontSize, baseWidth = 120, baseHeight = 72) {
+            const widthRatio = cellWidth / baseWidth;
+            const heightRatio = cellHeight / baseHeight;
+            const avgRatio = (widthRatio + heightRatio) / 2;
+            
+            const scaledSize = baseFontSize * avgRatio;
+            return Math.max(10, Math.min(scaledSize, baseFontSize * 1.5));
+        }
+
+        // 获取动态样式配置
+        function getDynamicStyles(cellWidth, cellHeight) {
+            return {
+                header: {
+                    backgroundColor: '#000000',
+                    textColor: '#FFFFFF',
+                    fontSize: Math.round(calculateDynamicFontSize(cellWidth, cellHeight, 24)),
+                    fontWeight: '600',
+                    textAlign: 'center'
+                },
+                cell: {
+                    backgroundColor: '#FFFFFF',
+                    textColor: '#000000',
+                    fontSize: Math.round(calculateDynamicFontSize(cellWidth, cellHeight, 20)),
+                    fontWeight: '500',
+                    textAlign: 'center'
+                },
+                firstColumn: {
+                    backgroundColor: '#FFFFFF',
+                    textColor: '#000000',
+                    fontSize: Math.round(calculateDynamicFontSize(cellWidth, cellHeight, 22)),
+                    fontWeight: '600',
+                    textAlign: 'center'
+                },
+                footer: {
+                    backgroundColor: '#f2f2f2',
+                    textColor: '#000000',
+                    fontSize: Math.round(calculateDynamicFontSize(cellWidth, cellHeight, 20)),
+                    fontWeight: '500',
+                    textAlign: 'center'
+                }
+            };
+        }
+
+        // 测试数据
+        const testData = [
+            { '尺码': 'S', '胸围': '88', '腰围': '68', '臀围': '92' },
+            { '尺码': 'M', '胸围': '90', '腰围': '70', '臀围': '94' },
+            { '尺码': 'L', '胸围': '92', '腰围': '72', '臀围': '96' },
+            { '尺码': 'XL', '胸围': '94', '腰围': '74', '臀围': '98' }
+        ];
+
+        function calculateTableLayout(data) {
+            if (!data || data.length === 0) return null;
+
+            const rows = data.length + 2;
+            const cols = Object.keys(data[0]).length;
+            
+            const availableWidth = CANVAS_CONFIG.width - (CANVAS_CONFIG.padding * 2);
+            const availableHeight = CANVAS_CONFIG.height - (CANVAS_CONFIG.padding * 2);
+            
+            let cellWidth, cellHeight;
+            
+            const widthBasedCellWidth = availableWidth / cols;
+            const widthBasedCellHeight = widthBasedCellWidth / CELL_CONFIG.aspectRatio;
+            const widthBasedTableHeight = widthBasedCellHeight * rows;
+            
+            const heightBasedCellHeight = availableHeight / rows;
+            const heightBasedCellWidth = heightBasedCellHeight * CELL_CONFIG.aspectRatio;
+            const heightBasedTableWidth = heightBasedCellWidth * cols;
+            
+            // 优化：选择能最大化利用空间的方案
+            if (widthBasedTableHeight <= availableHeight && heightBasedTableWidth <= availableWidth) {
+                // 两种方案都可行，选择占用空间更大的方案
+                const widthBasedArea = widthBasedCellWidth * cols * widthBasedCellHeight * rows;
+                const heightBasedArea = heightBasedCellWidth * cols * heightBasedCellHeight * rows;
+                
+                if (widthBasedArea >= heightBasedArea) {
+                    cellWidth = widthBasedCellWidth;
+                    cellHeight = widthBasedCellHeight;
+                } else {
+                    cellWidth = heightBasedCellWidth;
+                    cellHeight = heightBasedCellHeight;
+                }
+            } else if (widthBasedTableHeight <= availableHeight) {
+                cellWidth = widthBasedCellWidth;
+                cellHeight = widthBasedCellHeight;
+            } else if (heightBasedTableWidth <= availableWidth) {
+                cellWidth = heightBasedCellWidth;
+                cellHeight = heightBasedCellHeight;
+            } else {
+                cellWidth = Math.min(widthBasedCellWidth, heightBasedCellWidth);
+                cellHeight = cellWidth / CELL_CONFIG.aspectRatio;
+            }
+            
+            cellWidth = Math.max(cellWidth, CELL_CONFIG.minWidth);
+            cellHeight = Math.max(cellHeight, CELL_CONFIG.minHeight);
+            
+            // 如果应用最小尺寸后仍有空间，尝试放大以更好利用空间
+            const finalTableWidth = cellWidth * cols;
+            const finalTableHeight = cellHeight * rows;
+            
+            if (finalTableWidth < availableWidth && finalTableHeight < availableHeight) {
+                const scaleX = availableWidth / finalTableWidth;
+                const scaleY = availableHeight / finalTableHeight;
+                const scale = Math.min(scaleX, scaleY) * 0.95; // 留5%余量
+                
+                if (scale > 1) {
+                    cellWidth *= scale;
+                    cellHeight *= scale;
+                }
+            }
+            
+            const tableWidth = cellWidth * cols;
+            const tableHeight = cellHeight * rows;
+            
+            const startX = (CANVAS_CONFIG.width - tableWidth) / 2;
+            const startY = (CANVAS_CONFIG.height - tableHeight) / 2;
+            
+            return {
+                cellWidth, cellHeight, tableWidth, tableHeight,
+                startX, startY, rows, cols
+            };
+        }
+
+        function drawTableBorder(ctx, layout) {
+            const { startX, startY, tableWidth, tableHeight, cellWidth, cellHeight, rows, cols } = layout;
+            
+            ctx.strokeStyle = CELL_CONFIG.borderColor;
+            ctx.lineWidth = CELL_CONFIG.borderWidth;
+            
+            // 绘制外边框
+            ctx.strokeRect(startX, startY, tableWidth, tableHeight);
+            
+            // 绘制垂直线（不延伸到最后一行温馨提示行）
+            for (let i = 1; i < cols; i++) {
+                const x = startX + (cellWidth * i);
+                const stopY = startY + ((rows - 1) * cellHeight); // 停止在倒数第二行的底部
+                ctx.beginPath();
+                ctx.moveTo(x, startY);
+                ctx.lineTo(x, stopY);
+                ctx.stroke();
+            }
+            
+            // 绘制水平线
+            for (let i = 1; i < rows; i++) {
+                const y = startY + (cellHeight * i);
+                ctx.beginPath();
+                ctx.moveTo(startX, y);
+                ctx.lineTo(startX + tableWidth, y);
+                ctx.stroke();
+            }
+        }
+
+        function drawCellBackground(ctx, layout, row, col, style) {
+            const { startX, startY, cellWidth, cellHeight } = layout;
+            
+            const x = startX + (col * cellWidth);
+            const y = startY + (row * cellHeight);
+            
+            ctx.fillStyle = style.backgroundColor;
+            ctx.fillRect(x, y, cellWidth, cellHeight);
+        }
+
+        function drawCellText(ctx, layout, row, col, text, style) {
+            const { startX, startY, cellWidth, cellHeight } = layout;
+            
+            const x = startX + (col * cellWidth);
+            const y = startY + (row * cellHeight);
+            
+            ctx.fillStyle = style.textColor;
+            ctx.font = `${style.fontWeight} ${style.fontSize}px 'MiSans', 'Microsoft YaHei', '微软雅黑', sans-serif`;
+            ctx.textAlign = style.textAlign;
+            ctx.textBaseline = 'middle';
+            
+            const textX = x + cellWidth / 2;
+            const textY = y + cellHeight / 2;
+            
+            ctx.fillText(text, textX, textY);
+        }
+
+        function drawTipRowBackground(ctx, layout) {
+            const { startX, startY, tableWidth, cellHeight, rows } = layout;
+            const y = startY + ((rows - 1) * cellHeight);
+            ctx.fillStyle = STYLES.footer.backgroundColor;
+            ctx.fillRect(startX, y, tableWidth, cellHeight);
+        }
+
+        function drawTipRowText(ctx, layout, tipText) {
+            const { startX, startY, tableWidth, cellHeight, rows } = layout;
+            const y = startY + ((rows - 1) * cellHeight);
+            
+            ctx.fillStyle = STYLES.footer.textColor;
+            ctx.font = `${STYLES.footer.fontWeight} ${STYLES.footer.fontSize}px 'MiSans', 'Microsoft YaHei', '微软雅黑', sans-serif`;
+            ctx.textAlign = STYLES.footer.textAlign;
+            ctx.textBaseline = 'middle';
+            
+            const textX = startX + tableWidth / 2;
+            const textY = y + cellHeight / 2;
+            
+            ctx.fillText(tipText, textX, textY);
+        }
+
+        window.testTableExport = function() {
+            const canvas = document.getElementById('testCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // 清空画布
+            ctx.clearRect(0, 0, 600, 600);
+            
+            // 绘制白色背景
+            ctx.fillStyle = CANVAS_CONFIG.backgroundColor;
+            ctx.fillRect(0, 0, CANVAS_CONFIG.width, CANVAS_CONFIG.height);
+            
+            // 计算布局
+            const layout = calculateTableLayout(testData);
+            if (!layout) return;
+            
+            // 获取动态样式配置
+            const dynamicStyles = getDynamicStyles(layout.cellWidth, layout.cellHeight);
+            
+            const headers = Object.keys(testData[0]);
+            
+            // 第一步：绘制所有单元格背景
+            headers.forEach((header, col) => {
+                drawCellBackground(ctx, layout, 0, col, dynamicStyles.header);
+            });
+            
+            testData.forEach((row, rowIndex) => {
+                headers.forEach((header, col) => {
+                    const style = col === 0 ? dynamicStyles.firstColumn : dynamicStyles.cell;
+                    drawCellBackground(ctx, layout, rowIndex + 1, col, style);
+                });
+            });
+            
+            // 温馨提示行背景
+            const y = layout.startY + ((layout.rows - 1) * layout.cellHeight);
+            ctx.fillStyle = dynamicStyles.footer.backgroundColor;
+            ctx.fillRect(layout.startX, y, layout.tableWidth, layout.cellHeight);
+            
+            // 第二步：绘制表格边框
+            drawTableBorder(ctx, layout);
+            
+            // 第三步：绘制所有文字内容
+            headers.forEach((header, col) => {
+                drawCellText(ctx, layout, 0, col, header, dynamicStyles.header);
+            });
+            
+            testData.forEach((row, rowIndex) => {
+                headers.forEach((header, col) => {
+                    const value = row[header];
+                    const style = col === 0 ? dynamicStyles.firstColumn : dynamicStyles.cell;
+                    drawCellText(ctx, layout, rowIndex + 1, col, String(value), style);
+                });
+            });
+            
+            // 温馨提示行文字
+            ctx.fillStyle = dynamicStyles.footer.textColor;
+            ctx.font = `${dynamicStyles.footer.fontWeight} ${dynamicStyles.footer.fontSize}px 'MiSans', 'Microsoft YaHei', '微软雅黑', sans-serif`;
+            ctx.textAlign = dynamicStyles.footer.textAlign;
+            ctx.textBaseline = 'middle';
+            
+            const textX = layout.startX + layout.tableWidth / 2;
+            const textY = y + layout.cellHeight / 2;
+            ctx.fillText("温馨提示:由于手工测量会存在1-3cm误差，属于正常范围", textX, textY);
+            
+            // 显示测试数据
+            document.getElementById('testData').textContent = JSON.stringify(testData, null, 2);
+        };
+
+        window.downloadTest = function() {
+            const canvas = document.getElementById('testCanvas');
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+            
+            const link = document.createElement('a');
+            link.download = 'size-chart-border-test.jpg';
+            link.href = dataUrl;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        // 页面加载时自动生成测试表格
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(testTableExport, 500);
+        });
+    </script>
+</body>
+</html>

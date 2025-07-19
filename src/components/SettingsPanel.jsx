@@ -111,8 +111,128 @@ const SettingsPanel = ({
       case 'general':
         return (
           <div>
-            <h3>通用设置</h3>
-            <p>这里将来可以添加其他设置选项</p>
+            <h3 style={{ 
+              fontSize: '16px', 
+              fontWeight: '600', 
+              marginBottom: '16px',
+              color: '#374151'
+            }}>通用设置</h3>
+            
+            {/* 导出路径设置 */}
+            <div style={{ 
+              marginBottom: '20px',
+              padding: '16px', 
+              background: '#F9FAFB', 
+              borderRadius: '8px',
+              border: '1px solid #E5E7EB'
+            }}>
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center',
+                marginBottom: '12px'
+              }}>
+                <label style={{ 
+                  fontWeight: '500',
+                  fontSize: '14px',
+                  color: '#374151'
+                }}>默认导出路径</label>
+              </div>
+              
+              <div style={{ 
+                display: 'flex', 
+                gap: '8px',
+                alignItems: 'center'
+              }}>
+                <input
+                  type="text"
+                  value={appState.exportPath || ''}
+                  onChange={(e) => setAppState(prev => ({ 
+                    ...prev, 
+                    exportPath: e.target.value 
+                  }))}
+                  placeholder="选择图片保存路径..."
+                  style={{
+                    flex: 1,
+                    padding: '8px 12px',
+                    border: '1px solid #D1D5DB',
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    outline: 'none',
+                    background: '#FFFFFF'
+                  }}
+                />
+                <Button
+                  variant="outline"
+                  size="small"
+                  onClick={async () => {
+                    try {
+                      // 使用 Electron 的文件对话框选择文件夹
+                      if (window.electronAPI) {
+                        const result = await window.electronAPI.selectDirectory();
+                        if (result && !result.canceled) {
+                          setAppState(prev => ({ 
+                            ...prev, 
+                            exportPath: result.filePaths[0] 
+                          }));
+                        }
+                      } else {
+                        // 浏览器环境，提示用户手动输入
+                        alert('请手动输入保存路径，或在桌面应用中使用文件夹选择功能');
+                      }
+                    } catch (error) {
+                      console.error('选择文件夹失败:', error);
+                      alert('选择文件夹失败，请手动输入路径');
+                    }
+                  }}
+                >
+                  浏览
+                </Button>
+              </div>
+              
+              <div style={{ 
+                fontSize: '12px',
+                color: '#6B7280',
+                marginTop: '8px'
+              }}>
+                设置后导出图片时将直接保存到此路径，无需每次选择。快捷键：Ctrl+S
+              </div>
+            </div>
+            
+            <div style={{ 
+              padding: '16px', 
+              background: '#F9FAFB', 
+              borderRadius: '8px',
+              border: '1px solid #E5E7EB'
+            }}>
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center',
+                marginBottom: '8px'
+              }}>
+                <span style={{ fontWeight: '500' }}>应用版本</span>
+                <span style={{ 
+                  color: '#6B7280',
+                  fontFamily: 'monospace'
+                }}>v1.0.0</span>
+              </div>
+              
+              <div style={{ 
+                fontSize: '12px',
+                color: '#6B7280'
+              }}>
+                尺码表生成器 - 专业的服装尺码表制作工具
+              </div>
+            </div>
+            
+            <div style={{ 
+              marginTop: '20px',
+              fontSize: '14px',
+              color: '#6B7280'
+            }}>
+              <p>其他设置选项将在后续版本中添加...</p>
+            </div>
           </div>
         );
       default:
