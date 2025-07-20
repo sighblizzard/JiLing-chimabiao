@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,9 +12,9 @@ const SelectTrigger = styled(motion.button)`
   width: 100%;
   padding: ${props => {
     switch (props.$size) {
-      case 'small': return '6px 32px 6px 12px';
-      case 'large': return '12px 40px 12px 16px';
-      default: return '8px 36px 8px 12px';
+      case 'small': return '6px 28px 6px 12px';
+      case 'large': return '12px 36px 12px 16px';
+      default: return '8px 32px 8px 12px';
     }
   }};
   font-size: ${props => {
@@ -71,7 +71,7 @@ const ChevronIcon = styled(motion.div)`
   position: absolute;
   right: 12px;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%); /* 基础居中位置，具体位置调整由Framer Motion控制 */
   width: 16px;
   height: 16px;
   color: ${props => props.theme.colors.gray[400]};
@@ -79,6 +79,7 @@ const ChevronIcon = styled(motion.div)`
   align-items: center;
   justify-content: center;
   pointer-events: none;
+  transition: color 0.2s ease;
 
   &::after {
     content: '';
@@ -88,6 +89,11 @@ const ChevronIcon = styled(motion.div)`
     border-right: 4px solid transparent;
     border-top: 4px solid currentColor;
   }
+  
+  /* 悬停状态下的颜色变化 */
+  ${props => props.$isOpen && `
+    color: ${props.theme.colors.primary};
+  `}
 `;
 
 const OptionsContainer = styled(motion.div)`
@@ -179,56 +185,49 @@ const Select = ({
   const triggerRef = useRef(null);
 
   // 计算下拉菜单位置
-  const calculatePosition = () => {
+  const calculatePosition = useCallback(() => {
     if (!triggerRef.current) return;
     
     const rect = triggerRef.current.getBoundingClientRect();
-    console.log('计算位置:', {
-      top: rect.bottom,
-      left: rect.left,
-      width: rect.width,
-      scrollY: window.scrollY,
-      scrollX: window.scrollX
-    });
     
     setDropdownPosition({
-      top: rect.bottom + window.scrollY + 4, // 添加4px间距
-      left: rect.left + window.scrollX,
+      top: rect.bottom + 4, // 添加4px间距，不需要scrollY因为使用fixed定位
+      left: rect.left,
       width: rect.width
     });
-  };
+  }, []);
+
+  // 监听滚动和窗口大小变化，重新计算位置
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleScroll = () => {
+      calculatePosition();
+    };
+
+    const handleResize = () => {
+      calculatePosition();
+    };
+
+    // 监听所有可能的滚动容器
+    window.addEventListener('scroll', handleScroll, true);
+    window.addEventListener('resize', handleResize);
+    
+    // 初始计算位置
+    calculatePosition();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [isOpen, calculatePosition]);
 
   // 处理打开下拉菜单
   const handleToggle = () => {
     if (!disabled) {
-      if (!isOpen) {
-        // 先设置状态，然后在下一帧计算位置
-        setIsOpen(true);
-        requestAnimationFrame(() => {
-          calculatePosition();
-        });
-      } else {
-        setIsOpen(false);
-      }
+      setIsOpen(prev => !prev);
     }
   };
-
-  // 处理窗口大小变化
-  useEffect(() => {
-    const handleResize = () => {
-      if (isOpen) {
-        calculatePosition();
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('scroll', handleResize);
-    
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('scroll', handleResize);
-    };
-  }, [isOpen]);
 
   // 处理点击外部关闭
   useEffect(() => {
@@ -311,54 +310,61 @@ const Select = ({
       >
         {displayValue || placeholder}
         <ChevronIcon
-          animate={{ rotate: isOpen ? 180 : 0 }}
+          $isOpen={isOpen}
+          $size={size}
+          animate={{ 
+            rotate: isOpen ? 180 : 0,
+            y: -6 // 向上移动6px，保持在Framer Motion控制下
+          }}
           transition={{ duration: 0.2 }}
         />
       </SelectTrigger>
 
-      {isOpen && createPortal(
+      {createPortal(
         <AnimatePresence>
-          <OptionsContainer
-            as={motion.div}
-            data-dropdown-container
-            style={{
-              position: 'fixed',
-              top: dropdownPosition.top,
-              left: dropdownPosition.left,
-              width: dropdownPosition.width,
-              zIndex: 9999,
-              backgroundColor: 'white',
-              border: '1px solid #ddd',
-              borderRadius: '4px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-              maxHeight: '200px',
-              overflowY: 'auto'
-            }}
-            initial={{ opacity: 0, y: -10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-          >
-            {options.map((option, index) => (
-              <Option
-                key={option.value}
-                $selected={option.value === value}
-                $disabled={option.disabled}
-                onClick={() => handleOptionClick(option)}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: index * 0.02 }}
-                whileHover={!option.disabled ? { backgroundColor: 'rgba(0, 0, 0, 0.04)' } : {}}
-              >
-                {option.label}
-              </Option>
-            ))}
-            {options.length === 0 && (
-              <Option $disabled>
-                暂无选项
-              </Option>
-            )}
-          </OptionsContainer>
+          {isOpen && (
+            <OptionsContainer
+              as={motion.div}
+              data-dropdown-container
+              style={{
+                position: 'fixed',
+                top: dropdownPosition.top,
+                left: dropdownPosition.left,
+                width: dropdownPosition.width,
+                zIndex: 9999,
+                backgroundColor: 'white',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                maxHeight: '200px',
+                overflowY: 'auto'
+              }}
+              initial={{ opacity: 0, y: -10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+            >
+              {options.map((option, index) => (
+                <Option
+                  key={option.value}
+                  $selected={option.value === value}
+                  $disabled={option.disabled}
+                  onClick={() => handleOptionClick(option)}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: index * 0.02 }}
+                  whileHover={!option.disabled ? { backgroundColor: 'rgba(0, 0, 0, 0.04)' } : {}}
+                >
+                  {option.label}
+                </Option>
+              ))}
+              {options.length === 0 && (
+                <Option $disabled>
+                  暂无选项
+                </Option>
+              )}
+            </OptionsContainer>
+          )}
         </AnimatePresence>,
         document.body
       )}

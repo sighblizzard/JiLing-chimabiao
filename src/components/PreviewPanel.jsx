@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import Button from './Button';
@@ -17,44 +17,56 @@ const PanelHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  background: ${props => props.theme.colors.background.primary};
+  border: 1px solid ${props => props.theme.colors.border.light};
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
 `;
 
 const Title = styled.h2`
   color: ${props => props.theme.colors.gray[900]};
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 600;
   margin: 0;
+  flex-shrink: 0;
+  min-width: 120px;
 `;
 
 const Controls = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+  flex: 1;
+  justify-content: flex-end;
+  max-width: 400px;
 `;
 
 const ZoomControls = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   padding: 6px 12px;
   background: ${props => props.theme.colors.gray[50]};
   border-radius: 6px;
   border: 1px solid ${props => props.theme.colors.gray[200]};
+  min-width: 120px;
 `;
 
 const ZoomButton = styled(Button)`
   padding: 4px 8px;
-  min-width: auto;
+  min-width: 28px;
   font-size: 12px;
 `;
 
 const ZoomLevel = styled.span`
-  font-size: 14px;
+  font-size: 12px;
   color: ${props => props.theme.colors.gray[600]};
-  min-width: 60px;
+  min-width: 50px;
   text-align: center;
+  font-weight: 500;
 `;
 
 const CanvasContainer = styled.div`
@@ -71,6 +83,7 @@ const CanvasContainer = styled.div`
     linear-gradient(-45deg, transparent 75%, #f8f9fa 75%);
   background-size: 20px 20px;
   background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  min-height: 400px;
 `;
 
 const Canvas = styled.canvas`
@@ -81,6 +94,8 @@ const Canvas = styled.canvas`
   transform: scale(${props => props.zoom / 100});
   transform-origin: center;
   transition: transform 0.2s ease;
+  max-width: 100%;
+  max-height: 100%;
 `;
 
 const EmptyState = styled.div`
@@ -102,11 +117,69 @@ const EmptyIcon = styled.div`
 const PreviewPanel = ({ appState }) => {
   const { selectedCategories, sizeSettings, chartData, mode, categories, categoryStartValues } = appState;
   const canvasRef = useRef(null);
+  const containerRef = useRef(null);
   const [zoom, setZoom] = useState(100);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [canvasSize, setCanvasSize] = useState({ width: 800, height: 800 });
+
+  // 计算Canvas适应容器的最佳尺寸
+  const calculateCanvasSize = useCallback(() => {
+    if (!containerRef.current) return { width: 800, height: 800 };
+    
+    const container = containerRef.current;
+    const containerRect = container.getBoundingClientRect();
+    
+    // 减去padding和一些安全间距
+    const availableWidth = containerRect.width - 48; // 24px padding * 2
+    const availableHeight = containerRect.height - 48;
+    
+    // 保持正方形比例，选择较小的尺寸
+    const maxSize = Math.min(availableWidth, availableHeight);
+    
+    // 设置最小和最大尺寸限制
+    const minSize = 300;
+    const maxSize_limit = 1000;
+    
+    const finalSize = Math.max(minSize, Math.min(maxSize, maxSize_limit));
+    
+    return { width: finalSize, height: finalSize };
+  }, []);
+
+  // 监听容器尺寸变化
+  useEffect(() => {
+    const updateCanvasSize = () => {
+      const newSize = calculateCanvasSize();
+      setCanvasSize(newSize);
+    };
+
+    // 初始设置
+    updateCanvasSize();
+
+    // 监听窗口大小变化
+    const handleResize = () => {
+      // 使用 setTimeout 来延迟执行，确保容器尺寸已经更新
+      setTimeout(updateCanvasSize, 100);
+    };
+
+    window.addEventListener('resize', handleResize);
+    
+    // 使用 ResizeObserver 监听容器大小变化（如果支持）
+    let resizeObserver;
+    if (window.ResizeObserver && containerRef.current) {
+      resizeObserver = new ResizeObserver(handleResize);
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (resizeObserver && containerRef.current) {
+        resizeObserver.unobserve(containerRef.current);
+      }
+    };
+  }, [calculateCanvasSize]);
 
   // 格式化图表数据为表格导出器期望的格式（正确格式：第一列是尺码）
-  const formatChartDataForExport = (chartData) => {
+  const formatChartDataForExport = useCallback((chartData) => {
     if (!chartData || chartData.length === 0) return [];
     
     const { headers, rows } = formatSizeDataForTable(chartData);
@@ -119,18 +192,18 @@ const PreviewPanel = ({ appState }) => {
       });
       return obj;
     });
-  };
+  }, []);
 
   // 渲染Canvas预览
-  const renderCanvasPreview = () => {
+  const renderCanvasPreview = useCallback(() => {
     if (!canvasRef.current || !chartData) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     
-    // 设置Canvas尺寸为800x800
-    canvas.width = 800;
-    canvas.height = 800;
+    // 使用动态计算的Canvas尺寸
+    canvas.width = canvasSize.width;
+    canvas.height = canvasSize.height;
     
     try {
       // 将chartData转换为tableExporter期望的格式
@@ -143,40 +216,40 @@ const PreviewPanel = ({ appState }) => {
       // 在Canvas上显示图片
       const img = new Image();
       img.onload = () => {
-        ctx.clearRect(0, 0, 800, 800);
-        ctx.drawImage(img, 0, 0, 800, 800);
+        ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
+        ctx.drawImage(img, 0, 0, canvasSize.width, canvasSize.height);
       };
       img.src = imageDataUrl;
     } catch (error) {
       console.error('渲染预览失败:', error);
       
       // 降级到简单文本渲染
-      ctx.clearRect(0, 0, 800, 800);
+      ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, 800, 800);
+      ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
       
       ctx.fillStyle = '#333333';
       ctx.font = '16px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('预览生成失败', 400, 380);
-      ctx.fillText('请检查数据格式', 400, 410);
+      ctx.fillText('预览生成失败', canvasSize.width / 2, canvasSize.height / 2 - 15);
+      ctx.fillText('请检查数据格式', canvasSize.width / 2, canvasSize.height / 2 + 15);
     }
-  };
+  }, [chartData, mode, canvasSize, formatChartDataForExport]);
 
-  // 当数据变化时重新渲染预览
+  // 当数据或画布尺寸变化时重新渲染预览
   useEffect(() => {
     if (chartData && chartData.length > 0) {
       renderCanvasPreview();
     }
-  }, [chartData, mode]);
+  }, [chartData, mode, canvasSize, renderCanvasPreview]);
 
   // 当选择变化时清空预览
   useEffect(() => {
     if (selectedCategories.length === 0 && canvasRef.current) {
       const ctx = canvasRef.current.getContext('2d');
-      ctx.clearRect(0, 0, 800, 800);
+      ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
     }
-  }, [selectedCategories]);
+  }, [selectedCategories, canvasSize]);
 
   // 监听快捷键导出事件
   useEffect(() => {
@@ -268,51 +341,85 @@ const PreviewPanel = ({ appState }) => {
       <PanelHeader>
         <Title>尺码表预览</Title>
         <Controls>
-          <ZoomControls>
-            <ZoomButton 
-              variant="outline" 
-              size="small" 
-              onClick={handleZoomOut}
-              disabled={zoom <= 50}
-            >
-              -
-            </ZoomButton>
-            <ZoomLevel>{zoom}%</ZoomLevel>
-            <ZoomButton 
-              variant="outline" 
-              size="small" 
-              onClick={handleZoomIn}
-              disabled={zoom >= 200}
-            >
-              +
-            </ZoomButton>
-            <ZoomButton 
-              variant="outline" 
-              size="small" 
-              onClick={handleZoomReset}
-            >
-              重置
-            </ZoomButton>
-          </ZoomControls>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '8px',
+            paddingRight: '12px',
+            borderRight: '1px solid #e5e7eb'
+          }}>
+            <span style={{ 
+              fontSize: '12px', 
+              color: '#6b7280',
+              fontWeight: '500'
+            }}>
+              缩放
+            </span>
+            <ZoomControls>
+              <ZoomButton 
+                variant="outline" 
+                size="small" 
+                onClick={handleZoomOut}
+                disabled={zoom <= 50}
+              >
+                -
+              </ZoomButton>
+              <ZoomLevel>{zoom}%</ZoomLevel>
+              <ZoomButton 
+                variant="outline" 
+                size="small" 
+                onClick={handleZoomIn}
+                disabled={zoom >= 200}
+              >
+                +
+              </ZoomButton>
+              <ZoomButton 
+                variant="outline" 
+                size="small" 
+                onClick={handleZoomReset}
+              >
+                重置
+              </ZoomButton>
+            </ZoomControls>
+          </div>
           
-          <Button
-            variant="outline"
-            onClick={() => handleExportImage('jpeg')}
-            disabled={!hasData}
-            data-export="image"
-          >
-            导出图片
-          </Button>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '8px'
+          }}>
+            <span style={{ 
+              fontSize: '12px', 
+              color: '#6b7280',
+              fontWeight: '500'
+            }}>
+              操作
+            </span>
+            <Button
+              variant="outline"
+              size="small"
+              onClick={() => handleExportImage('jpeg')}
+              disabled={!hasData}
+              data-export="image"
+              style={{ minWidth: '80px' }}
+            >
+              导出图片
+            </Button>
+          </div>
         </Controls>
       </PanelHeader>
 
-      <CanvasContainer>
+      <CanvasContainer ref={containerRef}>
         {hasData ? (
           <Canvas
             ref={canvasRef}
             zoom={zoom}
-            width={800}
-            height={800}
+            width={canvasSize.width}
+            height={canvasSize.height}
+            style={{
+              width: `${canvasSize.width}px`,
+              height: `${canvasSize.height}px`
+            }}
           />
         ) : (
           <EmptyState>

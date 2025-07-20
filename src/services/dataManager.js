@@ -35,11 +35,21 @@ export const presetCategories = [
     iconUrl: null // 预留图标字段
   },
   {
+    id: 'hem',
+    name: '下摆围',
+    type: 'hem',
+    baseValue: 90,
+    baseIncrement: 4,
+    isCustom: false,
+    description: '下摆处的水平围长',
+    iconUrl: null // 预留图标字段
+  },
+  {
     id: 'shoulder',
     name: '肩宽',
     type: 'shoulder',
     baseValue: 38,
-    baseIncrement: 2,
+    baseIncrement: 1,
     isCustom: false,
     description: '两肩点之间的直线距离',
     iconUrl: null // 预留图标字段
@@ -49,9 +59,19 @@ export const presetCategories = [
     name: '袖长',
     type: 'sleeve',
     baseValue: 58,
-    baseIncrement: 2,
+    baseIncrement: 1,
     isCustom: false,
     description: '肩点到袖口的长度',
+    iconUrl: null // 预留图标字段
+  },
+  {
+    id: 'shoulderSleeve',
+    name: '肩袖长',
+    type: 'shoulderSleeve',
+    baseValue: 22,
+    baseIncrement: 1,
+    isCustom: false,
+    description: '肩缝到袖口的长度',
     iconUrl: null // 预留图标字段
   },
   {
@@ -59,9 +79,49 @@ export const presetCategories = [
     name: '衣长',
     type: 'length',
     baseValue: 65,
-    baseIncrement: 2,
+    baseIncrement: 1,
     isCustom: false,
     description: '后中心领窝点到下摆的长度',
+    iconUrl: null // 预留图标字段
+  },
+  {
+    id: 'pantLength',
+    name: '裤长',
+    type: 'pantLength',
+    baseValue: 100,
+    baseIncrement: 1,
+    isCustom: false,
+    description: '裤腰到裤脚的长度',
+    iconUrl: null // 预留图标字段
+  },
+  {
+    id: 'skirtLength',
+    name: '裙长',
+    type: 'skirtLength',
+    baseValue: 60,
+    baseIncrement: 1,
+    isCustom: false,
+    description: '裙腰到裙摆的长度',
+    iconUrl: null // 预留图标字段
+  },
+  {
+    id: 'backLength',
+    name: '中后长',
+    type: 'backLength',
+    baseValue: 38,
+    baseIncrement: 1,
+    isCustom: false,
+    description: '后中心领窝点到腰线的长度',
+    iconUrl: null // 预留图标字段
+  },
+  {
+    id: 'frontLength',
+    name: '中前长',
+    type: 'frontLength',
+    baseValue: 36,
+    baseIncrement: 1,
+    isCustom: false,
+    description: '前中心领窝点到腰线的长度',
     iconUrl: null // 预留图标字段
   }
 ];

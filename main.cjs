@@ -34,14 +34,14 @@ class Application {
    */
   setupApp() {
     // 设置应用程序名称
-    app.setName('尺码表生成器');
+    app.setName('集领商品部尺码表');
 
     // 禁用硬件加速（解决GPU相关问题）
     app.disableHardwareAcceleration();
 
     // 设置应用程序图标路径
     if (process.platform === 'win32') {
-      app.setAppUserModelId('com.sizechargen.app');
+      app.setAppUserModelId('com.jilingsizetable.app');
     }
 
     // 监听应用程序事件

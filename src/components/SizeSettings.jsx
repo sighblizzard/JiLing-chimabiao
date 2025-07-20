@@ -85,11 +85,52 @@ const PreviewSection = styled(motion.div)`
   margin-bottom: 20px;
 `;
 
+const PreviewHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 8px;
+  }
+`;
+
+const SettingsControls = styled.div`
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+`;
+
+const CompactControlGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 120px;
+
+  @media (max-width: 480px) {
+    min-width: auto;
+  }
+`;
+
 const PreviewTitle = styled.h3`
   font-size: 14px;
   font-weight: 600;
   color: ${props => props.theme.colors.gray[700]};
-  margin: 0 0 8px 0;
+  margin: 0;
 `;
 
 const SizePreview = styled.div`
@@ -324,49 +365,43 @@ const SizeSettings = ({ appState, setAppState }) => {
 
   return (
     <PanelContainer>
-      <PanelHeader>
-        <Title>尺码设置</Title>
-        <Subtitle>
-          配置尺码范围和数量，设置会实时应用到预览中。
-          当前已选择 {selectedCategories.length} 个类别。
-        </Subtitle>
-      </PanelHeader>
-
-      <SettingsGrid>
-        <CompactRow>
-          <Label>起始尺码</Label>
-          <Select
-            placeholder="选择起始尺码"
-            options={sizeOptions}
-            value={startSize}
-            onChange={(value) => updateSizeSettings({ startSize: value })}
-            error={errors.startSize}
-            helperText="选择尺码表的第一个尺码"
-            size="small"
-          />
-          <Label>尺码数量</Label>
-          <Input
-            type="number"
-            placeholder="输入尺码数量"
-            value={count}
-            onChange={(e) => updateSizeSettings({ count: parseInt(e.target.value) || 1 })}
-            min={1}
-            max={8}
-            error={errors.count}
-            helperText="设置要生成的尺码总数量（1-8个）"
-            size="small"
-          />
-        </CompactRow>
-      </SettingsGrid>
-
-      {/* 尺码预览 */}
-      {generatedSizes.length > 0 && (
-        <PreviewSection
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <PreviewTitle>尺码预览</PreviewTitle>
+      {/* 尺码预览 - 合并设置功能 */}
+      <PreviewSection
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <PreviewHeader>
+          <PreviewTitle>尺码设置</PreviewTitle>
+          <SettingsControls>
+            <CompactControlGroup>
+              <Label>起始尺码</Label>
+              <Select
+                placeholder="选择起始尺码"
+                options={sizeOptions}
+                value={startSize}
+                onChange={(value) => updateSizeSettings({ startSize: value })}
+                error={errors.startSize}
+                size="small"
+              />
+            </CompactControlGroup>
+            <CompactControlGroup>
+              <Label>尺码数量</Label>
+              <Input
+                type="number"
+                placeholder="输入数量"
+                value={count}
+                onChange={(e) => updateSizeSettings({ count: parseInt(e.target.value) || 1 })}
+                min={1}
+                max={8}
+                error={errors.count}
+                size="small"
+              />
+            </CompactControlGroup>
+          </SettingsControls>
+        </PreviewHeader>
+        
+        {generatedSizes.length > 0 && (
           <SizePreview>
             {generatedSizes.map((size, index) => (
               <SizeTag
@@ -384,8 +419,8 @@ const SizeSettings = ({ appState, setAppState }) => {
               </SizeTag>
             ))}
           </SizePreview>
-        </PreviewSection>
-      )}
+        )}
+      </PreviewSection>
 
       {/* 类别起始值设置 */}
       {selectedCategories.length > 0 && (

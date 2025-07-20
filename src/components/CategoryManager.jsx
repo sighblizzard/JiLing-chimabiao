@@ -40,21 +40,27 @@ const Subtitle = styled.p`
 `;
 
 const CategoryGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px; /* 参考侧栏的间距 */
 `;
 
 const CategoryCard = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px; /* 参考侧栏的padding */
   background: ${props => props.theme.colors.background.primary};
   border: 1px solid ${props => props.theme.colors.border.light};
   border-radius: ${props => props.theme.borderRadius.lg};
-  padding: 20px;
   transition: all 0.2s ease-out;
+  user-select: none;
 
   &:hover {
     border-color: ${props => props.theme.colors.border.dark};
-    box-shadow: ${props => props.theme.shadows.md};
+    background: ${props => props.theme.colors.gray[50]};
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   ${props => props.$isCustom && `
@@ -63,31 +69,35 @@ const CategoryCard = styled(motion.div)`
 `;
 
 const CardHeader = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
+  flex: 1;
+  min-width: 0;
 `;
 
 const CategoryIcon = styled.div`
-  width: 32px;
-  height: 32px;
+  width: 28px;  /* 减小图标尺寸 */
+  height: 28px;
   border-radius: ${props => props.theme.borderRadius.md};
   background: ${props => {
     switch (props.$type) {
       case 'chest': return '#FF6B6B';
       case 'waist': return '#4ECDC4';
       case 'hip': return '#45B7D1';
+      case 'hem': return '#9C88FF';
       case 'shoulder': return '#96CEB4';
       case 'sleeve': return '#FECA57';
+      case 'shoulderSleeve': return '#FF8A65';
       case 'length': return '#FF9FF3';
+      case 'pantLength': return '#81C784';
+      case 'skirtLength': return '#F48FB1';
+      case 'backLength': return '#A1887F';
+      case 'frontLength': return '#BCAAA4';
       default: return props.theme.colors.gray[400];
     }
   }};
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 12px; /* 减小字体 */
   font-weight: 600;
   color: white;
   
@@ -100,45 +110,27 @@ const CategoryIcon = styled.div`
 `;
 
 const CardTitle = styled.h3`
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 15px; /* 参考侧栏字体大小 */
+  font-weight: 500;
   color: ${props => props.theme.colors.gray[800]};
-  margin: 0;
-  flex: 1;
+  margin: 0 0 2px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const CardContent = styled.div`
-  margin-bottom: 16px;
-`;
-
-const MetaRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  font-size: 14px;
-`;
-
-const MetaLabel = styled.span`
+  font-size: 13px; /* 参考侧栏meta字体大小 */
   color: ${props => props.theme.colors.gray[600]};
-`;
-
-const MetaValue = styled.span`
-  font-weight: 500;
-  color: ${props => props.theme.colors.gray[800]};
-`;
-
-const Description = styled.p`
-  font-size: 13px;
-  color: ${props => props.theme.colors.gray[500]};
-  margin: 12px 0 0 0;
-  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
 const CardActions = styled.div`
   display: flex;
-  gap: 8px;
-  justify-content: flex-end;
+  gap: 6px; /* 减小按钮间距 */
+  flex-shrink: 0;
 `;
 
 const EmptyState = styled.div`
@@ -182,33 +174,20 @@ const CategoryCardComponent = ({ category, onEdit, onDelete }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      whileHover={{ y: -2 }}
+      whileHover={{ y: -1 }}
     >
+      <CategoryIcon $type={category.type} $iconUrl={category.iconUrl}>
+        {getCategoryDisplay(category)}
+      </CategoryIcon>
+      
       <CardHeader>
-        <CategoryIcon $type={category.type} $iconUrl={category.iconUrl}>
-          {getCategoryDisplay(category)}
-        </CategoryIcon>
         <CardTitle>{category.name}</CardTitle>
+        <CardContent>
+          <span>{category.baseValue}cm</span>
+          <span>+{category.baseIncrement}cm</span>
+          <span>{category.isCustom ? '自定义' : '预设'}</span>
+        </CardContent>
       </CardHeader>
-
-      <CardContent>
-        <MetaRow>
-          <MetaLabel>基础数值</MetaLabel>
-          <MetaValue>{category.baseValue} cm</MetaValue>
-        </MetaRow>
-        <MetaRow>
-          <MetaLabel>递增数值</MetaLabel>
-          <MetaValue>+{category.baseIncrement} cm</MetaValue>
-        </MetaRow>
-        <MetaRow>
-          <MetaLabel>类型</MetaLabel>
-          <MetaValue>{category.isCustom ? '自定义' : '预设'}</MetaValue>
-        </MetaRow>
-        
-        {category.description && (
-          <Description>{category.description}</Description>
-        )}
-      </CardContent>
 
       <CardActions>
         {category.isCustom && (
@@ -266,8 +245,15 @@ const CategoryManager = ({
     if (lowerName.includes('胸') || lowerName.includes('chest')) return 'chest';
     if (lowerName.includes('腰') || lowerName.includes('waist')) return 'waist';
     if (lowerName.includes('臀') || lowerName.includes('hip')) return 'hip';
-    if (lowerName.includes('肩') || lowerName.includes('shoulder')) return 'shoulder';
-    if (lowerName.includes('袖') || lowerName.includes('sleeve')) return 'sleeve';
+    if (lowerName.includes('下摆') || lowerName.includes('hem')) return 'hem';
+    if (lowerName.includes('肩宽') || lowerName.includes('肩') || lowerName.includes('shoulder')) return 'shoulder';
+    if (lowerName.includes('袖长') || lowerName.includes('袖') || lowerName.includes('sleeve')) return 'sleeve';
+    if (lowerName.includes('肩袖长') || lowerName.includes('肩袖')) return 'shoulderSleeve';
+    if (lowerName.includes('衣长') || lowerName.includes('身长')) return 'length';
+    if (lowerName.includes('裤长') || lowerName.includes('pant')) return 'pantLength';
+    if (lowerName.includes('裙长') || lowerName.includes('skirt')) return 'skirtLength';
+    if (lowerName.includes('中后长') || lowerName.includes('后长')) return 'backLength';
+    if (lowerName.includes('中前长') || lowerName.includes('前长')) return 'frontLength';
     if (lowerName.includes('长') || lowerName.includes('length')) return 'length';
     return 'other';
   };

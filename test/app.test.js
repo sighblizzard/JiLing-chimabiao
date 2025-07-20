@@ -54,7 +54,7 @@ describe('数据管理服务测试', () => {
   });
 
   test('预设类别应该有效', () => {
-    expect(presetCategories).toHaveLength(6);
+    expect(presetCategories).toHaveLength(12);
     presetCategories.forEach(category => {
       expect(category).toHaveProperty('id');
       expect(category).toHaveProperty('name');
@@ -88,9 +88,11 @@ describe('尺码计算服务测试', () => {
     ];
     
     const data = calculateSizeData(settings, categories);
-    expect(data).toHaveProperty('sizes');
-    expect(data).toHaveProperty('tableData');
-    expect(data.sizes).toEqual(['S', 'M', 'L']);
+    expect(Array.isArray(data)).toBe(true);
+    expect(data).toHaveLength(2);
+    expect(data[0]).toHaveProperty('categoryName', '胸围');
+    expect(data[0]).toHaveProperty('values');
+    expect(data[0].values).toHaveLength(3);
   });
 });
 
@@ -138,7 +140,11 @@ describe('应用集成测试', () => {
 
     // 3. 计算尺码数据
     const sizeData = calculateSizeData(settings, [category]);
-    expect(sizeData.sizes).toEqual(['S', 'M', 'L', 'XL']);
+    expect(Array.isArray(sizeData)).toBe(true);
+    expect(sizeData).toHaveLength(1);
+    expect(sizeData[0].values).toHaveLength(4);
+    expect(sizeData[0].values[0].size).toBe('S');
+    expect(sizeData[0].values[3].size).toBe('XL');
 
     // 4. 生成图表配置
     const chart = await generateSizeChart([category], settings);
@@ -190,9 +196,4 @@ const runManualTests = () => {
 };
 
 // 导出测试函数
-export { runManualTests };
-
-// 如果直接运行此文件
-if (import.meta.url === `file://${process.argv[1]}`) {
-  runManualTests();
-}
+module.exports = { runManualTests };
