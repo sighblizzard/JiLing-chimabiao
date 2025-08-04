@@ -152,15 +152,15 @@ const App = () => {
 
   const handleMinimize = () => {
     // Electron 环境下的最小化
-    if (window.electron) {
-      window.electron.minimize();
+    if (window.electronAPI) {
+      window.electronAPI.window.minimize();
     }
   };
 
   const handleMaximize = () => {
     // Electron 环境下的最大化/还原
-    if (window.electron) {
-      window.electron.toggleMaximize();
+    if (window.electronAPI) {
+      window.electronAPI.window.toggleMaximize();
     }
   };
 

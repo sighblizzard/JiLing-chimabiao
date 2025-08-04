@@ -150,6 +150,9 @@ const windowAPI = {
   // 获取窗口状态
   isMaximized: () => ipcRenderer.invoke('window:isMaximized'),
   
+  // 检测是否为无边框窗口
+  isFrameless: () => ipcRenderer.invoke('window-is-frameless'),
+  
   // 设置窗口大小
   setSize: (width, height) => ipcRenderer.invoke('window:setSize', width, height),
   
