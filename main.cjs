@@ -12,10 +12,8 @@ const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
 
 // 检测开发环境
-const isDev = process.env.NODE_ENV === 'development' || 
-             process.defaultApp || 
-             /[\\/]electron-prebuilt[\\/]/.test(process.execPath) || 
-             /[\\/]electron[\\/]/.test(process.execPath);
+const isDev = process.env.NODE_ENV === 'development' && 
+             process.defaultApp;
 
 // 导入后端服务
 const IPCHandler = require('./src/services/backend/ipcHandler.cjs');
