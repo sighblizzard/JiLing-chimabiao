@@ -507,23 +507,36 @@ const generateUniqueFileName = async (basePath, baseName, extension) => {
 
   // 如果是 Electron 环境，使用 fs 检查文件是否存在
   if (window.electronAPI && window.electronAPI.fileExists) {
+    // 使用正确的路径分隔符
+    const pathSeparator = window.navigator.platform.indexOf('Win') !== -1 ? '\\' : '/';
+    
+    // 首先检查基础文件名
+    let fileName = `${baseName}.${extension}`;
+    let fullPath = `${basePath}${pathSeparator}${fileName}`;
+    
+    const initialCheck = await window.electronAPI.fileExists(fullPath);
+    if (!initialCheck.success || !initialCheck.exists) {
+      return fullPath;
+    }
+    
+    // 如果基础文件名已存在，开始递增
     let counter = 1;
-    let fileName = `${baseName}${counter}.${extension}`;
-    let fullPath = `${basePath}\\${fileName}`;
-
-    // 检查文件是否存在，如果存在就递增计数器
-    const checkResult = await window.electronAPI.fileExists(fullPath);
-    while (checkResult.success && checkResult.exists) {
-      counter++;
+    while (true) {
       fileName = `${baseName}${counter}.${extension}`;
-      fullPath = `${basePath}\\${fileName}`;
-      const nextCheckResult = await window.electronAPI.fileExists(fullPath);
-      if (!nextCheckResult.success || !nextCheckResult.exists) {
-        break;
+      fullPath = `${basePath}${pathSeparator}${fileName}`;
+      
+      const checkResult = await window.electronAPI.fileExists(fullPath);
+      if (!checkResult.success || !checkResult.exists) {
+        return fullPath;
+      }
+      
+      counter++;
+      
+      // 安全限制，避免无限循环
+      if (counter > 9999) {
+        throw new Error('无法生成唯一文件名：文件过多');
       }
     }
-
-    return fullPath;
   }
 
   // 浏览器环境，返回基础文件名
