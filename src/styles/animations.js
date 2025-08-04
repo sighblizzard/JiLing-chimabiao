@@ -10,25 +10,25 @@ export const transitions = {
 
 // 弹性动画配置
 export const springConfig = {
-  type: "spring",
+  type: 'spring',
   stiffness: 300,
-  damping: 30
+  damping: 30,
 };
 
 // 微交互动画
 export const microAnimations = {
   hover: {
     scale: 1.02,
-    transition: { type: "spring", stiffness: 400, damping: 25 }
+    transition: { type: 'spring', stiffness: 400, damping: 25 },
   },
   tap: {
     scale: 0.98,
-    transition: { type: "spring", stiffness: 400, damping: 25 }
+    transition: { type: 'spring', stiffness: 400, damping: 25 },
   },
   focus: {
     scale: 1.01,
-    transition: { type: "spring", stiffness: 400, damping: 25 }
-  }
+    transition: { type: 'spring', stiffness: 400, damping: 25 },
+  },
 };
 
 // 页面过渡动画
@@ -36,18 +36,18 @@ export const pageTransitions = {
   slideLeft: {
     initial: { x: -100, opacity: 0 },
     animate: { x: 0, opacity: 1 },
-    exit: { x: 100, opacity: 0 }
+    exit: { x: 100, opacity: 0 },
   },
   slideRight: {
     initial: { x: 100, opacity: 0 },
     animate: { x: 0, opacity: 1 },
-    exit: { x: -100, opacity: 0 }
+    exit: { x: -100, opacity: 0 },
   },
   fade: {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
-    exit: { opacity: 0 }
-  }
+    exit: { opacity: 0 },
+  },
 };
 
 // 列表项动画
@@ -58,11 +58,11 @@ export const listItemVariants = {
     y: 0,
     transition: {
       delay: index * 0.05,
-      type: "spring",
+      type: 'spring',
       stiffness: 300,
-      damping: 25
-    }
-  })
+      damping: 25,
+    },
+  }),
 };
 
 // 样式工具函数
@@ -75,7 +75,7 @@ export const createGlassEffect = (opacity = 0.8) => css`
 
 export const createHoverEffect = () => css`
   transition: ${transitions.normal};
-  
+
   &:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -97,5 +97,5 @@ export default {
   listItemVariants,
   createGlassEffect,
   createHoverEffect,
-  createFocusRing
+  createFocusRing,
 };

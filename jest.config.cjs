@@ -5,8 +5,15 @@ module.exports = {
   },
   moduleFileExtensions: ['js', 'jsx'],
   testMatch: [
-    '**/test/**/*.(js|jsx)',
-    '**/*.(test|spec).(js|jsx)'
+    '**/test/**/*.(test|spec).(js|jsx)',
+    '**/test/verify-*.js',
+    '**/test/test-*.js',
+    '**/test/format-test.js',
+    '**/test/app.test.js'
+  ],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/test/setupTests.js'
   ],
   collectCoverageFrom: [
     'src/**/*.{js,jsx}',

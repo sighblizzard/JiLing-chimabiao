@@ -9,7 +9,7 @@ const MainContentContainer = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: ${props => props.theme.colors.background.secondary};
+  background: ${(props) => props.theme.colors.background.secondary};
   overflow-x: hidden;
   overflow-y: auto;
   min-width: 0;
@@ -20,14 +20,14 @@ const TabBar = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 16px 24px;
-  background: ${props => props.theme.colors.background.primary};
-  border-bottom: 1px solid ${props => props.theme.colors.border.light};
+  background: ${(props) => props.theme.colors.background.primary};
+  border-bottom: 1px solid ${(props) => props.theme.colors.border.light};
 `;
 
 const TabTitle = styled.h2`
   font-size: 18px;
   font-weight: 600;
-  color: ${props => props.theme.colors.gray[800]};
+  color: ${(props) => props.theme.colors.gray[800]};
   margin: 0;
 `;
 
@@ -55,7 +55,7 @@ const EmptyState = styled.div`
   justify-content: center;
   height: 100%;
   text-align: center;
-  color: ${props => props.theme.colors.gray[500]};
+  color: ${(props) => props.theme.colors.gray[500]};
   gap: 16px;
 
   .icon {
@@ -66,7 +66,7 @@ const EmptyState = styled.div`
   .title {
     font-size: 20px;
     font-weight: 600;
-    color: ${props => props.theme.colors.gray[700]};
+    color: ${(props) => props.theme.colors.gray[700]};
   }
 
   .description {
@@ -85,12 +85,12 @@ const MainContent = ({ appState, setAppState }) => {
   // 标签页选项
   const tabOptions = [
     { label: '尺码设置', value: 'settings' },
-    { label: '预览导出', value: 'preview' }
+    { label: '预览导出', value: 'preview' },
   ];
 
   // 获取当前标签页标题
   const getCurrentTabTitle = () => {
-    const currentTab = tabOptions.find(tab => tab.value === activeTab);
+    const currentTab = tabOptions.find((tab) => tab.value === activeTab);
     return currentTab ? currentTab.label : '尺码表生成器';
   };
 
@@ -100,49 +100,41 @@ const MainContent = ({ appState, setAppState }) => {
       case 'settings':
         return (
           <TabContent
-            key="settings"
+            key='settings'
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <SizeSettings
-              appState={appState}
-              setAppState={setAppState}
-            />
+            <SizeSettings appState={appState} setAppState={setAppState} />
           </TabContent>
         );
 
       case 'preview':
         return (
           <TabContent
-            key="preview"
+            key='preview'
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <PreviewPanel
-              appState={appState}
-              setAppState={setAppState}
-            />
+            <PreviewPanel appState={appState} setAppState={setAppState} />
           </TabContent>
         );
 
       default:
         return (
           <TabContent
-            key="empty"
+            key='empty'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <EmptyState>
-              <div className="icon">📊</div>
-              <div className="title">选择一个标签页</div>
-              <div className="description">
-                请从上方选择要使用的功能模块
-              </div>
+              <div className='icon'>📊</div>
+              <div className='title'>选择一个标签页</div>
+              <div className='description'>请从上方选择要使用的功能模块</div>
             </EmptyState>
           </TabContent>
         );
@@ -153,19 +145,17 @@ const MainContent = ({ appState, setAppState }) => {
     <MainContentContainer>
       <TabBar>
         <TabTitle>{getCurrentTabTitle()}</TabTitle>
-        
+
         <SegmentedControl
           options={tabOptions}
           value={activeTab}
           onChange={setActiveTab}
-          size="medium"
+          size='medium'
         />
       </TabBar>
 
       <ContentArea>
-        <AnimatePresence mode="wait">
-          {renderTabContent()}
-        </AnimatePresence>
+        <AnimatePresence mode='wait'>{renderTabContent()}</AnimatePresence>
       </ContentArea>
     </MainContentContainer>
   );

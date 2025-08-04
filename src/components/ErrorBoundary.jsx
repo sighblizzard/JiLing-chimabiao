@@ -9,26 +9,28 @@ const ErrorContainer = styled.div`
   min-height: 400px;
   padding: 2rem;
   text-align: center;
-  background: ${props => props.theme?.colors?.background?.primary || '#f9fafb'};
+  background: ${(props) =>
+    props.theme?.colors?.background?.primary || '#f9fafb'};
   border-radius: 8px;
-  border: 2px dashed ${props => props.theme?.colors?.border?.light || '#e5e7eb'};
+  border: 2px dashed
+    ${(props) => props.theme?.colors?.border?.light || '#e5e7eb'};
 `;
 
 const ErrorTitle = styled.h2`
-  color: ${props => props.theme?.colors?.error || '#ef4444'};
+  color: ${(props) => props.theme?.colors?.error || '#ef4444'};
   margin-bottom: 1rem;
   font-size: 1.5rem;
 `;
 
 const ErrorMessage = styled.p`
-  color: ${props => props.theme?.colors?.gray?.[600] || '#6b7280'};
+  color: ${(props) => props.theme?.colors?.gray?.[600] || '#6b7280'};
   margin-bottom: 1.5rem;
   max-width: 500px;
   line-height: 1.6;
 `;
 
 const ErrorButton = styled.button`
-  background: ${props => props.theme?.colors?.primary || '#3b82f6'};
+  background: ${(props) => props.theme?.colors?.primary || '#3b82f6'};
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -38,14 +40,15 @@ const ErrorButton = styled.button`
   transition: background-color 0.2s;
 
   &:hover {
-    background: ${props => props.theme?.colors?.primaryHover || '#2563eb'};
+    background: ${(props) => props.theme?.colors?.primaryHover || '#2563eb'};
   }
 `;
 
 const ErrorDetails = styled.details`
   margin-top: 1rem;
   padding: 1rem;
-  background: ${props => props.theme?.colors?.background?.secondary || '#f3f4f6'};
+  background: ${(props) =>
+    props.theme?.colors?.background?.secondary || '#f3f4f6'};
   border-radius: 4px;
   max-width: 600px;
   text-align: left;
@@ -67,21 +70,21 @@ const ErrorDetails = styled.details`
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      hasError: false, 
-      error: null, 
-      errorInfo: null 
+    this.state = {
+      hasError: false,
+      error: null,
+      errorInfo: null,
     };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(_error) {
     return { hasError: true };
   }
 
   componentDidCatch(error, errorInfo) {
     this.setState({
       error,
-      errorInfo
+      errorInfo,
     });
 
     // 记录错误到控制台
@@ -93,16 +96,16 @@ class ErrorBoundary extends React.Component {
         error: error.toString(),
         stack: error.stack,
         componentStack: errorInfo.componentStack,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     }
   }
 
   handleReload = () => {
-    this.setState({ 
-      hasError: false, 
-      error: null, 
-      errorInfo: null 
+    this.setState({
+      hasError: false,
+      error: null,
+      errorInfo: null,
     });
   };
 
@@ -123,14 +126,10 @@ class ErrorBoundary extends React.Component {
             很抱歉，应用在运行过程中遇到了意外错误。
             您可以尝试重新加载组件或重启应用。
           </ErrorMessage>
-          
+
           <div style={{ display: 'flex', gap: '1rem' }}>
-            <ErrorButton onClick={this.handleReload}>
-              重新加载
-            </ErrorButton>
-            <ErrorButton onClick={this.handleRestart}>
-              重启应用
-            </ErrorButton>
+            <ErrorButton onClick={this.handleReload}>重新加载</ErrorButton>
+            <ErrorButton onClick={this.handleRestart}>重启应用</ErrorButton>
           </div>
 
           {process.env.NODE_ENV === 'development' && this.state.error && (
@@ -140,7 +139,8 @@ class ErrorBoundary extends React.Component {
                 <strong>错误信息:</strong> {this.state.error.toString()}
                 {this.state.error.stack && (
                   <>
-                    <br /><br />
+                    <br />
+                    <br />
                     <strong>错误堆栈:</strong>
                     <br />
                     {this.state.error.stack}
@@ -148,7 +148,8 @@ class ErrorBoundary extends React.Component {
                 )}
                 {this.state.errorInfo?.componentStack && (
                   <>
-                    <br /><br />
+                    <br />
+                    <br />
                     <strong>组件堆栈:</strong>
                     <br />
                     {this.state.errorInfo.componentStack}

@@ -11,12 +11,12 @@ export const highQualityBase = css`
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
   will-change: transform;
-  
+
   /* 反锯齿 */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  
+
   /* 子像素精度 */
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
@@ -24,8 +24,8 @@ export const highQualityBase = css`
 
 // 精细化边框
 export const precisionBorder = css`
-  border: 1px solid ${props => props.theme.colors.border.light};
-  
+  border: 1px solid ${(props) => props.theme.colors.border.light};
+
   @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
     border-width: 0.5px;
   }
@@ -34,42 +34,44 @@ export const precisionBorder = css`
 // 高质量按钮样式
 export const highQualityButton = css`
   ${highQualityBase}
-  
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: ${props => props.theme.spacing.sm} ${props => props.theme.spacing.md};
+  padding: ${(props) => props.theme.spacing.sm}
+    ${(props) => props.theme.spacing.md};
   border: none;
-  border-radius: ${props => props.theme.borderRadius.md};
-  font-family: ${props => props.theme.typography.fontFamily.sans.join(', ')};
-  font-weight: ${props => props.theme.typography.fontWeight.medium};
-  font-size: ${props => props.theme.typography.fontSize.sm};
-  line-height: ${props => props.theme.typography.lineHeight.normal};
+  border-radius: ${(props) => props.theme.borderRadius.md};
+  font-family: ${(props) => props.theme.typography.fontFamily.sans.join(', ')};
+  font-weight: ${(props) => props.theme.typography.fontWeight.medium};
+  font-size: ${(props) => props.theme.typography.fontSize.sm};
+  line-height: ${(props) => props.theme.typography.lineHeight.normal};
   cursor: pointer;
-  transition: all ${props => props.theme.rendering.duration.normal} ${props => props.theme.rendering.easing.ease};
-  
+  transition: all ${(props) => props.theme.rendering.duration.normal}
+    ${(props) => props.theme.rendering.easing.ease};
+
   /* 防止文本选择 */
   user-select: none;
   -webkit-user-select: none;
-  
+
   /* 触摸优化 */
   touch-action: manipulation;
-  
+
   &:hover {
     transform: translateY(-1px) translateZ(0);
-    box-shadow: ${props => props.theme.shadows.md};
+    box-shadow: ${(props) => props.theme.shadows.md};
   }
-  
+
   &:active {
     transform: translateY(0) translateZ(0);
-    transition-duration: ${props => props.theme.rendering.duration.fast};
+    transition-duration: ${(props) => props.theme.rendering.duration.fast};
   }
-  
+
   &:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
   }
-  
+
   /* 禁用状态 */
   &:disabled {
     opacity: 0.5;
@@ -84,28 +86,30 @@ export const highQualityInput = css`
   ${highQualityBase}
   ${precisionBorder}
   
-  padding: ${props => props.theme.spacing.sm} ${props => props.theme.spacing.md};
-  border-radius: ${props => props.theme.borderRadius.md};
-  font-family: ${props => props.theme.typography.fontFamily.sans.join(', ')};
-  font-size: ${props => props.theme.typography.fontSize.sm};
-  line-height: ${props => props.theme.typography.lineHeight.normal};
-  background: ${props => props.theme.colors.background.primary};
-  color: ${props => props.theme.colors.gray[700]};
-  transition: all ${props => props.theme.rendering.duration.normal} ${props => props.theme.rendering.easing.ease};
-  
+  padding: ${(props) => props.theme.spacing.sm} ${(props) =>
+    props.theme.spacing.md};
+  border-radius: ${(props) => props.theme.borderRadius.md};
+  font-family: ${(props) => props.theme.typography.fontFamily.sans.join(', ')};
+  font-size: ${(props) => props.theme.typography.fontSize.sm};
+  line-height: ${(props) => props.theme.typography.lineHeight.normal};
+  background: ${(props) => props.theme.colors.background.primary};
+  color: ${(props) => props.theme.colors.gray[700]};
+  transition: all ${(props) => props.theme.rendering.duration.normal}
+    ${(props) => props.theme.rendering.easing.ease};
+
   &::placeholder {
-    color: ${props => props.theme.colors.gray[400]};
+    color: ${(props) => props.theme.colors.gray[400]};
   }
-  
+
   &:focus {
-    border-color: ${props => props.theme.colors.primary};
+    border-color: ${(props) => props.theme.colors.primary};
     box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
     outline: none;
   }
-  
+
   &:disabled {
-    background: ${props => props.theme.colors.gray[50]};
-    color: ${props => props.theme.colors.gray[400]};
+    background: ${(props) => props.theme.colors.gray[50]};
+    color: ${(props) => props.theme.colors.gray[400]};
     cursor: not-allowed;
   }
 `;
@@ -113,15 +117,16 @@ export const highQualityInput = css`
 // 高质量卡片样式
 export const highQualityCard = css`
   ${highQualityBase}
-  
-  background: ${props => props.theme.colors.background.primary};
-  border-radius: ${props => props.theme.borderRadius.lg};
+
+  background: ${(props) => props.theme.colors.background.primary};
+  border-radius: ${(props) => props.theme.borderRadius.lg};
   border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: ${props => props.theme.shadows.sm};
-  transition: all ${props => props.theme.rendering.duration.slow} ${props => props.theme.rendering.easing.ease};
-  
+  box-shadow: ${(props) => props.theme.shadows.sm};
+  transition: all ${(props) => props.theme.rendering.duration.slow}
+    ${(props) => props.theme.rendering.easing.ease};
+
   &:hover {
-    box-shadow: ${props => props.theme.shadows.md};
+    box-shadow: ${(props) => props.theme.shadows.md};
     transform: translateY(-2px) translateZ(0);
   }
 `;
@@ -129,48 +134,49 @@ export const highQualityCard = css`
 // 高质量表格样式
 export const highQualityTable = css`
   ${highQualityBase}
-  
+
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-radius: ${props => props.theme.borderRadius.lg};
+  border-radius: ${(props) => props.theme.borderRadius.lg};
   overflow: hidden;
-  box-shadow: ${props => props.theme.shadows.sm};
-  background: ${props => props.theme.colors.background.primary};
-  
-  th, td {
-    padding: ${props => props.theme.spacing.md};
+  box-shadow: ${(props) => props.theme.shadows.sm};
+  background: ${(props) => props.theme.colors.background.primary};
+
+  th,
+  td {
+    padding: ${(props) => props.theme.spacing.md};
     text-align: left;
-    border-right: 1px solid ${props => props.theme.colors.border.light};
-    border-bottom: 1px solid ${props => props.theme.colors.border.light};
-    
+    border-right: 1px solid ${(props) => props.theme.colors.border.light};
+    border-bottom: 1px solid ${(props) => props.theme.colors.border.light};
+
     /* 优化表格文本渲染 */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    
+
     &:last-child {
       border-right: none;
     }
   }
-  
+
   th {
-    background: ${props => props.theme.colors.background.secondary};
-    font-weight: ${props => props.theme.typography.fontWeight.medium};
-    color: ${props => props.theme.colors.gray[700]};
-    font-size: ${props => props.theme.typography.fontSize.sm};
+    background: ${(props) => props.theme.colors.background.secondary};
+    font-weight: ${(props) => props.theme.typography.fontWeight.medium};
+    color: ${(props) => props.theme.colors.gray[700]};
+    font-size: ${(props) => props.theme.typography.fontSize.sm};
   }
-  
+
   td {
-    font-size: ${props => props.theme.typography.fontSize.sm};
-    color: ${props => props.theme.colors.gray[600]};
+    font-size: ${(props) => props.theme.typography.fontSize.sm};
+    color: ${(props) => props.theme.colors.gray[600]};
   }
-  
+
   tr:last-child td {
     border-bottom: none;
   }
-  
+
   tr:hover td {
-    background: ${props => props.theme.colors.background.secondary};
+    background: ${(props) => props.theme.colors.background.secondary};
   }
 `;
 
@@ -186,8 +192,9 @@ export const fadeInAnimation = css`
       transform: translateY(0);
     }
   }
-  
-  animation: fadeIn ${props => props.theme.rendering.duration.slow} ${props => props.theme.rendering.easing.easeOut};
+
+  animation: fadeIn ${(props) => props.theme.rendering.duration.slow}
+    ${(props) => props.theme.rendering.easing.easeOut};
 `;
 
 // 高DPI优化
@@ -206,30 +213,30 @@ export const sizeTableOptimization = css`
   
   /* 尺码表特定优化 */
   font-variant-numeric: tabular-nums;
-  letter-spacing: ${props => props.theme.typography.letterSpacing.tight};
-  
+  letter-spacing: ${(props) => props.theme.typography.letterSpacing.tight};
+
   th {
-    font-weight: ${props => props.theme.typography.fontWeight.medium};
+    font-weight: ${(props) => props.theme.typography.fontWeight.medium};
     text-transform: uppercase;
-    letter-spacing: ${props => props.theme.typography.letterSpacing.wide};
-    font-size: ${props => props.theme.typography.fontSize.xs};
+    letter-spacing: ${(props) => props.theme.typography.letterSpacing.wide};
+    font-size: ${(props) => props.theme.typography.fontSize.xs};
   }
-  
+
   td {
-    font-weight: ${props => props.theme.typography.fontWeight.normal};
+    font-weight: ${(props) => props.theme.typography.fontWeight.normal};
     font-variant-numeric: tabular-nums;
   }
-  
+
   /* 数字单元格优化 */
   .numeric-cell {
     text-align: center;
-    font-feature-settings: "tnum";
+    font-feature-settings: 'tnum';
     font-variant-numeric: tabular-nums;
   }
-  
+
   /* 尺码标识优化 */
   .size-label {
-    font-weight: ${props => props.theme.typography.fontWeight.medium};
+    font-weight: ${(props) => props.theme.typography.fontWeight.medium};
     text-align: center;
   }
 `;

@@ -18,10 +18,10 @@ const Overlay = styled(motion.div)`
 `;
 
 const ModalContainer = styled(motion.div)`
-  background: ${props => props.theme.colors.background.primary};
-  border-radius: ${props => props.theme.borderRadius.lg};
-  box-shadow: ${props => props.theme.shadows.xl};
-  max-width: ${props => props.$maxWidth || '500px'};
+  background: ${(props) => props.theme.colors.background.primary};
+  border-radius: ${(props) => props.theme.borderRadius.lg};
+  box-shadow: ${(props) => props.theme.shadows.xl};
+  max-width: ${(props) => props.$maxWidth || '500px'};
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
@@ -29,7 +29,7 @@ const ModalContainer = styled(motion.div)`
 
 const ModalHeader = styled.div`
   padding: 24px 24px 16px 24px;
-  border-bottom: 1px solid ${props => props.theme.colors.border.light};
+  border-bottom: 1px solid ${(props) => props.theme.colors.border.light};
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -38,7 +38,7 @@ const ModalHeader = styled.div`
 const ModalTitle = styled.h2`
   font-size: 20px;
   font-weight: 600;
-  color: ${props => props.theme.colors.gray[800]};
+  color: ${(props) => props.theme.colors.gray[800]};
   margin: 0;
 `;
 
@@ -47,23 +47,23 @@ const CloseButton = styled.button`
   height: 24px;
   border: none;
   background: none;
-  border-radius: ${props => props.theme.borderRadius.sm};
+  border-radius: ${(props) => props.theme.borderRadius.sm};
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: ${props => props.theme.colors.gray[400]};
+  color: ${(props) => props.theme.colors.gray[400]};
   font-size: 16px;
   transition: all 0.2s ease-out;
 
   &:hover {
-    background: ${props => props.theme.colors.gray[100]};
-    color: ${props => props.theme.colors.gray[600]};
+    background: ${(props) => props.theme.colors.gray[100]};
+    color: ${(props) => props.theme.colors.gray[600]};
   }
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 2px ${props => props.theme.colors.primary}33;
+    box-shadow: 0 0 0 2px ${(props) => props.theme.colors.primary}33;
   }
 `;
 
@@ -74,18 +74,20 @@ const ModalContent = styled.div`
 /**
  * 模态框组件
  */
-const Modal = ({ 
-  isOpen, 
-  onClose, 
-  title, 
-  children, 
+const Modal = ({
+  isOpen,
+  onClose,
+  title,
+  children,
   maxWidth,
   closeOnOverlayClick = true,
-  closeOnEsc = true
+  closeOnEsc = true,
 }) => {
   // 处理 ESC 键关闭
   useEffect(() => {
-    if (!closeOnEsc || !isOpen) return;
+    if (!closeOnEsc || !isOpen) {
+      return;
+    }
 
     const handleEscKey = (event) => {
       if (event.key === 'Escape') {
@@ -119,33 +121,33 @@ const Modal = ({
   const overlayVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
-    exit: { opacity: 0 }
+    exit: { opacity: 0 },
   };
 
   const modalVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       scale: 0.8,
-      y: 20
+      y: 20,
     },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       scale: 1,
       y: 0,
       transition: {
-        type: "spring",
+        type: 'spring',
         damping: 20,
-        stiffness: 300
-      }
+        stiffness: 300,
+      },
     },
-    exit: { 
-      opacity: 0, 
+    exit: {
+      opacity: 0,
       scale: 0.8,
       y: 20,
       transition: {
-        duration: 0.2
-      }
-    }
+        duration: 0.2,
+      },
+    },
   };
 
   return (
@@ -153,30 +155,26 @@ const Modal = ({
       {isOpen && (
         <Overlay
           variants={overlayVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
+          initial='hidden'
+          animate='visible'
+          exit='exit'
           onClick={handleOverlayClick}
         >
           <ModalContainer
             $maxWidth={maxWidth}
             variants={modalVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
+            initial='hidden'
+            animate='visible'
+            exit='exit'
           >
             {title && (
               <ModalHeader>
                 <ModalTitle>{title}</ModalTitle>
-                <CloseButton onClick={onClose}>
-                  ✕
-                </CloseButton>
+                <CloseButton onClick={onClose}>✕</CloseButton>
               </ModalHeader>
             )}
-            
-            <ModalContent>
-              {children}
-            </ModalContent>
+
+            <ModalContent>{children}</ModalContent>
           </ModalContainer>
         </Overlay>
       )}

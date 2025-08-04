@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
  */
 export const useFramelessDetection = () => {
   const [isFrameless, setIsFrameless] = useState(false);
-  
+
   useEffect(() => {
     const checkFrameless = async () => {
       try {
@@ -19,10 +19,10 @@ export const useFramelessDetection = () => {
         setIsFrameless(false);
       }
     };
-    
+
     checkFrameless();
   }, []);
-  
+
   return isFrameless;
 };
 

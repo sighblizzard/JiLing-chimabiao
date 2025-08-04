@@ -75,17 +75,14 @@
 
 /* 全局字体变量 */
 :root {
-  --font-family-primary: 'MiSans', 
-    /* 系统中文字体备用 */
-    'Microsoft YaHei', '微软雅黑',
-    'PingFang SC', '苹方',
-    /* 通用备用字体 */
-    'Helvetica Neue', Arial, sans-serif;
-    
-  --font-family-ui: 'MiSans', 
-    'Microsoft YaHei UI', 'Microsoft YaHei',
-    'PingFang SC', 'Hiragino Sans GB',
-    'Segoe UI', 'Roboto', sans-serif;
+  --font-family-primary:
+    'MiSans', /* 系统中文字体备用 */ 'Microsoft YaHei', '微软雅黑',
+    'PingFang SC', '苹方', /* 通用备用字体 */ 'Helvetica Neue', Arial,
+    sans-serif;
+
+  --font-family-ui:
+    'MiSans', 'Microsoft YaHei UI', 'Microsoft YaHei', 'PingFang SC',
+    'Hiragino Sans GB', 'Segoe UI', 'Roboto', sans-serif;
 }
 
 /* 字重工具类 */

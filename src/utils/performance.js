@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'development') {
         }
       }
     });
-    
+
     observer.observe({ entryTypes: ['measure'] });
   }
 }
@@ -25,26 +25,26 @@ export const performanceUtils = {
       window.performance.mark(name);
     }
   },
-  
+
   measure: (name, startMark, endMark) => {
     if (typeof window !== 'undefined' && window.performance) {
       window.performance.measure(name, startMark, endMark);
     }
   },
-  
+
   // 组件渲染性能监控
   measureRender: (componentName, renderFn) => {
     const startMark = `${componentName}-render-start`;
     const endMark = `${componentName}-render-end`;
     const measureName = `${componentName}-render`;
-    
+
     performanceUtils.mark(startMark);
     const result = renderFn();
     performanceUtils.mark(endMark);
     performanceUtils.measure(measureName, startMark, endMark);
-    
+
     return result;
-  }
+  },
 };
 
 // 内存使用监控
@@ -55,8 +55,8 @@ export const memoryUtils = {
       console.log('Memory Usage:', {
         used: `${Math.round(memory.usedJSHeapSize / 1024 / 1024)} MB`,
         total: `${Math.round(memory.totalJSHeapSize / 1024 / 1024)} MB`,
-        limit: `${Math.round(memory.jsHeapSizeLimit / 1024 / 1024)} MB`
+        limit: `${Math.round(memory.jsHeapSizeLimit / 1024 / 1024)} MB`,
       });
     }
-  }
+  },
 };

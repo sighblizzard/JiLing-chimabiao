@@ -10,12 +10,12 @@ const ToolbarContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   height: 52px;
-  background: ${props => props.theme.colors.background.primary};
-  border-bottom: 1px solid ${props => props.theme.colors.border.light};
+  background: ${(props) => props.theme.colors.background.primary};
+  border-bottom: 1px solid ${(props) => props.theme.colors.border.light};
   padding: 0 16px;
   gap: 16px;
-  -webkit-app-region: drag;  /* 允许拖拽整个工具栏 */
-  
+  -webkit-app-region: drag; /* 允许拖拽整个工具栏 */
+
   &:not([data-no-drag]) {
     -webkit-app-region: drag;
   }
@@ -25,7 +25,7 @@ const ToolbarSection = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
-  -webkit-app-region: no-drag;  /* 按钮和控件区域禁止拖拽 */
+  -webkit-app-region: no-drag; /* 按钮和控件区域禁止拖拽 */
 `;
 
 const ModeSelector = styled.div`
@@ -37,7 +37,7 @@ const ModeSelector = styled.div`
 const ModeLabel = styled.span`
   font-size: 13px;
   font-weight: 500;
-  color: ${props => props.theme.colors.gray[600]};
+  color: ${(props) => props.theme.colors.gray[600]};
   white-space: nowrap;
 `;
 
@@ -52,11 +52,11 @@ const StatusIndicator = styled(motion.div)`
   align-items: center;
   gap: 6px;
   padding: 4px 8px;
-  border-radius: ${props => props.theme.borderRadius.sm};
+  border-radius: ${(props) => props.theme.borderRadius.sm};
   font-size: 12px;
   font-weight: 500;
 
-  ${props => {
+  ${(props) => {
     switch (props.$status) {
       case 'ready':
         return `
@@ -87,8 +87,10 @@ const StatusDot = styled.div`
   height: 6px;
   border-radius: 50%;
   background: currentColor;
-  
-  ${props => props.$pulsing && `
+
+  ${(props) =>
+    props.$pulsing &&
+    `
     animation: pulse 1.5s ease-in-out infinite;
     
     @keyframes pulse {
@@ -114,14 +116,14 @@ const Toolbar = ({
   // 模式选项
   const modeOptions = [
     { label: '普通', value: 'normal' },
-    { label: '毛衣', value: 'sweater' }
+    { label: '毛衣', value: 'sweater' },
   ];
 
   // 处理模式切换
   const handleModeChange = (newMode) => {
-    setAppState(prev => ({
+    setAppState((prev) => ({
       ...prev,
-      mode: newMode
+      mode: newMode,
     }));
   };
 
@@ -155,31 +157,29 @@ const Toolbar = ({
     if (event.target.tagName === 'BUTTON' || event.target.closest('button')) {
       return;
     }
-    
+
     if (window.electronAPI?.window?.toggleMaximize) {
       window.electronAPI.window.toggleMaximize();
     }
   };
 
   return (
-    <ToolbarContainer 
-      className={className} 
+    <ToolbarContainer
+      className={className}
       onDoubleClick={handleDoubleClick}
       {...props}
     >
       <ToolbarSection>
-        <WindowControlsComponent />  {/* 窗口控制按钮 */}
-        
+        <WindowControlsComponent /> {/* 窗口控制按钮 */}
         <ModeSelector>
           <ModeLabel>模式:</ModeLabel>
           <SegmentedControl
             options={modeOptions}
             value={mode}
             onChange={handleModeChange}
-            size="small"
+            size='small'
           />
         </ModeSelector>
-
         <StatusIndicator
           $status={status}
           initial={{ opacity: 0, x: -10 }}
@@ -194,13 +194,12 @@ const Toolbar = ({
       <ToolbarSection>
         {/* 右侧操作按钮 */}
         <Button
-          variant="ghost"
-          size="small"
+          variant='ghost'
+          size='small'
           onClick={onSettings}
-          icon="⚙️"
-          title="设置"
-        >
-        </Button>
+          icon='⚙️'
+          title='设置'
+        ></Button>
       </ToolbarSection>
     </ToolbarContainer>
   );

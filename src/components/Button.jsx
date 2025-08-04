@@ -8,24 +8,30 @@ const StyledButton = styled(motion.button)`
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: ${props => {
+  padding: ${(props) => {
     switch (props.$size) {
-      case 'small': return '6px 12px';
-      case 'large': return '12px 24px';
-      default: return '8px 16px';
+      case 'small':
+        return '6px 12px';
+      case 'large':
+        return '12px 24px';
+      default:
+        return '8px 16px';
     }
   }};
-  font-size: ${props => {
+  font-size: ${(props) => {
     switch (props.$size) {
-      case 'small': return '12px';
-      case 'large': return '16px';
-      default: return '14px';
+      case 'small':
+        return '12px';
+      case 'large':
+        return '16px';
+      default:
+        return '14px';
     }
   }};
   font-weight: 500;
-  font-family: ${props => props.theme.typography.fontFamily.sans.join(', ')};
+  font-family: ${(props) => props.theme.typography.fontFamily.sans.join(', ')};
   border: none;
-  border-radius: ${props => props.theme.borderRadius.md};
+  border-radius: ${(props) => props.theme.borderRadius.md};
   cursor: pointer;
   transition: all 0.2s ease-out;
   user-select: none;
@@ -34,7 +40,7 @@ const StyledButton = styled(motion.button)`
   overflow: hidden;
 
   /* 变体样式 */
-  ${props => {
+  ${(props) => {
     switch (props.$variant) {
       case 'primary':
         return `
@@ -127,7 +133,7 @@ const StyledButton = styled(motion.button)`
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    
+
     &:hover {
       transform: none;
       box-shadow: none;
@@ -137,11 +143,13 @@ const StyledButton = styled(motion.button)`
   /* 聚焦样式 */
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 3px ${props => props.theme.colors.primary}33;
+    box-shadow: 0 0 0 3px ${(props) => props.theme.colors.primary}33;
   }
 
   /* 加载状态 */
-  ${props => props.$loading && `
+  ${(props) =>
+    props.$loading &&
+    `
     pointer-events: none;
     opacity: 0.7;
   `}
@@ -166,60 +174,61 @@ const IconWrapper = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: ${props => props.$size === 'small' ? '14px' : '16px'};
+  font-size: ${(props) => (props.$size === 'small' ? '14px' : '16px')};
 `;
 
 /**
  * macOS 风格按钮组件
  */
-const Button = React.forwardRef(({
-  children,
-  variant = 'default',
-  size = 'medium',
-  loading = false,
-  disabled = false,
-  icon,
-  iconPosition = 'left',
-  onClick,
-  className,
-  ...props
-}, ref) => {
-  const handleClick = (e) => {
-    if (loading || disabled) {
-      e.preventDefault();
-      return;
-    }
-    onClick?.(e);
-  };
+const Button = React.forwardRef(
+  (
+    {
+      children,
+      variant = 'default',
+      size = 'medium',
+      loading = false,
+      disabled = false,
+      icon,
+      iconPosition = 'left',
+      onClick,
+      className,
+      ...props
+    },
+    ref
+  ) => {
+    const handleClick = (e) => {
+      if (loading || disabled) {
+        e.preventDefault();
+        return;
+      }
+      onClick?.(e);
+    };
 
-  const iconElement = icon && (
-    <IconWrapper $size={size}>
-      {icon}
-    </IconWrapper>
-  );
+    const iconElement = icon && <IconWrapper $size={size}>{icon}</IconWrapper>;
 
-  const loadingElement = loading && <LoadingSpinner />;
+    const loadingElement = loading && <LoadingSpinner />;
 
-  return (
-    <StyledButton
-      ref={ref}
-      $variant={variant}
-      $size={size}
-      $loading={loading}
-      disabled={disabled}
-      onClick={handleClick}
-      className={className}
-      whileHover={!disabled && !loading ? microAnimations.hover : {}}
-      whileTap={!disabled && !loading ? microAnimations.tap : {}}
-      {...props}
-    >
-      {loading && loadingElement}
-      {!loading && iconPosition === 'left' && iconElement}
-      {children}
-      {!loading && iconPosition === 'right' && iconElement}
-    </StyledButton>
-  );
-});
+    return (
+      <StyledButton
+        ref={ref}
+        $variant={variant}
+        $size={size}
+        $loading={loading}
+        disabled={disabled}
+        onClick={handleClick}
+        className={className}
+        whileHover={!disabled && !loading ? microAnimations.hover : {}}
+        whileTap={!disabled && !loading ? microAnimations.tap : {}}
+        {...props}
+      >
+        {loading && loadingElement}
+        {!loading && iconPosition === 'left' && iconElement}
+        {children}
+        {!loading && iconPosition === 'right' && iconElement}
+      </StyledButton>
+    );
+  }
+);
 
 Button.displayName = 'Button';
 

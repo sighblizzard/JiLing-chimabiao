@@ -16,8 +16,8 @@ const CANVAS_CONFIG = {
 // 单元格配置
 const CELL_CONFIG = {
   aspectRatio: 10 / 6, // 宽高比 10:6
-  minWidth: 40,        // 进一步降低最小宽度要求
-  minHeight: 24,       // 进一步降低最小高度要求
+  minWidth: 40, // 进一步降低最小宽度要求
+  minHeight: 24, // 进一步降低最小高度要求
   borderWidth: 1,
   borderColor: '#000000', // 改为黑色边框，更符合标准尺码表
 };
@@ -51,7 +51,7 @@ const STYLES = {
     fontSize: 20,
     fontWeight: '400',
     textAlign: 'center',
-  }
+  },
 };
 
 /**
@@ -63,12 +63,18 @@ const STYLES = {
  * @param {number} baseHeight - 基础单元格高度（用于计算比例）
  * @returns {number} 动态调整后的字体大小
  */
-const calculateDynamicFontSize = (cellWidth, cellHeight, baseFontSize, baseWidth = 120, baseHeight = 72) => {
+const calculateDynamicFontSize = (
+  cellWidth,
+  cellHeight,
+  baseFontSize,
+  baseWidth = 120,
+  baseHeight = 72
+) => {
   // 计算宽高比例的平均值
   const widthRatio = cellWidth / baseWidth;
   const heightRatio = cellHeight / baseHeight;
   const avgRatio = (widthRatio + heightRatio) / 2;
-  
+
   // 应用比例缩放，但限制最小和最大值
   const scaledSize = baseFontSize * avgRatio;
   // 对于很小的基础字号（如温馨提示），允许更小的最小值
@@ -86,15 +92,21 @@ const calculateDynamicFontSize = (cellWidth, cellHeight, baseFontSize, baseWidth
 const getDynamicStyles = (cellWidth, cellHeight, cols = 5) => {
   // 根据列数计算温馨提示基础字号
   const getFooterBaseFontSize = (columnCount) => {
-    if (columnCount === 2) return 9; // 当类别为1时，表格是2列（尺码列 + 1个类别列）
-    if (columnCount === 3) return 13; // 当类别为2时，表格是3列（尺码列 + 2个类别列）
-    if (columnCount === 4) return 17; // 当类别为3时，表格是4列（尺码列 + 3个类别列）
+    if (columnCount === 2) {
+      return 9;
+    } // 当类别为1时，表格是2列（尺码列 + 1个类别列）
+    if (columnCount === 3) {
+      return 13;
+    } // 当类别为2时，表格是3列（尺码列 + 2个类别列）
+    if (columnCount === 4) {
+      return 17;
+    } // 当类别为3时，表格是4列（尺码列 + 3个类别列）
     // 可以根据需要添加更多列数的字号设置
     return 20; // 默认字号
   };
-  
+
   const footerBaseFontSize = getFooterBaseFontSize(cols);
-  
+
   return {
     header: {
       backgroundColor: '#000000',
@@ -120,10 +132,12 @@ const getDynamicStyles = (cellWidth, cellHeight, cols = 5) => {
     footer: {
       backgroundColor: '#f2f2f2',
       textColor: '#000000',
-      fontSize: Math.round(calculateDynamicFontSize(cellWidth, cellHeight, footerBaseFontSize)),
+      fontSize: Math.round(
+        calculateDynamicFontSize(cellWidth, cellHeight, footerBaseFontSize)
+      ),
       fontWeight: '400',
       textAlign: 'center',
-    }
+    },
   };
 };
 
@@ -133,34 +147,41 @@ const getDynamicStyles = (cellWidth, cellHeight, cols = 5) => {
  * @returns {Object} 表格布局信息
  */
 export const calculateTableLayout = (data) => {
-  if (!data || data.length === 0) return null;
+  if (!data || data.length === 0) {
+    return null;
+  }
 
   const rows = data.length + 2; // 数据行 + 表头 + 温馨提示
   const cols = Object.keys(data[0]).length; // 列数
-  
+
   // 计算可用空间（留出边距）
-  const availableWidth = CANVAS_CONFIG.width - (CANVAS_CONFIG.padding * 2);
-  const availableHeight = CANVAS_CONFIG.height - (CANVAS_CONFIG.padding * 2);
-  
+  const availableWidth = CANVAS_CONFIG.width - CANVAS_CONFIG.padding * 2;
+  const availableHeight = CANVAS_CONFIG.height - CANVAS_CONFIG.padding * 2;
+
   // 计算单元格尺寸以铺满可用空间
   let cellWidth, cellHeight;
-  
+
   // 按宽度优先计算
   const widthBasedCellWidth = availableWidth / cols;
   const widthBasedCellHeight = widthBasedCellWidth / CELL_CONFIG.aspectRatio;
   const widthBasedTableHeight = widthBasedCellHeight * rows;
-  
+
   // 按高度优先计算
   const heightBasedCellHeight = availableHeight / rows;
   const heightBasedCellWidth = heightBasedCellHeight * CELL_CONFIG.aspectRatio;
   const heightBasedTableWidth = heightBasedCellWidth * cols;
-  
+
   // 优化：选择能最大化利用空间的方案
-  if (widthBasedTableHeight <= availableHeight && heightBasedTableWidth <= availableWidth) {
+  if (
+    widthBasedTableHeight <= availableHeight &&
+    heightBasedTableWidth <= availableWidth
+  ) {
     // 两种方案都可行，选择占用空间更大的方案
-    const widthBasedArea = widthBasedCellWidth * cols * widthBasedCellHeight * rows;
-    const heightBasedArea = heightBasedCellWidth * cols * heightBasedCellHeight * rows;
-    
+    const widthBasedArea =
+      widthBasedCellWidth * cols * widthBasedCellHeight * rows;
+    const heightBasedArea =
+      heightBasedCellWidth * cols * heightBasedCellHeight * rows;
+
     if (widthBasedArea >= heightBasedArea) {
       cellWidth = widthBasedCellWidth;
       cellHeight = widthBasedCellHeight;
@@ -181,33 +202,33 @@ export const calculateTableLayout = (data) => {
     cellWidth = Math.min(widthBasedCellWidth, heightBasedCellWidth);
     cellHeight = cellWidth / CELL_CONFIG.aspectRatio;
   }
-  
+
   // 放宽最小尺寸限制，但确保基本可读性
   cellWidth = Math.max(cellWidth, CELL_CONFIG.minWidth);
   cellHeight = Math.max(cellHeight, CELL_CONFIG.minHeight);
-  
+
   // 如果应用最小尺寸后仍有空间，尝试放大以更好利用空间
   const finalTableWidth = cellWidth * cols;
   const finalTableHeight = cellHeight * rows;
-  
+
   if (finalTableWidth < availableWidth && finalTableHeight < availableHeight) {
     // 还有剩余空间，尝试放大
     const scaleX = availableWidth / finalTableWidth;
     const scaleY = availableHeight / finalTableHeight;
     const scale = Math.min(scaleX, scaleY) * 0.95; // 留5%余量
-    
+
     if (scale > 1) {
       cellWidth *= scale;
       cellHeight *= scale;
     }
-  }  // 重新计算表格总尺寸
+  } // 重新计算表格总尺寸
   const tableWidth = cellWidth * cols;
   const tableHeight = cellHeight * rows;
-  
+
   // 计算居中位置
   const startX = (CANVAS_CONFIG.width - tableWidth) / 2;
   const startY = (CANVAS_CONFIG.height - tableHeight) / 2;
-  
+
   return {
     cellWidth,
     cellHeight,
@@ -216,37 +237,46 @@ export const calculateTableLayout = (data) => {
     startX,
     startY,
     rows,
-    cols
+    cols,
   };
 };
 
 /**
  * 绘制表格边框
- * @param {CanvasRenderingContext2D} ctx 
- * @param {Object} layout 
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {Object} layout
  */
 const drawTableBorder = (ctx, layout) => {
-  const { startX, startY, tableWidth, tableHeight, cellWidth, cellHeight, rows, cols } = layout;
-  
+  const {
+    startX,
+    startY,
+    tableWidth,
+    tableHeight,
+    cellWidth,
+    cellHeight,
+    rows,
+    cols,
+  } = layout;
+
   ctx.strokeStyle = CELL_CONFIG.borderColor;
   ctx.lineWidth = CELL_CONFIG.borderWidth;
-  
+
   // 绘制外边框
   ctx.strokeRect(startX, startY, tableWidth, tableHeight);
-  
+
   // 绘制垂直线（不延伸到最后一行温馨提示行）
   for (let i = 1; i < cols; i++) {
-    const x = startX + (cellWidth * i);
-    const stopY = startY + ((rows - 1) * cellHeight); // 停止在倒数第二行的底部
+    const x = startX + cellWidth * i;
+    const stopY = startY + (rows - 1) * cellHeight; // 停止在倒数第二行的底部
     ctx.beginPath();
     ctx.moveTo(x, startY);
     ctx.lineTo(x, stopY);
     ctx.stroke();
   }
-  
+
   // 绘制水平线
   for (let i = 1; i < rows; i++) {
-    const y = startY + (cellHeight * i);
+    const y = startY + cellHeight * i;
     ctx.beginPath();
     ctx.moveTo(startX, y);
     ctx.lineTo(startX + tableWidth, y);
@@ -256,18 +286,18 @@ const drawTableBorder = (ctx, layout) => {
 
 /**
  * 绘制单元格背景
- * @param {CanvasRenderingContext2D} ctx 
- * @param {Object} layout 
- * @param {number} row 
- * @param {number} col 
- * @param {Object} style 
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {Object} layout
+ * @param {number} row
+ * @param {number} col
+ * @param {Object} style
  */
 const drawCellBackground = (ctx, layout, row, col, style) => {
   const { startX, startY, cellWidth, cellHeight } = layout;
-  
-  const x = startX + (col * cellWidth);
-  const y = startY + (row * cellHeight);
-  
+
+  const x = startX + col * cellWidth;
+  const y = startY + row * cellHeight;
+
   // 绘制背景
   ctx.fillStyle = style.backgroundColor;
   ctx.fillRect(x, y, cellWidth, cellHeight);
@@ -275,39 +305,39 @@ const drawCellBackground = (ctx, layout, row, col, style) => {
 
 /**
  * 绘制单元格文字
- * @param {CanvasRenderingContext2D} ctx 
- * @param {Object} layout 
- * @param {number} row 
- * @param {number} col 
- * @param {string} text 
- * @param {Object} style 
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {Object} layout
+ * @param {number} row
+ * @param {number} col
+ * @param {string} text
+ * @param {Object} style
  */
 const drawCellText = (ctx, layout, row, col, text, style) => {
   const { startX, startY, cellWidth, cellHeight } = layout;
-  
-  const x = startX + (col * cellWidth);
-  const y = startY + (row * cellHeight);
-  
+
+  const x = startX + col * cellWidth;
+  const y = startY + row * cellHeight;
+
   // 绘制文字
   ctx.fillStyle = style.textColor;
   ctx.font = `${style.fontWeight} ${style.fontSize}px 'MiSans', 'Microsoft YaHei', '微软雅黑', sans-serif`;
   ctx.textAlign = style.textAlign;
   ctx.textBaseline = 'middle';
-  
+
   const textX = x + cellWidth / 2;
   const textY = y + cellHeight / 2;
-  
+
   ctx.fillText(text, textX, textY);
 };
 
 /**
  * 绘制单元格（保持向后兼容，但建议分别调用背景和文字方法）
- * @param {CanvasRenderingContext2D} ctx 
- * @param {Object} layout 
- * @param {number} row 
- * @param {number} col 
- * @param {string} text 
- * @param {Object} style 
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {Object} layout
+ * @param {number} row
+ * @param {number} col
+ * @param {string} text
+ * @param {Object} style
  */
 const drawCell = (ctx, layout, row, col, text, style) => {
   drawCellBackground(ctx, layout, row, col, style);
@@ -316,14 +346,14 @@ const drawCell = (ctx, layout, row, col, text, style) => {
 
 /**
  * 绘制温馨提示行背景（合并整行）
- * @param {CanvasRenderingContext2D} ctx 
- * @param {Object} layout 
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {Object} layout
  */
 const drawTipRowBackground = (ctx, layout) => {
   const { startX, startY, tableWidth, cellHeight, rows } = layout;
-  
-  const y = startY + ((rows - 1) * cellHeight); // 最后一行
-  
+
+  const y = startY + (rows - 1) * cellHeight; // 最后一行
+
   // 绘制背景
   ctx.fillStyle = STYLES.footer.backgroundColor;
   ctx.fillRect(startX, y, tableWidth, cellHeight);
@@ -331,32 +361,32 @@ const drawTipRowBackground = (ctx, layout) => {
 
 /**
  * 绘制温馨提示行文字（合并整行）
- * @param {CanvasRenderingContext2D} ctx 
- * @param {Object} layout 
- * @param {string} tipText 
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {Object} layout
+ * @param {string} tipText
  */
 const drawTipRowText = (ctx, layout, tipText) => {
   const { startX, startY, tableWidth, cellHeight, rows } = layout;
-  
-  const y = startY + ((rows - 1) * cellHeight); // 最后一行
-  
+
+  const y = startY + (rows - 1) * cellHeight; // 最后一行
+
   // 绘制文字
   ctx.fillStyle = STYLES.footer.textColor;
   ctx.font = `${STYLES.footer.fontWeight} ${STYLES.footer.fontSize}px 'MiSans', 'Microsoft YaHei', '微软雅黑', sans-serif`;
   ctx.textAlign = STYLES.footer.textAlign;
   ctx.textBaseline = 'middle';
-  
+
   const textX = startX + tableWidth / 2;
   const textY = y + cellHeight / 2;
-  
+
   ctx.fillText(tipText, textX, textY);
 };
 
 /**
  * 绘制温馨提示行（保持向后兼容）
- * @param {CanvasRenderingContext2D} ctx 
- * @param {Object} layout 
- * @param {string} tipText 
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {Object} layout
+ * @param {string} tipText
  */
 const drawTipRow = (ctx, layout, tipText) => {
   drawTipRowBackground(ctx, layout);
@@ -369,22 +399,25 @@ const drawTipRow = (ctx, layout, tipText) => {
  * @param {string} tipText - 温馨提示文字
  * @returns {string} 图片的 base64 数据
  */
-export const exportSizeTableToImage = (data, tipText = "温馨提示:由于手工测量会存在1-3cm误差，属于正常范围") => {
+export const exportSizeTableToImage = (
+  data,
+  tipText = '温馨提示:由于手工测量会存在1-3cm误差，属于正常范围'
+) => {
   // 创建高分辨率画布
   const canvas = document.createElement('canvas');
   const scale = CANVAS_CONFIG.superResolutionScale;
   canvas.width = CANVAS_CONFIG.width * scale;
   canvas.height = CANVAS_CONFIG.height * scale;
   const ctx = canvas.getContext('2d');
-  
+
   // 设置高DPI渲染
   ctx.scale(scale, scale);
-  
+
   // 启用最高质量渲染设置
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
   ctx.textRenderingOptimization = 'optimizeQuality';
-  
+
   // 额外的高质量渲染设置
   if (ctx.textRenderingOptimization !== undefined) {
     ctx.textRenderingOptimization = 'optimizeQuality';
@@ -392,25 +425,31 @@ export const exportSizeTableToImage = (data, tipText = "温馨提示:由于手�
   if (ctx.textDrawingMode !== undefined) {
     ctx.textDrawingMode = 'glyph';
   }
-  
+
   // 绘制白色背景
   ctx.fillStyle = CANVAS_CONFIG.backgroundColor;
   ctx.fillRect(0, 0, CANVAS_CONFIG.width, CANVAS_CONFIG.height);
-  
+
   // 计算布局
   const layout = calculateTableLayout(data);
-  if (!layout) return null;
-  
+  if (!layout) {
+    return null;
+  }
+
   // 获取动态样式配置，传递列数参数
   const headers = Object.keys(data[0]);
-  const dynamicStyles = getDynamicStyles(layout.cellWidth, layout.cellHeight, headers.length);
-  
+  const dynamicStyles = getDynamicStyles(
+    layout.cellWidth,
+    layout.cellHeight,
+    headers.length
+  );
+
   // 第一步：绘制所有单元格背景
   // 表头背景
   headers.forEach((header, col) => {
     drawCellBackground(ctx, layout, 0, col, dynamicStyles.header);
   });
-  
+
   // 数据行背景
   data.forEach((row, rowIndex) => {
     headers.forEach((header, col) => {
@@ -419,25 +458,25 @@ export const exportSizeTableToImage = (data, tipText = "温馨提示:由于手�
       drawCellBackground(ctx, layout, rowIndex + 1, col, style);
     });
   });
-  
+
   // 温馨提示行背景
   const drawTipRowBackgroundDynamic = (ctx, layout, style) => {
     const { startX, startY, tableWidth, cellHeight, rows } = layout;
-    const y = startY + ((rows - 1) * cellHeight);
+    const y = startY + (rows - 1) * cellHeight;
     ctx.fillStyle = style.backgroundColor;
     ctx.fillRect(startX, y, tableWidth, cellHeight);
   };
   drawTipRowBackgroundDynamic(ctx, layout, dynamicStyles.footer);
-  
+
   // 第二步：绘制表格边框（这样边框就不会被背景覆盖）
   drawTableBorder(ctx, layout);
-  
+
   // 第三步：绘制所有文字内容
   // 表头文字
   headers.forEach((header, col) => {
     drawCellText(ctx, layout, 0, col, header, dynamicStyles.header);
   });
-  
+
   // 数据行文字
   data.forEach((row, rowIndex) => {
     headers.forEach((header, col) => {
@@ -447,48 +486,57 @@ export const exportSizeTableToImage = (data, tipText = "温馨提示:由于手�
       drawCellText(ctx, layout, rowIndex + 1, col, String(value), style);
     });
   });
-  
+
   // 温馨提示行文字
   const drawTipRowTextDynamic = (ctx, layout, tipText, style) => {
     const { startX, startY, tableWidth, cellHeight, rows } = layout;
-    const y = startY + ((rows - 1) * cellHeight);
-    
+    const y = startY + (rows - 1) * cellHeight;
+
     ctx.fillStyle = style.textColor;
     ctx.font = `${style.fontWeight} ${style.fontSize}px 'MiSans', 'Microsoft YaHei', '微软雅黑', sans-serif`;
     ctx.textAlign = style.textAlign;
     ctx.textBaseline = 'middle';
-    
+
     const textX = startX + tableWidth / 2;
     const textY = y + cellHeight / 2;
-    
+
     ctx.fillText(tipText, textX, textY);
   };
   drawTipRowTextDynamic(ctx, layout, tipText, dynamicStyles.footer);
-  
+
   // 超分辨率抗锯齿处理
-  if (CANVAS_CONFIG.superResolutionScale > 1 && CANVAS_CONFIG.outputScale === 1) {
+  if (
+    CANVAS_CONFIG.superResolutionScale > 1 &&
+    CANVAS_CONFIG.outputScale === 1
+  ) {
     // 创建最终输出的Canvas（800x800）
     const outputCanvas = document.createElement('canvas');
-    outputCanvas.width = CANVAS_CONFIG.width;  // 800
+    outputCanvas.width = CANVAS_CONFIG.width; // 800
     outputCanvas.height = CANVAS_CONFIG.height; // 800
     const outputCtx = outputCanvas.getContext('2d');
-    
+
     // 关键：启用最高质量的抗锯齿设置
     outputCtx.imageSmoothingEnabled = true;
     outputCtx.imageSmoothingQuality = 'high';
-    
+
     // 使用高质量双线性插值缩放
     // 从4000x4000缩放到800x800（5:1比例）
     outputCtx.drawImage(
-      canvas, 
-      0, 0, canvas.width, canvas.height,    // 源：4000x4000
-      0, 0, outputCanvas.width, outputCanvas.height  // 目标：800x800
+      canvas,
+      0,
+      0,
+      canvas.width,
+      canvas.height, // 源：4000x4000
+      0,
+      0,
+      outputCanvas.width,
+      outputCanvas.height // 目标：800x800
     );
-    
+
     // 返回抗锯齿后的800x800图片
     return outputCanvas.toDataURL('image/jpeg', 1.0);
   }
-  
+
   // 如果是其他缩放情况或原生分辨率，直接返回
   return canvas.toDataURL('image/jpeg', 1.0);
 };
@@ -536,23 +584,38 @@ const generateUniqueFileName = async (basePath, baseName, extension) => {
  * @param {string} exportPath - 导出路径（可选）
  * @param {string} filename - 文件名（可选，默认为'尺码表'）
  */
-export const downloadImage = async (dataUrl, exportPath = null, filename = '尺码表') => {
+export const downloadImage = async (
+  dataUrl,
+  exportPath = null,
+  filename = '尺码表'
+) => {
   try {
-    if (exportPath && window.electronAPI && window.electronAPI.saveImageToPath) {
+    if (
+      exportPath &&
+      window.electronAPI &&
+      window.electronAPI.saveImageToPath
+    ) {
       // 使用 Electron API 直接保存到指定路径
-      const fullPath = await generateUniqueFileName(exportPath, filename, 'jpg');
-      
+      const fullPath = await generateUniqueFileName(
+        exportPath,
+        filename,
+        'jpg'
+      );
+
       // 将 base64 数据转换为 Buffer
       const base64Data = dataUrl.replace(/^data:image\/jpeg;base64,/, '');
-      
-      const result = await window.electronAPI.saveImageToPath(fullPath, base64Data);
-      
+
+      const result = await window.electronAPI.saveImageToPath(
+        fullPath,
+        base64Data
+      );
+
       if (result.success) {
         // 显示保存成功提示
         if (window.electronAPI.showNotification) {
           window.electronAPI.showNotification({
             title: '导出成功',
-            body: `图片已保存到: ${result.path}`
+            body: `图片已保存到: ${result.path}`,
           });
         }
         console.log('图片保存成功:', result.path);
@@ -572,7 +635,7 @@ export const downloadImage = async (dataUrl, exportPath = null, filename = '尺�
     }
   } catch (error) {
     console.error('下载图片失败:', error);
-    
+
     // 如果路径保存失败，回退到传统下载方式
     if (exportPath) {
       console.log('回退到传统下载方式');
@@ -583,7 +646,7 @@ export const downloadImage = async (dataUrl, exportPath = null, filename = '尺�
       link.click();
       document.body.removeChild(link);
     }
-    
+
     throw error;
   }
 };
@@ -592,8 +655,8 @@ export const downloadImage = async (dataUrl, exportPath = null, filename = '尺�
  * 示例数据格式（正确格式：第一列是尺码，其他列是各个测量类别）
  */
 export const sampleData = [
-  { '尺码': 'S', '胸长': '109', '肩宽': '35', '胸围': '78', '袖长': '11' },
-  { '尺码': 'M', '胸长': '110', '肩宽': '36', '胸围': '82', '袖长': '12' },
-  { '尺码': 'L', '胸长': '111', '肩宽': '37', '胸围': '86', '袖长': '13' },
-  { '尺码': 'XL', '胸长': '112', '肩宽': '38', '胸围': '90', '袖长': '14' }
+  { 尺码: 'S', 胸长: '109', 肩宽: '35', 胸围: '78', 袖长: '11' },
+  { 尺码: 'M', 胸长: '110', 肩宽: '36', 胸围: '82', 袖长: '12' },
+  { 尺码: 'L', 胸长: '111', 肩宽: '37', 胸围: '86', 袖长: '13' },
+  { 尺码: 'XL', 胸长: '112', 肩宽: '38', 胸围: '90', 袖长: '14' },
 ];

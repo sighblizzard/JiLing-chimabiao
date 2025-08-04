@@ -21,9 +21,9 @@ const AppContainer = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: ${props => props.theme.colors.background.secondary};
-  font-family: ${props => props.theme.typography.fontFamily.sans.join(', ')};
-  
+  background: ${(props) => props.theme.colors.background.secondary};
+  font-family: ${(props) => props.theme.typography.fontFamily.sans.join(', ')};
+
   /* 应用高质量渲染基础 */
   ${highQualityStyles.base}
   ${highQualityStyles.highDPI}
@@ -48,9 +48,9 @@ const App = () => {
   // 简单的状态管理 - 直接在 App 层级
   const [appState, setAppState] = useState({
     mode: 'normal',
-    sizeSettings: { 
-      startSize: 'S', 
-      count: 4 
+    sizeSettings: {
+      startSize: 'S',
+      count: 4,
     },
     selectedCategories: [],
     categories: [],
@@ -70,12 +70,12 @@ const App = () => {
     const savedMode = storage.load('mode', appState.mode);
     const savedStartValues = storage.load('categoryStartValues', {});
 
-    setAppState(prev => ({
+    setAppState((prev) => ({
       ...prev,
       categories: [...presetCategories, ...savedCategories],
       sizeSettings: savedSettings,
       mode: savedMode,
-      categoryStartValues: savedStartValues
+      categoryStartValues: savedStartValues,
     }));
   }, []);
 
@@ -86,13 +86,15 @@ const App = () => {
       if (event.ctrlKey && event.key === 's') {
         event.preventDefault();
         console.log('Ctrl+S pressed, chartData:', !!appState.chartData);
-        
+
         // 触发图片导出 - 发送自定义事件
         if (appState.chartData) {
           console.log('Dispatching export-shortcut event');
-          window.dispatchEvent(new CustomEvent('export-shortcut', { 
-            detail: { format: 'jpeg' } 
-          }));
+          window.dispatchEvent(
+            new CustomEvent('export-shortcut', {
+              detail: { format: 'jpeg' },
+            })
+          );
         } else {
           console.log('No chart data available');
           alert('请先生成尺码表数据');
@@ -106,58 +108,73 @@ const App = () => {
 
   // 保存数据到本地存储
   useEffect(() => {
-    const customCategories = appState.categories.filter(cat => cat.isCustom);
+    const customCategories = appState.categories.filter((cat) => cat.isCustom);
     storage.save('customCategories', customCategories);
     storage.save('sizeSettings', appState.sizeSettings);
     storage.save('categoryStartValues', appState.categoryStartValues);
     storage.save('mode', appState.mode);
-  }, [appState.categories, appState.sizeSettings, appState.mode, appState.categoryStartValues]);
+  }, [
+    appState.categories,
+    appState.sizeSettings,
+    appState.mode,
+    appState.categoryStartValues,
+  ]);
 
   // 实时更新预览 - 当设置或选择变化时自动生成预览
   useEffect(() => {
-    const { sizeSettings, selectedCategories, mode, categoryStartValues } = appState;
-    
+    const { sizeSettings, selectedCategories, mode, categoryStartValues } =
+      appState;
+
     // 只有当有选中的类别时才生成预览
     if (selectedCategories.length > 0) {
       try {
-        const chartData = calculateSizeData(sizeSettings, selectedCategories, mode, categoryStartValues);
-        setAppState(prev => ({
+        const chartData = calculateSizeData(
+          sizeSettings,
+          selectedCategories,
+          mode,
+          categoryStartValues
+        );
+        setAppState((prev) => ({
           ...prev,
-          chartData
+          chartData,
         }));
       } catch (error) {
         console.error('实时预览生成失败:', error);
         // 出错时清空预览
-        setAppState(prev => ({
+        setAppState((prev) => ({
           ...prev,
-          chartData: null
+          chartData: null,
         }));
       }
     } else {
       // 没有选中类别时清空预览
-      setAppState(prev => ({
+      setAppState((prev) => ({
         ...prev,
-        chartData: null
+        chartData: null,
       }));
     }
-  }, [appState.sizeSettings, appState.selectedCategories, appState.mode, appState.categoryStartValues]);
+  }, [
+    appState.sizeSettings,
+    appState.selectedCategories,
+    appState.mode,
+    appState.categoryStartValues,
+  ]);
 
-
-  // 窗口控制事件
-  const handleClose = () => {
+  // 窗口控制事件 (预留功能)
+  const _handleClose = () => {
     if (confirm('确定要关闭应用吗？')) {
       window.close();
     }
   };
 
-  const handleMinimize = () => {
+  const _handleMinimize = () => {
     // Electron 环境下的最小化
     if (window.electron) {
       window.electron.minimize();
     }
   };
 
-  const handleMaximize = () => {
+  const _handleMaximize = () => {
     // Electron 环境下的最大化/还原
     if (window.electron) {
       window.electron.toggleMaximize();
@@ -165,39 +182,41 @@ const App = () => {
   };
 
   const handleSettings = () => {
-    setAppState(prev => ({ ...prev, isSettingsOpen: true }));
+    setAppState((prev) => ({ ...prev, isSettingsOpen: true }));
   };
 
   const handleCloseSettings = () => {
-    setAppState(prev => ({ ...prev, isSettingsOpen: false }));
+    setAppState((prev) => ({ ...prev, isSettingsOpen: false }));
   };
 
   // 类别管理方法
   const handleCategoryAdd = (newCategory) => {
-    setAppState(prev => ({
+    setAppState((prev) => ({
       ...prev,
-      categories: [...prev.categories, { ...newCategory, isCustom: true }]
+      categories: [...prev.categories, { ...newCategory, isCustom: true }],
     }));
   };
 
   const handleCategoryEdit = (categoryId, updatedCategory) => {
-    setAppState(prev => ({
+    setAppState((prev) => ({
       ...prev,
-      categories: prev.categories.map(cat => 
+      categories: prev.categories.map((cat) =>
         cat.id === categoryId ? { ...cat, ...updatedCategory } : cat
-      )
+      ),
     }));
   };
 
   const handleCategoryDelete = (categoryId) => {
-    setAppState(prev => ({
+    setAppState((prev) => ({
       ...prev,
-      categories: prev.categories.filter(cat => cat.id !== categoryId),
-      selectedCategories: prev.selectedCategories.filter(id => id !== categoryId)
+      categories: prev.categories.filter((cat) => cat.id !== categoryId),
+      selectedCategories: prev.selectedCategories.filter(
+        (id) => id !== categoryId
+      ),
     }));
   };
 
-  const handleHelp = () => {
+  const _handleHelp = () => {
     // TODO: 打开帮助文档
     alert('帮助功能开发中...');
   };
@@ -210,22 +229,14 @@ const App = () => {
           setAppState={setAppState}
           onSettings={handleSettings}
         />
-        
+
         <ContentArea>
-          <Sidebar
-            appState={appState}
-            setAppState={setAppState}
-          />
-          
-          <MainContent
-            appState={appState}
-            setAppState={setAppState}
-          />
+          <Sidebar appState={appState} setAppState={setAppState} />
+
+          <MainContent appState={appState} setAppState={setAppState} />
         </ContentArea>
-        
-        <StatusBar
-          appState={appState}
-        />
+
+        <StatusBar appState={appState} />
 
         <SettingsPanel
           isOpen={appState.isSettingsOpen}

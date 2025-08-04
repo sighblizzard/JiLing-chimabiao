@@ -16,7 +16,7 @@ export const renderSizeChart = async (sizeData, options = {}) => {
     headerFontSize = 16,
     title = '尺码表',
     showGrid = true,
-    showTitle = true
+    showTitle = true,
   } = options;
 
   const canvas = document.createElement('canvas');
@@ -53,11 +53,11 @@ export const renderSizeChart = async (sizeData, options = {}) => {
   }
 
   // 获取表格数据
-  const sizes = sizeData[0]?.values?.map(v => v.size) || [];
+  const sizes = sizeData[0]?.values?.map((v) => v.size) || [];
   const headers = ['部位', ...sizes];
-  const rows = sizeData.map(category => [
+  const rows = sizeData.map((category) => [
     category.categoryName,
-    ...category.values.map(v => `${v.value}`)
+    ...category.values.map((v) => `${v.value}`),
   ]);
 
   // 计算单元格尺寸
@@ -84,7 +84,12 @@ export const renderSizeChart = async (sizeData, options = {}) => {
 
     // 绘制表头边框
     if (showGrid) {
-      ctx.strokeRect(padding + index * cellWidth, tableTop, cellWidth, cellHeight);
+      ctx.strokeRect(
+        padding + index * cellWidth,
+        tableTop,
+        cellWidth,
+        cellHeight
+      );
     }
   });
 
@@ -117,7 +122,12 @@ export const renderSizeChart = async (sizeData, options = {}) => {
 
       // 绘制单元格边框
       if (showGrid) {
-        ctx.strokeRect(padding + cellIndex * cellWidth, y, cellWidth, cellHeight);
+        ctx.strokeRect(
+          padding + cellIndex * cellWidth,
+          y,
+          cellWidth,
+          cellHeight
+        );
       }
     });
   });
@@ -141,7 +151,7 @@ export const renderSizeChart2D = async (sizeData, options = {}) => {
     textColor = '#374151',
     fontFamily = '-apple-system, BlinkMacSystemFont, SF Pro Display, sans-serif',
     fontSize = 12,
-    title = '尺码趋势图'
+    title = '尺码趋势图',
   } = options;
 
   const canvas = document.createElement('canvas');
@@ -175,8 +185,8 @@ export const renderSizeChart2D = async (sizeData, options = {}) => {
   ctx.fillText(title, width / 2, padding + 20);
 
   // 获取数据范围
-  const allValues = sizeData.flatMap(category => 
-    category.values.map(v => v.value)
+  const allValues = sizeData.flatMap((category) =>
+    category.values.map((v) => v.value)
   );
   const minValue = Math.min(...allValues);
   const maxValue = Math.max(...allValues);
@@ -199,7 +209,7 @@ export const renderSizeChart2D = async (sizeData, options = {}) => {
   ctx.stroke();
 
   // 绘制网格线和刻度
-  const sizes = sizeData[0]?.values?.map(v => v.size) || [];
+  const sizes = sizeData[0]?.values?.map((v) => v.size) || [];
   const stepX = chartWidth / (sizes.length - 1);
 
   sizes.forEach((size, index) => {
@@ -245,8 +255,14 @@ export const renderSizeChart2D = async (sizeData, options = {}) => {
 
   // 绘制数据线
   const colors = [
-    '#007AFF', '#FF3B30', '#34C759', '#FF9500', 
-    '#5856D6', '#AF52DE', '#FF2D92', '#A2845E'
+    '#007AFF',
+    '#FF3B30',
+    '#34C759',
+    '#FF9500',
+    '#5856D6',
+    '#AF52DE',
+    '#FF2D92',
+    '#A2845E',
   ];
 
   sizeData.forEach((category, categoryIndex) => {
@@ -259,7 +275,9 @@ export const renderSizeChart2D = async (sizeData, options = {}) => {
     ctx.beginPath();
     category.values.forEach((valueData, index) => {
       const x = padding + index * stepX;
-      const y = chartTop + chartHeight - 
+      const y =
+        chartTop +
+        chartHeight -
         ((valueData.value - minValue) / valueRange) * chartHeight;
 
       if (index === 0) {
@@ -273,7 +291,9 @@ export const renderSizeChart2D = async (sizeData, options = {}) => {
     // 绘制数据点
     category.values.forEach((valueData, index) => {
       const x = padding + index * stepX;
-      const y = chartTop + chartHeight - 
+      const y =
+        chartTop +
+        chartHeight -
         ((valueData.value - minValue) / valueRange) * chartHeight;
 
       ctx.beginPath();
@@ -331,9 +351,7 @@ export const copyImageToClipboard = async (dataUrl) => {
     const blob = await response.blob();
 
     // 写入剪贴板
-    await navigator.clipboard.write([
-      new ClipboardItem({ [blob.type]: blob })
-    ]);
+    await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
 
     return true;
   } catch (error) {
@@ -347,24 +365,24 @@ export const copyImageToClipboard = async (dataUrl) => {
  */
 export const generateSizeChart = async (categories, settings) => {
   const { startSize, count } = settings;
-  
+
   // 生成尺码序列
   const sizes = generateSizeSequence(startSize, count);
-  
+
   // 构建表格数据
   const headers = ['类别', ...sizes];
   const data = [headers];
-  
+
   // 为每个类别计算对应的尺寸数据
-  categories.forEach(category => {
+  categories.forEach((category) => {
     const row = [category.name];
     sizes.forEach((size, index) => {
-      const value = category.baseValue + (index * category.baseIncrement);
+      const value = category.baseValue + index * category.baseIncrement;
       row.push(value);
     });
     data.push(row);
   });
-  
+
   return {
     title: '尺码表',
     data,
@@ -373,9 +391,9 @@ export const generateSizeChart = async (categories, settings) => {
     settings,
     dimensions: {
       width: Math.max(800, data[0].length * 100),
-      height: Math.max(400, data.length * 50 + 100)
+      height: Math.max(400, data.length * 50 + 100),
     },
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
   };
 };
 
@@ -398,20 +416,20 @@ export const exportToImage = async (canvas, format = 'png') => {
  */
 export const exportToExcel = async (chartData, categories, settings) => {
   // 创建简单的 CSV 格式数据，模拟 Excel 导出
-  const csvContent = chartData.data.map(row => 
-    row.map(cell => `"${cell}"`).join(',')
-  ).join('\n');
-  
+  const csvContent = chartData.data
+    .map((row) => row.map((cell) => `"${cell}"`).join(','))
+    .join('\n');
+
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
-  
+
   const link = document.createElement('a');
   link.href = url;
   link.download = `尺码表_${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  
+
   URL.revokeObjectURL(url);
 };
 
@@ -420,12 +438,19 @@ export const exportToExcel = async (chartData, categories, settings) => {
  */
 const generateSizeSequence = (startSize, count) => {
   const sizeMap = {
-    'XXS': 0, 'XS': 1, 'S': 2, 'M': 3, 'L': 4, 'XL': 5, 'XXL': 6, 'XXXL': 7
+    XXS: 0,
+    XS: 1,
+    S: 2,
+    M: 3,
+    L: 4,
+    XL: 5,
+    XXL: 6,
+    XXXL: 7,
   };
-  
+
   const sizeArray = Object.keys(sizeMap);
   const startIndex = sizeMap[startSize] || 2; // 默认从 S 开始
-  
+
   const result = [];
   for (let i = 0; i < count; i++) {
     const index = startIndex + i;
@@ -436,6 +461,6 @@ const generateSizeSequence = (startSize, count) => {
       result.push(`Size${index + 1}`);
     }
   }
-  
+
   return result;
 };

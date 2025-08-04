@@ -5,28 +5,28 @@ import { motion } from 'framer-motion';
 const TableContainer = styled.div`
   width: 100%;
   overflow: auto;
-  border-radius: ${props => props.theme.borderRadius.lg};
-  border: 1px solid ${props => props.theme.colors.border.light};
-  background: ${props => props.theme.colors.background.primary};
-  box-shadow: ${props => props.theme.shadows.sm};
+  border-radius: ${(props) => props.theme.borderRadius.lg};
+  border: 1px solid ${(props) => props.theme.colors.border.light};
+  background: ${(props) => props.theme.colors.background.primary};
+  box-shadow: ${(props) => props.theme.shadows.sm};
 `;
 
 const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;
-  font-family: ${props => props.theme.typography.fontFamily.sans.join(', ')};
+  font-family: ${(props) => props.theme.typography.fontFamily.sans.join(', ')};
   font-size: 14px;
 `;
 
 const TableHead = styled.thead`
-  background: ${props => props.theme.colors.gray[50]};
-  border-bottom: 1px solid ${props => props.theme.colors.border.light};
+  background: ${(props) => props.theme.colors.gray[50]};
+  border-bottom: 1px solid ${(props) => props.theme.colors.border.light};
 `;
 
 const TableBody = styled.tbody``;
 
 const TableRow = styled(motion.tr)`
-  border-bottom: 1px solid ${props => props.theme.colors.border.light};
+  border-bottom: 1px solid ${(props) => props.theme.colors.border.light};
   transition: background-color 0.15s ease-out;
 
   &:last-child {
@@ -34,10 +34,12 @@ const TableRow = styled(motion.tr)`
   }
 
   &:hover {
-    background: ${props => props.theme.colors.gray[25] || '#fafafa'};
+    background: ${(props) => props.theme.colors.gray[25] || '#fafafa'};
   }
 
-  ${props => props.$selected && `
+  ${(props) =>
+    props.$selected &&
+    `
     background: ${props.theme.colors.primary}1a;
     
     &:hover {
@@ -45,21 +47,25 @@ const TableRow = styled(motion.tr)`
     }
   `}
 
-  ${props => props.$clickable && `
+  ${(props) =>
+    props.$clickable &&
+    `
     cursor: pointer;
   `}
 `;
 
 const TableHeader = styled.th`
   padding: 12px 16px;
-  text-align: ${props => props.$align || 'left'};
+  text-align: ${(props) => props.$align || 'left'};
   font-weight: 600;
-  color: ${props => props.theme.colors.gray[700]};
-  background: ${props => props.theme.colors.gray[50]};
+  color: ${(props) => props.theme.colors.gray[700]};
+  background: ${(props) => props.theme.colors.gray[50]};
   white-space: nowrap;
   user-select: none;
 
-  ${props => props.$sortable && `
+  ${(props) =>
+    props.$sortable &&
+    `
     cursor: pointer;
     position: relative;
     
@@ -79,39 +85,53 @@ const TableHeader = styled.th`
       border-right: 4px solid transparent;
       opacity: 0.3;
       
-      ${props.$sortDirection === 'asc' && `
+      ${
+        props.$sortDirection === 'asc' &&
+        `
         border-bottom: 4px solid currentColor;
         opacity: 1;
-      `}
+      `
+      }
       
-      ${props.$sortDirection === 'desc' && `
+      ${
+        props.$sortDirection === 'desc' &&
+        `
         border-top: 4px solid currentColor;
         opacity: 1;
-      `}
+      `
+      }
     }
   `}
 
-  ${props => props.$width && `
+  ${(props) =>
+    props.$width &&
+    `
     width: ${props.$width};
   `}
 `;
 
 const TableCell = styled.td`
   padding: 12px 16px;
-  text-align: ${props => props.$align || 'left'};
-  color: ${props => props.theme.colors.gray[600]};
+  text-align: ${(props) => props.$align || 'left'};
+  color: ${(props) => props.theme.colors.gray[600]};
   vertical-align: middle;
-  
-  ${props => props.$width && `
+
+  ${(props) =>
+    props.$width &&
+    `
     width: ${props.$width};
   `}
 
-  ${props => props.$bold && `
+  ${(props) =>
+    props.$bold &&
+    `
     font-weight: 600;
     color: ${props.theme.colors.gray[700]};
   `}
 
-  ${props => props.$muted && `
+  ${(props) =>
+    props.$muted &&
+    `
     color: ${props.theme.colors.gray[400]};
     font-size: 13px;
   `}
@@ -120,21 +140,21 @@ const TableCell = styled.td`
 const EmptyState = styled.div`
   padding: 48px 24px;
   text-align: center;
-  color: ${props => props.theme.colors.gray[400]};
-  
+  color: ${(props) => props.theme.colors.gray[400]};
+
   .icon {
     font-size: 48px;
     margin-bottom: 16px;
     opacity: 0.5;
   }
-  
+
   .title {
     font-size: 16px;
     font-weight: 500;
     margin-bottom: 8px;
-    color: ${props => props.theme.colors.gray[600]};
+    color: ${(props) => props.theme.colors.gray[600]};
   }
-  
+
   .description {
     font-size: 14px;
   }
@@ -143,21 +163,25 @@ const EmptyState = styled.div`
 const LoadingState = styled.div`
   padding: 48px 24px;
   text-align: center;
-  color: ${props => props.theme.colors.gray[400]};
-  
+  color: ${(props) => props.theme.colors.gray[400]};
+
   .spinner {
     width: 24px;
     height: 24px;
-    border: 2px solid ${props => props.theme.colors.gray[200]};
-    border-top: 2px solid ${props => props.theme.colors.primary};
+    border: 2px solid ${(props) => props.theme.colors.gray[200]};
+    border-top: 2px solid ${(props) => props.theme.colors.primary};
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin: 0 auto 16px;
   }
 
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 `;
 
@@ -181,7 +205,9 @@ const Table = ({
   const [sortDirection, setSortDirection] = React.useState('asc');
 
   const handleSort = (column) => {
-    if (!sortable || !column.sortable) return;
+    if (!sortable || !column.sortable) {
+      return;
+    }
 
     let newDirection = 'asc';
     if (sortColumn === column.key) {
@@ -200,7 +226,9 @@ const Table = ({
   };
 
   const isRowSelected = (row, index) => {
-    if (!selectable) return false;
+    if (!selectable) {
+      return false;
+    }
     return selectedRows.includes(row.id || index);
   };
 
@@ -215,9 +243,9 @@ const Table = ({
   // 空状态组件
   const EmptyComponent = () => (
     <EmptyState>
-      <div className="icon">📊</div>
-      <div className="title">暂无数据</div>
-      <div className="description">
+      <div className='icon'>📊</div>
+      <div className='title'>暂无数据</div>
+      <div className='description'>
         {empty?.description || '当前没有可显示的数据'}
       </div>
     </EmptyState>
@@ -226,7 +254,7 @@ const Table = ({
   // 加载状态组件
   const LoadingComponent = () => (
     <LoadingState>
-      <div className="spinner"></div>
+      <div className='spinner'></div>
       <div>加载中...</div>
     </LoadingState>
   );
@@ -258,7 +286,9 @@ const Table = ({
                 $align={column.align}
                 $width={column.width}
                 $sortable={sortable && column.sortable}
-                $sortDirection={sortColumn === column.key ? sortDirection : null}
+                $sortDirection={
+                  sortColumn === column.key ? sortDirection : null
+                }
                 onClick={() => handleSort(column)}
               >
                 {column.title}
@@ -275,11 +305,11 @@ const Table = ({
               onClick={() => handleRowClick(row, index)}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ 
+              transition={{
                 delay: index * 0.02,
-                type: "spring",
+                type: 'spring',
                 stiffness: 300,
-                damping: 25
+                damping: 25,
               }}
               whileHover={onRowClick ? { scale: 1.005 } : {}}
             >

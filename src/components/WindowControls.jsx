@@ -19,11 +19,11 @@ const ControlButton = styled.button`
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
-  
+
   &:hover {
     transform: scale(1.1);
   }
-  
+
   &.close {
     background: #ff5f57;
     &:hover::after {
@@ -37,7 +37,7 @@ const ControlButton = styled.button`
       font-weight: bold;
     }
   }
-  
+
   &.minimize {
     background: #ffbd2e;
     &:hover::after {
@@ -51,7 +51,7 @@ const ControlButton = styled.button`
       font-weight: bold;
     }
   }
-  
+
   &.maximize {
     background: #28ca42;
     &:hover::after {
@@ -77,24 +77,27 @@ const WindowControlsComponent = () => {
         setIsMaximized(maximized);
       }
     };
-    
+
     checkMaximized();
-    
+
     // 监听窗口状态变化
     const handleWindowStateChange = (event) => {
       if (event.detail && typeof event.detail.maximized !== 'undefined') {
         setIsMaximized(event.detail.maximized);
       }
     };
-    
+
     // 使用全局事件监听
     window.addEventListener('window-state-changed', handleWindowStateChange);
-    
+
     // 备用轮询机制（降低频率以提高性能）
     const interval = setInterval(checkMaximized, 1000);
-    
+
     return () => {
-      window.removeEventListener('window-state-changed', handleWindowStateChange);
+      window.removeEventListener(
+        'window-state-changed',
+        handleWindowStateChange
+      );
       clearInterval(interval);
     };
   }, []);
@@ -134,12 +137,16 @@ const WindowControlsComponent = () => {
 
   return (
     <WindowControls>
-      <ControlButton className="close" onClick={handleClose} title="关闭" />
-      <ControlButton className="minimize" onClick={handleMinimize} title="最小化" />
-      <ControlButton 
-        className="maximize" 
-        onClick={handleMaximize} 
-        title={isMaximized ? "还原" : "最大化"} 
+      <ControlButton className='close' onClick={handleClose} title='关闭' />
+      <ControlButton
+        className='minimize'
+        onClick={handleMinimize}
+        title='最小化'
+      />
+      <ControlButton
+        className='maximize'
+        onClick={handleMaximize}
+        title={isMaximized ? '还原' : '最大化'}
       />
     </WindowControls>
   );

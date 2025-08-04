@@ -3,13 +3,13 @@ import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from './Button';
 import Input from './Input';
-import Select from './Select';
+// import Select from './Select';  // 暂未使用
 import Modal from './Modal';
-import { 
-  createCategory, 
-  validateCategory, 
-  updateCategory, 
-  deleteCategory 
+import {
+  createCategory,
+  validateCategory,
+  updateCategory,
+  deleteCategory,
 } from '../services/dataManager';
 
 const PanelContainer = styled.div`
@@ -29,13 +29,13 @@ const HeaderContent = styled.div``;
 const Title = styled.h1`
   font-size: 24px;
   font-weight: 700;
-  color: ${props => props.theme.colors.gray[800]};
+  color: ${(props) => props.theme.colors.gray[800]};
   margin: 0 0 8px 0;
 `;
 
 const Subtitle = styled.p`
   font-size: 16px;
-  color: ${props => props.theme.colors.gray[600]};
+  color: ${(props) => props.theme.colors.gray[600]};
   margin: 0;
 `;
 
@@ -50,20 +50,22 @@ const CategoryCard = styled(motion.div)`
   align-items: center;
   gap: 12px;
   padding: 10px 14px; /* 参考侧栏的padding */
-  background: ${props => props.theme.colors.background.primary};
-  border: 1px solid ${props => props.theme.colors.border.light};
-  border-radius: ${props => props.theme.borderRadius.lg};
+  background: ${(props) => props.theme.colors.background.primary};
+  border: 1px solid ${(props) => props.theme.colors.border.light};
+  border-radius: ${(props) => props.theme.borderRadius.lg};
   transition: all 0.2s ease-out;
   user-select: none;
 
   &:hover {
-    border-color: ${props => props.theme.colors.border.dark};
-    background: ${props => props.theme.colors.gray[50]};
+    border-color: ${(props) => props.theme.colors.border.dark};
+    background: ${(props) => props.theme.colors.gray[50]};
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
-  ${props => props.$isCustom && `
+  ${(props) =>
+    props.$isCustom &&
+    `
     border-left: 4px solid ${props.theme.colors.primary};
   `}
 `;
@@ -74,24 +76,37 @@ const CardHeader = styled.div`
 `;
 
 const CategoryIcon = styled.div`
-  width: 28px;  /* 减小图标尺寸 */
+  width: 28px; /* 减小图标尺寸 */
   height: 28px;
-  border-radius: ${props => props.theme.borderRadius.md};
-  background: ${props => {
+  border-radius: ${(props) => props.theme.borderRadius.md};
+  background: ${(props) => {
     switch (props.$type) {
-      case 'chest': return '#FF6B6B';
-      case 'waist': return '#4ECDC4';
-      case 'hip': return '#45B7D1';
-      case 'hem': return '#9C88FF';
-      case 'shoulder': return '#96CEB4';
-      case 'sleeve': return '#FECA57';
-      case 'shoulderSleeve': return '#FF8A65';
-      case 'length': return '#FF9FF3';
-      case 'pantLength': return '#81C784';
-      case 'skirtLength': return '#F48FB1';
-      case 'backLength': return '#A1887F';
-      case 'frontLength': return '#BCAAA4';
-      default: return props.theme.colors.gray[400];
+      case 'chest':
+        return '#FF6B6B';
+      case 'waist':
+        return '#4ECDC4';
+      case 'hip':
+        return '#45B7D1';
+      case 'hem':
+        return '#9C88FF';
+      case 'shoulder':
+        return '#96CEB4';
+      case 'sleeve':
+        return '#FECA57';
+      case 'shoulderSleeve':
+        return '#FF8A65';
+      case 'length':
+        return '#FF9FF3';
+      case 'pantLength':
+        return '#81C784';
+      case 'skirtLength':
+        return '#F48FB1';
+      case 'backLength':
+        return '#A1887F';
+      case 'frontLength':
+        return '#BCAAA4';
+      default:
+        return props.theme.colors.gray[400];
     }
   }};
   display: flex;
@@ -100,9 +115,11 @@ const CategoryIcon = styled.div`
   font-size: 12px; /* 减小字体 */
   font-weight: 600;
   color: white;
-  
+
   /* 预留图标扩展 */
-  ${props => props.$iconUrl && `
+  ${(props) =>
+    props.$iconUrl &&
+    `
     background-image: url(${props.$iconUrl});
     background-size: cover;
     background-position: center;
@@ -112,7 +129,7 @@ const CategoryIcon = styled.div`
 const CardTitle = styled.h3`
   font-size: 15px; /* 参考侧栏字体大小 */
   font-weight: 500;
-  color: ${props => props.theme.colors.gray[800]};
+  color: ${(props) => props.theme.colors.gray[800]};
   margin: 0 0 2px 0;
   white-space: nowrap;
   overflow: hidden;
@@ -121,7 +138,7 @@ const CardTitle = styled.h3`
 
 const CardContent = styled.div`
   font-size: 13px; /* 参考侧栏meta字体大小 */
-  color: ${props => props.theme.colors.gray[600]};
+  color: ${(props) => props.theme.colors.gray[600]};
   display: flex;
   align-items: center;
   gap: 8px;
@@ -136,20 +153,20 @@ const CardActions = styled.div`
 const EmptyState = styled.div`
   text-align: center;
   padding: 48px 24px;
-  color: ${props => props.theme.colors.gray[500]};
-  
+  color: ${(props) => props.theme.colors.gray[500]};
+
   .icon {
     font-size: 48px;
     margin-bottom: 16px;
   }
-  
+
   .title {
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 8px;
-    color: ${props => props.theme.colors.gray[700]};
+    color: ${(props) => props.theme.colors.gray[700]};
   }
-  
+
   .description {
     font-size: 14px;
     margin-bottom: 24px;
@@ -179,7 +196,7 @@ const CategoryCardComponent = ({ category, onEdit, onDelete }) => {
       <CategoryIcon $type={category.type} $iconUrl={category.iconUrl}>
         {getCategoryDisplay(category)}
       </CategoryIcon>
-      
+
       <CardHeader>
         <CardTitle>{category.name}</CardTitle>
         <CardContent>
@@ -193,18 +210,18 @@ const CategoryCardComponent = ({ category, onEdit, onDelete }) => {
         {category.isCustom && (
           <>
             <Button
-              variant="outline"
-              size="small"
+              variant='outline'
+              size='small'
               onClick={() => onEdit(category)}
-              icon="✏️"
+              icon='✏️'
             >
               编辑
             </Button>
             <Button
-              variant="danger"
-              size="small"
+              variant='danger'
+              size='small'
               onClick={() => onDelete(category)}
-              icon="🗑️"
+              icon='🗑️'
             >
               删除
             </Button>
@@ -218,16 +235,16 @@ const CategoryCardComponent = ({ category, onEdit, onDelete }) => {
 /**
  * 类别管理面板组件
  */
-const CategoryManager = ({ 
-  appState, 
-  setAppState, 
-  onCategoryAdd, 
-  onCategoryEdit, 
+const CategoryManager = ({
+  appState,
+  setAppState,
+  onCategoryAdd,
+  onCategoryEdit,
   onCategoryDelete,
-  showHeader = true 
+  showHeader = true,
 }) => {
   const { categories } = appState;
-  
+
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [formData, setFormData] = useState({
@@ -235,26 +252,60 @@ const CategoryManager = ({
     baseValue: '',
     baseIncrement: '',
     description: '',
-    iconUrl: '' // 添加图标URL字段
+    iconUrl: '', // 添加图标URL字段
   });
   const [formErrors, setFormErrors] = useState({});
 
   // 类型选项 - 已移除用户选择，改为根据名称自动判断
   const getAutoType = (name) => {
     const lowerName = name.toLowerCase();
-    if (lowerName.includes('胸') || lowerName.includes('chest')) return 'chest';
-    if (lowerName.includes('腰') || lowerName.includes('waist')) return 'waist';
-    if (lowerName.includes('臀') || lowerName.includes('hip')) return 'hip';
-    if (lowerName.includes('下摆') || lowerName.includes('hem')) return 'hem';
-    if (lowerName.includes('肩宽') || lowerName.includes('肩') || lowerName.includes('shoulder')) return 'shoulder';
-    if (lowerName.includes('袖长') || lowerName.includes('袖') || lowerName.includes('sleeve')) return 'sleeve';
-    if (lowerName.includes('肩袖长') || lowerName.includes('肩袖')) return 'shoulderSleeve';
-    if (lowerName.includes('衣长') || lowerName.includes('身长')) return 'length';
-    if (lowerName.includes('裤长') || lowerName.includes('pant')) return 'pantLength';
-    if (lowerName.includes('裙长') || lowerName.includes('skirt')) return 'skirtLength';
-    if (lowerName.includes('中后长') || lowerName.includes('后长')) return 'backLength';
-    if (lowerName.includes('中前长') || lowerName.includes('前长')) return 'frontLength';
-    if (lowerName.includes('长') || lowerName.includes('length')) return 'length';
+    if (lowerName.includes('胸') || lowerName.includes('chest')) {
+      return 'chest';
+    }
+    if (lowerName.includes('腰') || lowerName.includes('waist')) {
+      return 'waist';
+    }
+    if (lowerName.includes('臀') || lowerName.includes('hip')) {
+      return 'hip';
+    }
+    if (lowerName.includes('下摆') || lowerName.includes('hem')) {
+      return 'hem';
+    }
+    if (
+      lowerName.includes('肩宽') ||
+      lowerName.includes('肩') ||
+      lowerName.includes('shoulder')
+    ) {
+      return 'shoulder';
+    }
+    if (
+      lowerName.includes('袖长') ||
+      lowerName.includes('袖') ||
+      lowerName.includes('sleeve')
+    ) {
+      return 'sleeve';
+    }
+    if (lowerName.includes('肩袖长') || lowerName.includes('肩袖')) {
+      return 'shoulderSleeve';
+    }
+    if (lowerName.includes('衣长') || lowerName.includes('身长')) {
+      return 'length';
+    }
+    if (lowerName.includes('裤长') || lowerName.includes('pant')) {
+      return 'pantLength';
+    }
+    if (lowerName.includes('裙长') || lowerName.includes('skirt')) {
+      return 'skirtLength';
+    }
+    if (lowerName.includes('中后长') || lowerName.includes('后长')) {
+      return 'backLength';
+    }
+    if (lowerName.includes('中前长') || lowerName.includes('前长')) {
+      return 'frontLength';
+    }
+    if (lowerName.includes('长') || lowerName.includes('length')) {
+      return 'length';
+    }
     return 'other';
   };
 
@@ -265,7 +316,7 @@ const CategoryManager = ({
       baseValue: '',
       baseIncrement: '',
       description: '',
-      iconUrl: '' // 添加图标URL字段
+      iconUrl: '', // 添加图标URL字段
     });
     setFormErrors({});
   };
@@ -284,7 +335,7 @@ const CategoryManager = ({
       baseValue: category.baseValue.toString(),
       baseIncrement: category.baseIncrement.toString(),
       description: category.description || '',
-      iconUrl: category.iconUrl || '' // 添加图标URL字段
+      iconUrl: category.iconUrl || '', // 添加图标URL字段
     });
     setEditingCategory(category);
     setShowAddModal(true);
@@ -298,10 +349,12 @@ const CategoryManager = ({
       } else {
         // 回退到直接修改state的方式
         const updatedCategories = deleteCategory(categories, category.id);
-        setAppState(prev => ({
+        setAppState((prev) => ({
           ...prev,
           categories: updatedCategories,
-          selectedCategories: prev.selectedCategories.filter(cat => cat.id !== category.id)
+          selectedCategories: prev.selectedCategories.filter(
+            (cat) => cat.id !== category.id
+          ),
         }));
       }
     }
@@ -325,17 +378,21 @@ const CategoryManager = ({
           baseValue: Number(formData.baseValue),
           baseIncrement: Number(formData.baseIncrement),
           description: formData.description.trim(),
-          iconUrl: formData.iconUrl.trim() || null // 处理图标URL
+          iconUrl: formData.iconUrl.trim() || null, // 处理图标URL
         };
-        
+
         if (onCategoryEdit) {
           onCategoryEdit(editingCategory.id, updatedData);
         } else {
           // 回退到直接修改state的方式
-          const updatedCategories = updateCategory(categories, editingCategory.id, updatedData);
-          setAppState(prev => ({
+          const updatedCategories = updateCategory(
+            categories,
+            editingCategory.id,
+            updatedData
+          );
+          setAppState((prev) => ({
             ...prev,
-            categories: updatedCategories
+            categories: updatedCategories,
           }));
         }
       } else {
@@ -347,16 +404,16 @@ const CategoryManager = ({
           baseValue: Number(formData.baseValue),
           baseIncrement: Number(formData.baseIncrement),
           description: formData.description.trim(),
-          iconUrl: formData.iconUrl.trim() || null
+          iconUrl: formData.iconUrl.trim() || null,
         });
-        
+
         if (onCategoryAdd) {
           onCategoryAdd(newCategory);
         } else {
           // 回退到直接修改state的方式
-          setAppState(prev => ({
+          setAppState((prev) => ({
             ...prev,
-            categories: [...prev.categories, newCategory]
+            categories: [...prev.categories, newCategory],
           }));
         }
       }
@@ -369,8 +426,8 @@ const CategoryManager = ({
     }
   };
 
-  const customCategories = categories.filter(cat => cat.isCustom);
-  const presetCategories = categories.filter(cat => !cat.isCustom);
+  const customCategories = categories.filter((cat) => cat.isCustom);
+  const presetCategories = categories.filter((cat) => !cat.isCustom);
 
   return (
     <PanelContainer>
@@ -379,15 +436,15 @@ const CategoryManager = ({
           <HeaderContent>
             <Title>类别管理</Title>
             <Subtitle>
-              管理尺码类别，包括预设类别和自定义类别。
-              当前共有 {categories.length} 个类别。
+              管理尺码类别，包括预设类别和自定义类别。 当前共有{' '}
+              {categories.length} 个类别。
             </Subtitle>
           </HeaderContent>
-          
+
           <Button
-            variant="primary"
+            variant='primary'
             onClick={handleAddCategory}
-            icon="➕"
+            icon='➕'
             style={{ minWidth: 'auto', flexShrink: 0 }}
           >
             新建类别
@@ -396,15 +453,22 @@ const CategoryManager = ({
       )}
 
       {!showHeader && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '24px',
+          }}
+        >
           <div style={{ fontSize: '14px', color: '#6B7280' }}>
             当前共有 {categories.length} 个类别
           </div>
           <Button
-            variant="primary"
-            size="small"
+            variant='primary'
+            size='small'
             onClick={handleAddCategory}
-            icon="➕"
+            icon='➕'
             style={{ minWidth: 'auto', flexShrink: 0 }}
           >
             新建类别
@@ -415,17 +479,19 @@ const CategoryManager = ({
       {/* 自定义类别 */}
       {customCategories.length > 0 && (
         <div style={{ marginBottom: '32px' }}>
-          <h2 style={{ 
-            fontSize: '18px', 
-            fontWeight: '600', 
-            marginBottom: '16px',
-            color: '#374151'
-          }}>
+          <h2
+            style={{
+              fontSize: '18px',
+              fontWeight: '600',
+              marginBottom: '16px',
+              color: '#374151',
+            }}
+          >
             自定义类别 ({customCategories.length})
           </h2>
           <CategoryGrid>
             <AnimatePresence>
-              {customCategories.map(category => (
+              {customCategories.map((category) => (
                 <CategoryCardComponent
                   key={category.id}
                   category={category}
@@ -440,16 +506,18 @@ const CategoryManager = ({
 
       {/* 预设类别 */}
       <div>
-        <h2 style={{ 
-          fontSize: '18px', 
-          fontWeight: '600', 
-          marginBottom: '16px',
-          color: '#374151'
-        }}>
+        <h2
+          style={{
+            fontSize: '18px',
+            fontWeight: '600',
+            marginBottom: '16px',
+            color: '#374151',
+          }}
+        >
           预设类别 ({presetCategories.length})
         </h2>
         <CategoryGrid>
-          {presetCategories.map(category => (
+          {presetCategories.map((category) => (
             <CategoryCardComponent
               key={category.id}
               category={category}
@@ -462,16 +530,12 @@ const CategoryManager = ({
 
       {categories.length === 0 && (
         <EmptyState>
-          <div className="icon">📁</div>
-          <div className="title">暂无类别</div>
-          <div className="description">
+          <div className='icon'>📁</div>
+          <div className='title'>暂无类别</div>
+          <div className='description'>
             还没有任何尺码类别，点击上方按钮创建第一个类别。
           </div>
-          <Button
-            variant="primary"
-            onClick={handleAddCategory}
-            icon="➕"
-          >
+          <Button variant='primary' onClick={handleAddCategory} icon='➕'>
             创建类别
           </Button>
         </EmptyState>
@@ -489,47 +553,60 @@ const CategoryManager = ({
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <Input
-            label="类别名称"
-            placeholder="输入类别名称（如：胸围、腰围、袖长等）"
+            label='类别名称'
+            placeholder='输入类别名称（如：胸围、腰围、袖长等）'
             value={formData.name}
-            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, name: e.target.value }))
+            }
             error={formErrors.name}
-            help="系统会根据名称自动识别类别类型"
+            help='系统会根据名称自动识别类别类型'
           />
 
           <Input
-            label="基础数值 (cm)"
-            type="number"
-            placeholder="输入基础数值"
+            label='基础数值 (cm)'
+            type='number'
+            placeholder='输入基础数值'
             value={formData.baseValue}
-            onChange={(e) => setFormData(prev => ({ ...prev, baseValue: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, baseValue: e.target.value }))
+            }
             error={formErrors.baseValue}
           />
 
           <Input
-            label="递增数值 (cm)"
-            type="number"
-            placeholder="输入递增数值"
+            label='递增数值 (cm)'
+            type='number'
+            placeholder='输入递增数值'
             value={formData.baseIncrement}
-            onChange={(e) => setFormData(prev => ({ ...prev, baseIncrement: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                baseIncrement: e.target.value,
+              }))
+            }
             error={formErrors.baseIncrement}
           />
 
           <Input
-            label="描述 (可选)"
-            placeholder="输入类别描述"
+            label='描述 (可选)'
+            placeholder='输入类别描述'
             value={formData.description}
-            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, description: e.target.value }))
+            }
           />
 
           {/* 预留：高级选项区域，暂时隐藏图标设置 */}
           {false && (
             <Input
-              label="图标URL (可选)"
-              placeholder="输入图标图片的URL地址"
+              label='图标URL (可选)'
+              placeholder='输入图标图片的URL地址'
               value={formData.iconUrl}
-              onChange={(e) => setFormData(prev => ({ ...prev, iconUrl: e.target.value }))}
-              help="留空将显示首字母，支持 jpg、png、svg 格式"
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, iconUrl: e.target.value }))
+              }
+              help='留空将显示首字母，支持 jpg、png、svg 格式'
             />
           )}
 
@@ -539,9 +616,16 @@ const CategoryManager = ({
             </div>
           )}
 
-          <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '16px' }}>
+          <div
+            style={{
+              display: 'flex',
+              gap: '12px',
+              justifyContent: 'flex-end',
+              marginTop: '16px',
+            }}
+          >
             <Button
-              variant="outline"
+              variant='outline'
               onClick={() => {
                 setShowAddModal(false);
                 resetForm();
@@ -550,10 +634,7 @@ const CategoryManager = ({
             >
               取消
             </Button>
-            <Button
-              variant="primary"
-              onClick={handleSaveCategory}
-            >
+            <Button variant='primary' onClick={handleSaveCategory}>
               {editingCategory ? '保存' : '创建'}
             </Button>
           </div>

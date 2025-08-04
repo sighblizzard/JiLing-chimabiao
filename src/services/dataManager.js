@@ -12,7 +12,7 @@ export const presetCategories = [
     baseIncrement: 4,
     isCustom: false,
     description: '胸部最丰满处的水平围长',
-    iconUrl: null // 预留图标字段
+    iconUrl: null, // 预留图标字段
   },
   {
     id: 'waist',
@@ -22,7 +22,7 @@ export const presetCategories = [
     baseIncrement: 4,
     isCustom: false,
     description: '腰部最细处的水平围长',
-    iconUrl: null // 预留图标字段
+    iconUrl: null, // 预留图标字段
   },
   {
     id: 'hip',
@@ -32,7 +32,7 @@ export const presetCategories = [
     baseIncrement: 4,
     isCustom: false,
     description: '臀部最丰满处的水平围长',
-    iconUrl: null // 预留图标字段
+    iconUrl: null, // 预留图标字段
   },
   {
     id: 'hem',
@@ -42,7 +42,7 @@ export const presetCategories = [
     baseIncrement: 4,
     isCustom: false,
     description: '下摆处的水平围长',
-    iconUrl: null // 预留图标字段
+    iconUrl: null, // 预留图标字段
   },
   {
     id: 'shoulder',
@@ -52,7 +52,7 @@ export const presetCategories = [
     baseIncrement: 1,
     isCustom: false,
     description: '两肩点之间的直线距离',
-    iconUrl: null // 预留图标字段
+    iconUrl: null, // 预留图标字段
   },
   {
     id: 'sleeve',
@@ -62,7 +62,7 @@ export const presetCategories = [
     baseIncrement: 1,
     isCustom: false,
     description: '肩点到袖口的长度',
-    iconUrl: null // 预留图标字段
+    iconUrl: null, // 预留图标字段
   },
   {
     id: 'shoulderSleeve',
@@ -72,7 +72,7 @@ export const presetCategories = [
     baseIncrement: 1,
     isCustom: false,
     description: '肩缝到袖口的长度',
-    iconUrl: null // 预留图标字段
+    iconUrl: null, // 预留图标字段
   },
   {
     id: 'length',
@@ -82,7 +82,7 @@ export const presetCategories = [
     baseIncrement: 1,
     isCustom: false,
     description: '后中心领窝点到下摆的长度',
-    iconUrl: null // 预留图标字段
+    iconUrl: null, // 预留图标字段
   },
   {
     id: 'pantLength',
@@ -92,7 +92,7 @@ export const presetCategories = [
     baseIncrement: 1,
     isCustom: false,
     description: '裤腰到裤脚的长度',
-    iconUrl: null // 预留图标字段
+    iconUrl: null, // 预留图标字段
   },
   {
     id: 'skirtLength',
@@ -102,7 +102,7 @@ export const presetCategories = [
     baseIncrement: 1,
     isCustom: false,
     description: '裙腰到裙摆的长度',
-    iconUrl: null // 预留图标字段
+    iconUrl: null, // 预留图标字段
   },
   {
     id: 'backLength',
@@ -112,7 +112,7 @@ export const presetCategories = [
     baseIncrement: 1,
     isCustom: false,
     description: '后中心领窝点到腰线的长度',
-    iconUrl: null // 预留图标字段
+    iconUrl: null, // 预留图标字段
   },
   {
     id: 'frontLength',
@@ -122,8 +122,8 @@ export const presetCategories = [
     baseIncrement: 1,
     isCustom: false,
     description: '前中心领窝点到腰线的长度',
-    iconUrl: null // 预留图标字段
-  }
+    iconUrl: null, // 预留图标字段
+  },
 ];
 
 /**
@@ -132,12 +132,18 @@ export const presetCategories = [
  * @returns {Object} 新类别对象
  */
 export const createCategory = (categoryData) => {
-  const { name, type, baseValue, baseIncrement, description, iconUrl } = categoryData;
-  
-  if (!name || !type || baseValue === undefined || baseIncrement === undefined) {
+  const { name, type, baseValue, baseIncrement, description, iconUrl } =
+    categoryData;
+
+  if (
+    !name ||
+    !type ||
+    baseValue === undefined ||
+    baseIncrement === undefined
+  ) {
     throw new Error('缺少必要的类别信息');
   }
-  
+
   return {
     id: `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     name: name.trim(),
@@ -147,7 +153,7 @@ export const createCategory = (categoryData) => {
     isCustom: true,
     description: description || '',
     iconUrl: iconUrl || null, // 图标URL，可选
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
   };
 };
 
@@ -159,30 +165,30 @@ export const createCategory = (categoryData) => {
 export const validateCategory = (categoryData) => {
   const { name, baseValue, baseIncrement } = categoryData;
   const errors = {};
-  
+
   if (!name || name.trim().length === 0) {
     errors.name = '类别名称不能为空';
   } else if (name.trim().length > 20) {
     errors.name = '类别名称不能超过20个字符';
   }
-  
+
   // 移除类型验证，类型将自动根据名称判断
-  
+
   if (baseValue === undefined || baseValue === '') {
     errors.baseValue = '基础数值不能为空';
   } else if (isNaN(Number(baseValue)) || Number(baseValue) <= 0) {
     errors.baseValue = '基础数值必须是大于0的数字';
   }
-  
+
   if (baseIncrement === undefined || baseIncrement === '') {
     errors.baseIncrement = '递增数值不能为空';
   } else if (isNaN(Number(baseIncrement)) || Number(baseIncrement) <= 0) {
     errors.baseIncrement = '递增数值必须是大于0的数字';
   }
-  
+
   return {
     isValid: Object.keys(errors).length === 0,
-    errors
+    errors,
   };
 };
 
@@ -194,12 +200,12 @@ export const validateCategory = (categoryData) => {
  * @returns {Array} 更新后的类别列表
  */
 export const updateCategory = (categories, categoryId, updates) => {
-  return categories.map(category => {
+  return categories.map((category) => {
     if (category.id === categoryId) {
       return {
         ...category,
         ...updates,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
     }
     return category;
@@ -213,7 +219,7 @@ export const updateCategory = (categories, categoryId, updates) => {
  * @returns {Array} 删除后的类别列表
  */
 export const deleteCategory = (categories, categoryId) => {
-  return categories.filter(category => category.id !== categoryId);
+  return categories.filter((category) => category.id !== categoryId);
 };
 
 /**
@@ -226,13 +232,15 @@ export const searchCategories = (categories, query) => {
   if (!query || query.trim().length === 0) {
     return categories;
   }
-  
+
   const searchTerm = query.toLowerCase().trim();
-  
-  return categories.filter(category => 
-    category.name.toLowerCase().includes(searchTerm) ||
-    category.type.toLowerCase().includes(searchTerm) ||
-    (category.description && category.description.toLowerCase().includes(searchTerm))
+
+  return categories.filter(
+    (category) =>
+      category.name.toLowerCase().includes(searchTerm) ||
+      category.type.toLowerCase().includes(searchTerm) ||
+      (category.description &&
+        category.description.toLowerCase().includes(searchTerm))
   );
 };
 
@@ -260,17 +268,19 @@ export const groupCategoriesByType = (categories) => {
 export const importCategories = (jsonData) => {
   try {
     const data = JSON.parse(jsonData);
-    
+
     if (!Array.isArray(data)) {
       throw new Error('导入数据必须是数组格式');
     }
-    
-    return data.map(item => {
+
+    return data.map((item) => {
       const validation = validateCategory(item);
       if (!validation.isValid) {
-        throw new Error(`无效的类别数据: ${Object.values(validation.errors).join(', ')}`);
+        throw new Error(
+          `无效的类别数据: ${Object.values(validation.errors).join(', ')}`
+        );
       }
-      
+
       return createCategory(item);
     });
   } catch (error) {
@@ -284,14 +294,14 @@ export const importCategories = (jsonData) => {
  * @returns {string} JSON格式的类别数据
  */
 export const exportCategories = (categories) => {
-  const exportData = categories.map(category => ({
+  const exportData = categories.map((category) => ({
     name: category.name,
     type: category.type,
     baseValue: category.baseValue,
     baseIncrement: category.baseIncrement,
-    description: category.description
+    description: category.description,
   }));
-  
+
   return JSON.stringify(exportData, null, 2);
 };
 
@@ -309,7 +319,7 @@ export const storage = {
       return false;
     }
   },
-  
+
   // 从本地存储加载数据
   load: (key, defaultValue = null) => {
     try {
@@ -320,7 +330,7 @@ export const storage = {
       return defaultValue;
     }
   },
-  
+
   // 删除本地存储数据
   remove: (key) => {
     try {
@@ -331,7 +341,7 @@ export const storage = {
       return false;
     }
   },
-  
+
   // 清空所有本地存储
   clear: () => {
     try {
@@ -341,5 +351,5 @@ export const storage = {
       console.error('清空数据失败:', error);
       return false;
     }
-  }
+  },
 };

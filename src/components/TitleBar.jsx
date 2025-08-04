@@ -7,8 +7,8 @@ const TitleBarContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   height: 44px;
-  background: ${props => props.theme.colors.background.secondary};
-  border-bottom: 1px solid ${props => props.theme.colors.border.light};
+  background: ${(props) => props.theme.colors.background.secondary};
+  border-bottom: 1px solid ${(props) => props.theme.colors.border.light};
   padding: 0 16px;
   user-select: none;
   -webkit-app-region: drag;
@@ -30,8 +30,8 @@ const ControlButton = styled(motion.button)`
   cursor: pointer;
   transition: all 0.15s ease-out;
   position: relative;
-  
-  ${props => {
+
+  ${(props) => {
     switch (props.$color) {
       case 'red':
         return `
@@ -114,7 +114,7 @@ const WindowTitle = styled.div`
   transform: translate(-50%, -50%);
   font-size: 13px;
   font-weight: 600;
-  color: ${props => props.theme.colors.gray[700]};
+  color: ${(props) => props.theme.colors.gray[700]};
   white-space: nowrap;
   pointer-events: none;
 `;
@@ -129,10 +129,10 @@ const ToolbarButtons = styled.div`
 const IconButton = styled(motion.button)`
   width: 28px;
   height: 28px;
-  border-radius: ${props => props.theme.borderRadius.sm};
+  border-radius: ${(props) => props.theme.borderRadius.sm};
   border: none;
   background: transparent;
-  color: ${props => props.theme.colors.gray[500]};
+  color: ${(props) => props.theme.colors.gray[500]};
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -141,17 +141,17 @@ const IconButton = styled(motion.button)`
   transition: all 0.15s ease-out;
 
   &:hover {
-    background: ${props => props.theme.colors.gray[100]};
-    color: ${props => props.theme.colors.gray[700]};
+    background: ${(props) => props.theme.colors.gray[100]};
+    color: ${(props) => props.theme.colors.gray[700]};
   }
 
   &:active {
-    background: ${props => props.theme.colors.gray[200]};
+    background: ${(props) => props.theme.colors.gray[200]};
   }
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 2px ${props => props.theme.colors.primary}33;
+    box-shadow: 0 0 0 2px ${(props) => props.theme.colors.primary}33;
   }
 `;
 
@@ -208,34 +208,30 @@ const TitleBar = ({
       {showControls && (
         <TrafficLights>
           <ControlButton
-            $color="red"
+            $color='red'
             onClick={handleClose}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            title="关闭"
+            title='关闭'
           />
           <ControlButton
-            $color="yellow"
+            $color='yellow'
             onClick={handleMinimize}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            title="最小化"
+            title='最小化'
           />
           <ControlButton
-            $color="green"
+            $color='green'
             onClick={handleMaximize}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            title="最大化"
+            title='最大化'
           />
         </TrafficLights>
       )}
 
-      {showTitle && (
-        <WindowTitle>
-          {title}
-        </WindowTitle>
-      )}
+      {showTitle && <WindowTitle>{title}</WindowTitle>}
 
       {showToolbar && (
         <ToolbarButtons>
@@ -243,7 +239,7 @@ const TitleBar = ({
             onClick={handleSettings}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            title="设置"
+            title='设置'
           >
             ⚙️
           </IconButton>
@@ -251,7 +247,7 @@ const TitleBar = ({
             onClick={handleHelp}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            title="帮助"
+            title='帮助'
           >
             ❓
           </IconButton>

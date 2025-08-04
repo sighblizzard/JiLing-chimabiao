@@ -4,68 +4,56 @@
 
 import { calculateSizeData, generateSizeSequence } from '../src/services/sizeCalculator.js';
 
-console.log('🔍 验证裤装模式移除...\n');
+describe('裤装模式移除验证', () => {
+  const testCategory = {
+    id: 'waist-test',
+    name: '腰围',
+    type: 'waist',
+    baseValue: 68,
+    baseIncrement: 4
+  };
 
-// 测试数据
-const testCategory = {
-  name: '腰围',
-  type: 'waist',
-  baseValue: 68,
-  baseIncrement: 4
-};
+  const settings = {
+    startSize: 'S',
+    count: 4
+  };
 
-const settings = {
-  startSize: 'S',
-  count: 4
-};
+  test('验证普通模式和毛衣模式都正常工作', () => {
+    const normalResult = calculateSizeData(settings, [testCategory], 'normal');
+    const sweaterResult = calculateSizeData(settings, [testCategory], 'sweater');
+    
+    expect(normalResult).toBeDefined();
+    expect(sweaterResult).toBeDefined();
+    expect(normalResult[0].values).toHaveLength(4);
+    expect(sweaterResult[0].values).toHaveLength(4);
+  });
 
-console.log('📋 测试不同模式的计算结果:');
-console.log('=====================================');
+  test('验证裤装模式被移除（等同于普通模式）', () => {
+    const normalResult = calculateSizeData(settings, [testCategory], 'normal');
+    const pantsResult = calculateSizeData(settings, [testCategory], 'pants');
+    
+    const normalValues = normalResult[0].values.map(v => v.value);
+    const pantsValues = pantsResult[0].values.map(v => v.value);
+    
+    expect(pantsValues).toEqual(normalValues);
+  });
 
-// 测试普通模式
-console.log('\n✅ 普通模式:');
-const normalResult = calculateSizeData(settings, [testCategory], 'normal');
-console.log('   尺码序列:', normalResult.sizes);
-console.log('   腰围数值:', normalResult.tableData[0].values.map(v => v.value));
+  test('验证毛衣模式对大围度类别的递增减半效果', () => {
+    const chestCategory = {
+      id: 'chest-test',
+      name: '胸围',
+      type: 'chest',
+      baseValue: 88,
+      baseIncrement: 4
+    };
 
-// 测试毛衣模式（应该不影响腰围）
-console.log('\n✅ 毛衣模式（腰围不受影响）:');
-const sweaterResult = calculateSizeData(settings, [testCategory], 'sweater');
-console.log('   尺码序列:', sweaterResult.sizes);
-console.log('   腰围数值:', sweaterResult.tableData[0].values.map(v => v.value));
+    const chestNormal = calculateSizeData(settings, [chestCategory], 'normal');
+    const chestSweater = calculateSizeData(settings, [chestCategory], 'sweater');
 
-// 验证胸围在毛衣模式下的变化
-const chestCategory = {
-  name: '胸围',
-  type: 'chest',
-  baseValue: 88,
-  baseIncrement: 4
-};
+    const normalIncrement = chestNormal[0].values[1].value - chestNormal[0].values[0].value;
+    const sweaterIncrement = chestSweater[0].values[1].value - chestSweater[0].values[0].value;
 
-console.log('\n✅ 毛衣模式（胸围递增减半）:');
-const chestNormal = calculateSizeData(settings, [chestCategory], 'normal');
-const chestSweater = calculateSizeData(settings, [chestCategory], 'sweater');
-
-console.log('   普通模式胸围:', chestNormal.tableData[0].values.map(v => v.value));
-console.log('   毛衣模式胸围:', chestSweater.tableData[0].values.map(v => v.value));
-
-// 验证不再支持裤装模式
-console.log('\n❌ 裤装模式（已移除）:');
-try {
-  // 即使传入 pants 模式，也应该按普通模式处理
-  const pantsResult = calculateSizeData(settings, [testCategory], 'pants');
-  console.log('   处理结果（应等同普通模式）:', pantsResult.tableData[0].values.map(v => v.value));
-  
-  // 比较与普通模式是否相同
-  const normalValues = normalResult.tableData[0].values.map(v => v.value);
-  const pantsValues = pantsResult.tableData[0].values.map(v => v.value);
-  const isEqual = JSON.stringify(normalValues) === JSON.stringify(pantsValues);
-  
-  console.log('   ✓ 裤装模式已正确移除，结果等同普通模式:', isEqual);
-  
-} catch (error) {
-  console.log('   ❌ 发生错误:', error.message);
-}
-
-console.log('\n🎉 验证完成！裤装模式已成功移除。');
-console.log('📝 当前支持的模式: normal (普通), sweater (毛衣)');
+    expect(normalIncrement).toBe(4);
+    expect(sweaterIncrement).toBe(2); // 毛衣模式减半
+  });
+});

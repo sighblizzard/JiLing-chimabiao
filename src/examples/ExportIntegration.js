@@ -48,10 +48,10 @@ const Icon = styled.span`
 const SizeTableApp = () => {
   const [showExportDialog, setShowExportDialog] = useState(false);
   const [tableData, setTableData] = useState([
-    { '尺码': 'S', '胸长': '109', '肩宽': '35', '胸围': '78', '袖长': '11' },
-    { '尺码': 'M', '胸长': '110', '肩宽': '36', '胸围': '82', '袖长': '12' },
-    { '尺码': 'L', '胸长': '111', '肩宽': '37', '胸围': '86', '袖长': '13' },
-    { '尺码': 'XL', '胸长': '112', '肩宽': '38', '胸围': '90', '袖长': '14' }
+    { 尺码: 'S', 胸长: '109', 肩宽: '35', 胸围: '78', 袖长: '11' },
+    { 尺码: 'M', 胸长: '110', 肩宽: '36', 胸围: '82', 袖长: '12' },
+    { 尺码: 'L', 胸长: '111', 肩宽: '37', 胸围: '86', 袖长: '13' },
+    { 尺码: 'XL', 胸长: '112', 肩宽: '38', 胸围: '90', 袖长: '14' },
   ]);
 
   const handleExport = () => {
@@ -63,7 +63,7 @@ const SizeTableApp = () => {
   return (
     <div>
       {/* 你的尺码表展示组件 */}
-      
+
       {/* 导出按钮 */}
       <ExportButton
         onClick={handleExport}

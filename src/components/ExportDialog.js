@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { exportSizeTableToImage, downloadImage } from '../services/tableExporter';
+import {
+  exportSizeTableToImage,
+  downloadImage,
+} from '../services/tableExporter';
 
 const ExportPanel = styled(motion.div)`
   position: fixed;
@@ -90,14 +93,17 @@ const Button = styled(motion.button)`
   outline: none;
   transition: all 0.2s ease;
 
-  ${props => props.primary ? `
+  ${(props) =>
+    props.primary
+      ? `
     background: #007aff;
     color: white;
     
     &:hover {
       background: #0056cc;
     }
-  ` : `
+  `
+      : `
     background: #f2f2f7;
     color: #1d1d1f;
     
@@ -114,14 +120,18 @@ const Button = styled(motion.button)`
 
 const ExportDialog = ({ isOpen, onClose, tableData }) => {
   const [filename, setFilename] = useState('size-chart');
-  const [tipText, setTipText] = useState('温馨提示:由于手工测量会存在1-3cm误差，属于正常范围');
+  const [tipText, setTipText] = useState(
+    '温馨提示:由于手工测量会存在1-3cm误差，属于正常范围'
+  );
   const [previewUrl, setPreviewUrl] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 
   // 生成预览
   const generatePreview = async () => {
-    if (!tableData || tableData.length === 0) return;
-    
+    if (!tableData || tableData.length === 0) {
+      return;
+    }
+
     setIsGenerating(true);
     try {
       const imageUrl = exportSizeTableToImage(tableData, tipText);
@@ -147,7 +157,9 @@ const ExportDialog = ({ isOpen, onClose, tableData }) => {
     }
   }, [isOpen, tableData, tipText]);
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <>
@@ -161,45 +173,66 @@ const ExportDialog = ({ isOpen, onClose, tableData }) => {
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: 20 }}
-        transition={{ type: "spring", duration: 0.5 }}
+        transition={{ type: 'spring', duration: 0.5 }}
       >
-        <Title>
-          📸 导出尺码表
-        </Title>
+        <Title>📸 导出尺码表</Title>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#86868b' }}>
+          <label
+            style={{
+              display: 'block',
+              marginBottom: '8px',
+              fontSize: '14px',
+              color: '#86868b',
+            }}
+          >
             文件名
           </label>
           <Input
-            type="text"
+            type='text'
             value={filename}
             onChange={(e) => setFilename(e.target.value)}
-            placeholder="请输入文件名"
+            placeholder='请输入文件名'
           />
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#86868b' }}>
+          <label
+            style={{
+              display: 'block',
+              marginBottom: '8px',
+              fontSize: '14px',
+              color: '#86868b',
+            }}
+          >
             温馨提示
           </label>
           <Input
-            type="text"
+            type='text'
             value={tipText}
             onChange={(e) => setTipText(e.target.value)}
-            placeholder="请输入温馨提示文字"
+            placeholder='请输入温馨提示文字'
           />
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#86868b' }}>
+          <label
+            style={{
+              display: 'block',
+              marginBottom: '8px',
+              fontSize: '14px',
+              color: '#86868b',
+            }}
+          >
             预览 (600x600)
           </label>
           <PreviewContainer>
             {isGenerating ? (
-              <div style={{ color: '#86868b', fontSize: '14px' }}>生成中...</div>
+              <div style={{ color: '#86868b', fontSize: '14px' }}>
+                生成中...
+              </div>
             ) : previewUrl ? (
-              <PreviewImage src={previewUrl} alt="尺码表预览" />
+              <PreviewImage src={previewUrl} alt='尺码表预览' />
             ) : (
               <div style={{ color: '#86868b', fontSize: '14px' }}>暂无预览</div>
             )}
@@ -207,21 +240,21 @@ const ExportDialog = ({ isOpen, onClose, tableData }) => {
         </div>
 
         <div style={{ fontSize: '12px', color: '#86868b', lineHeight: '1.4' }}>
-          • 图片尺寸：600x600像素<br/>
-          • 单元格比例：10:6<br/>
-          • 背景：白色，表头：黑底白字<br/>
-          • 自动居中显示，左右或上下铺满
+          • 图片尺寸：600x600像素
+          <br />
+          • 单元格比例：10:6
+          <br />
+          • 背景：白色，表头：黑底白字
+          <br />• 自动居中显示，左右或上下铺满
         </div>
 
         <ButtonGroup>
-          <Button onClick={onClose}>
-            取消
-          </Button>
+          <Button onClick={onClose}>取消</Button>
           <Button onClick={generatePreview} disabled={isGenerating}>
             重新生成
           </Button>
-          <Button 
-            primary 
+          <Button
+            primary
             onClick={handleDownload}
             disabled={!previewUrl || isGenerating}
           >

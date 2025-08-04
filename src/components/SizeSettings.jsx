@@ -18,13 +18,13 @@ const PanelHeader = styled.div`
 const Title = styled.h1`
   font-size: 24px;
   font-weight: 700;
-  color: ${props => props.theme.colors.gray[800]};
+  color: ${(props) => props.theme.colors.gray[800]};
   margin: 0 0 8px 0;
 `;
 
 const Subtitle = styled.p`
   font-size: 16px;
-  color: ${props => props.theme.colors.gray[600]};
+  color: ${(props) => props.theme.colors.gray[600]};
   margin: 0;
   line-height: 1.5;
 `;
@@ -57,7 +57,7 @@ const CompactRow = styled.div`
     grid-template-columns: 1fr 1fr;
     gap: 8px;
   }
-  
+
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
     gap: 6px;
@@ -67,7 +67,7 @@ const CompactRow = styled.div`
 const Label = styled.label`
   font-size: 13px;
   font-weight: 600;
-  color: ${props => props.theme.colors.gray[700]};
+  color: ${(props) => props.theme.colors.gray[700]};
   padding-top: 8px;
   white-space: nowrap;
 
@@ -78,9 +78,9 @@ const Label = styled.label`
 `;
 
 const PreviewSection = styled(motion.div)`
-  background: ${props => props.theme.colors.background.primary};
-  border: 1px solid ${props => props.theme.colors.border.light};
-  border-radius: ${props => props.theme.borderRadius.lg};
+  background: ${(props) => props.theme.colors.background.primary};
+  border: 1px solid ${(props) => props.theme.colors.border.light};
+  border-radius: ${(props) => props.theme.borderRadius.lg};
   padding: 16px;
   margin-bottom: 20px;
 `;
@@ -129,7 +129,7 @@ const CompactControlGroup = styled.div`
 const PreviewTitle = styled.h3`
   font-size: 14px;
   font-weight: 600;
-  color: ${props => props.theme.colors.gray[700]};
+  color: ${(props) => props.theme.colors.gray[700]};
   margin: 0;
 `;
 
@@ -143,12 +143,12 @@ const SizeTag = styled(motion.span)`
   display: inline-flex;
   align-items: center;
   padding: 4px 8px;
-  background: ${props => props.theme.colors.primary}15;
-  color: ${props => props.theme.colors.primary};
-  border-radius: ${props => props.theme.borderRadius.md};
+  background: ${(props) => props.theme.colors.primary}15;
+  color: ${(props) => props.theme.colors.primary};
+  border-radius: ${(props) => props.theme.borderRadius.md};
   font-size: 12px;
   font-weight: 500;
-  border: 1px solid ${props => props.theme.colors.primary}30;
+  border: 1px solid ${(props) => props.theme.colors.primary}30;
 `;
 
 const ActionButtons = styled.div`
@@ -163,19 +163,19 @@ const ActionButtons = styled.div`
 `;
 
 const ErrorMessage = styled.div`
-  color: ${props => props.theme.colors.error};
+  color: ${(props) => props.theme.colors.error};
   font-size: 14px;
   margin-top: 8px;
   padding: 12px;
-  background: ${props => props.theme.colors.error}10;
-  border-radius: ${props => props.theme.borderRadius.md};
-  border: 1px solid ${props => props.theme.colors.error}30;
+  background: ${(props) => props.theme.colors.error}10;
+  border-radius: ${(props) => props.theme.borderRadius.md};
+  border: 1px solid ${(props) => props.theme.colors.error}30;
 `;
 
 const StartValuesSection = styled(motion.div)`
-  background: ${props => props.theme.colors.background.primary};
-  border: 1px solid ${props => props.theme.colors.border.light};
-  border-radius: ${props => props.theme.borderRadius.lg};
+  background: ${(props) => props.theme.colors.background.primary};
+  border: 1px solid ${(props) => props.theme.colors.border.light};
+  border-radius: ${(props) => props.theme.borderRadius.lg};
   padding: 16px;
   margin-bottom: 20px;
 `;
@@ -191,18 +191,18 @@ const CategoryRow = styled.div`
   gap: 12px;
   align-items: center;
   padding: 12px;
-  background: ${props => props.theme.colors.background.secondary};
-  border-radius: ${props => props.theme.borderRadius.md};
-  border: 1px solid ${props => props.theme.colors.border.light};
+  background: ${(props) => props.theme.colors.background.secondary};
+  border-radius: ${(props) => props.theme.borderRadius.md};
+  border: 1px solid ${(props) => props.theme.colors.border.light};
 `;
 
 const CategoryIcon = styled.div`
   width: 36px;
   height: 36px;
-  border-radius: ${props => props.theme.borderRadius.md};
-  background: ${props => props.color || props.theme.colors.primary}20;
-  color: ${props => props.color || props.theme.colors.primary};
-  border: 2px solid ${props => props.color || props.theme.colors.primary}30;
+  border-radius: ${(props) => props.theme.borderRadius.md};
+  background: ${(props) => props.color || props.theme.colors.primary}20;
+  color: ${(props) => props.color || props.theme.colors.primary};
+  border: 2px solid ${(props) => props.color || props.theme.colors.primary}30;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -217,13 +217,13 @@ const CategoryInfo = styled.div`
 const CategoryName = styled.div`
   font-size: 14px;
   font-weight: 600;
-  color: ${props => props.theme.colors.gray[800]};
+  color: ${(props) => props.theme.colors.gray[800]};
   margin-bottom: 2px;
 `;
 
 const CategoryType = styled.div`
   font-size: 12px;
-  color: ${props => props.theme.colors.gray[500]};
+  color: ${(props) => props.theme.colors.gray[500]};
 `;
 
 const ValueInput = styled(Input)`
@@ -233,7 +233,7 @@ const ValueInput = styled(Input)`
 
 const UnitLabel = styled.span`
   font-size: 14px;
-  color: ${props => props.theme.colors.gray[600]};
+  color: ${(props) => props.theme.colors.gray[600]};
   font-weight: 500;
 `;
 
@@ -241,9 +241,15 @@ const UnitLabel = styled.span`
  * 尺码设置面板组件
  */
 const SizeSettings = ({ appState, setAppState }) => {
-  const { sizeSettings, selectedCategories, categoryStartValues, categories, mode } = appState;
+  const {
+    sizeSettings,
+    selectedCategories,
+    categoryStartValues,
+    categories,
+    mode,
+  } = appState;
   const { startSize, count } = sizeSettings;
-  
+
   // 计算在当前模式下的实际递增值
   const getActualIncrement = (category) => {
     let increment = category.baseIncrement;
@@ -252,7 +258,7 @@ const SizeSettings = ({ appState, setAppState }) => {
     }
     return increment;
   };
-  
+
   const [errors, setErrors] = useState({});
 
   // 尺码选项
@@ -264,72 +270,81 @@ const SizeSettings = ({ appState, setAppState }) => {
     { label: 'XL', value: 'XL' },
     { label: '2XL', value: '2XL' },
     { label: '3XL', value: '3XL' },
-    { label: '4XL', value: '4XL' }
+    { label: '4XL', value: '4XL' },
   ];
 
   // 更新尺码设置
-  const updateSizeSettings = useCallback((updates) => {
-    const newSettings = { ...sizeSettings, ...updates };
-    
-    setAppState(prev => ({
-      ...prev,
-      sizeSettings: newSettings
-    }));
+  const updateSizeSettings = useCallback(
+    (updates) => {
+      const newSettings = { ...sizeSettings, ...updates };
 
-    // 清除相关错误
-    const newErrors = { ...errors };
-    Object.keys(updates).forEach(key => {
-      if (newErrors[key]) {
-        delete newErrors[key];
-      }
-    });
-    setErrors(newErrors);
-  }, [sizeSettings, errors, setAppState]);
+      setAppState((prev) => ({
+        ...prev,
+        sizeSettings: newSettings,
+      }));
+
+      // 清除相关错误
+      const newErrors = { ...errors };
+      Object.keys(updates).forEach((key) => {
+        if (newErrors[key]) {
+          delete newErrors[key];
+        }
+      });
+      setErrors(newErrors);
+    },
+    [sizeSettings, errors, setAppState]
+  );
 
   // 更新类别起始值
-  const updateCategoryStartValue = useCallback((categoryId, value) => {
-    // 直接存储字符串值，允许用户输入过程中的中间状态
-    const newStartValues = { ...categoryStartValues };
-    
-    if (value === '') {
-      // 如果值为空，删除自定义值，使用默认值
-      delete newStartValues[categoryId];
-    } else {
-      // 验证输入是否为有效的数字格式（包括中间状态如 "9." "9.5"）
-      const isValidInput = /^\d*\.?\d*$/.test(value) && value !== '.';
-      
-      if (isValidInput) {
-        // 如果是完整的有效数字，存储数值；否则保持字符串状态
-        const numValue = parseFloat(value);
-        if (!isNaN(numValue) && value.slice(-1) !== '.') {
-          newStartValues[categoryId] = numValue;
-        } else {
-          // 保持输入状态（如用户正在输入 "9." 这样的中间状态）
-          newStartValues[categoryId] = value;
+  const updateCategoryStartValue = useCallback(
+    (categoryId, value) => {
+      // 直接存储字符串值，允许用户输入过程中的中间状态
+      const newStartValues = { ...categoryStartValues };
+
+      if (value === '') {
+        // 如果值为空，删除自定义值，使用默认值
+        delete newStartValues[categoryId];
+      } else {
+        // 验证输入是否为有效的数字格式（包括中间状态如 "9." "9.5"）
+        const isValidInput = /^\d*\.?\d*$/.test(value) && value !== '.';
+
+        if (isValidInput) {
+          // 如果是完整的有效数字，存储数值；否则保持字符串状态
+          const numValue = parseFloat(value);
+          if (!isNaN(numValue) && value.slice(-1) !== '.') {
+            newStartValues[categoryId] = numValue;
+          } else {
+            // 保持输入状态（如用户正在输入 "9." 这样的中间状态）
+            newStartValues[categoryId] = value;
+          }
         }
       }
-    }
-    
-    setAppState(prev => ({
-      ...prev,
-      categoryStartValues: newStartValues
-    }));
-  }, [categoryStartValues, setAppState]);
+
+      setAppState((prev) => ({
+        ...prev,
+        categoryStartValues: newStartValues,
+      }));
+    },
+    [categoryStartValues, setAppState]
+  );
 
   // 获取类别的当前起始值
-  const getCategoryStartValue = useCallback((category) => {
-    const savedValue = categoryStartValues[category.id];
-    if (savedValue !== undefined) {
-      // 如果是字符串类型（输入中间状态），直接返回
-      if (typeof savedValue === 'string') {
+  const getCategoryStartValue = useCallback(
+    (category) => {
+      const savedValue = categoryStartValues[category.id];
+      if (savedValue !== undefined) {
+        // 如果是字符串类型（输入中间状态），直接返回
+        if (typeof savedValue === 'string') {
+          return savedValue;
+        }
+        // 如果是数字类型，返回数字
         return savedValue;
       }
-      // 如果是数字类型，返回数字
-      return savedValue;
-    }
-    // 没有自定义值时，返回默认值
-    return category.baseValue;
-  }, [categoryStartValues]);
+      // 没有自定义值时，返回默认值
+      return category.baseValue;
+    },
+    [categoryStartValues]
+  );
 
   // 获取类别图标文字
   const getCategoryIcon = (category) => {
@@ -353,12 +368,12 @@ const SizeSettings = ({ appState, setAppState }) => {
   const handleReset = useCallback(() => {
     updateSizeSettings({
       startSize: 'S',
-      count: 4
+      count: 4,
     });
     // 同时清空自定义起始值
-    setAppState(prev => ({
+    setAppState((prev) => ({
       ...prev,
-      categoryStartValues: {}
+      categoryStartValues: {},
     }));
     setErrors({});
   }, [updateSizeSettings, setAppState]);
@@ -377,30 +392,32 @@ const SizeSettings = ({ appState, setAppState }) => {
             <CompactControlGroup>
               <Label>起始尺码</Label>
               <Select
-                placeholder="选择起始尺码"
+                placeholder='选择起始尺码'
                 options={sizeOptions}
                 value={startSize}
                 onChange={(value) => updateSizeSettings({ startSize: value })}
                 error={errors.startSize}
-                size="small"
+                size='small'
               />
             </CompactControlGroup>
             <CompactControlGroup>
               <Label>尺码数量</Label>
               <Input
-                type="number"
-                placeholder="输入数量"
+                type='number'
+                placeholder='输入数量'
                 value={count}
-                onChange={(e) => updateSizeSettings({ count: parseInt(e.target.value) || 1 })}
+                onChange={(e) =>
+                  updateSizeSettings({ count: parseInt(e.target.value) || 1 })
+                }
                 min={1}
                 max={8}
                 error={errors.count}
-                size="small"
+                size='small'
               />
             </CompactControlGroup>
           </SettingsControls>
         </PreviewHeader>
-        
+
         {generatedSizes.length > 0 && (
           <SizePreview>
             {generatedSizes.map((size, index) => (
@@ -408,11 +425,11 @@ const SizeSettings = ({ appState, setAppState }) => {
                 key={size}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ 
+                transition={{
                   delay: index * 0.1,
-                  type: "spring",
+                  type: 'spring',
                   stiffness: 300,
-                  damping: 25
+                  damping: 25,
                 }}
               >
                 {size}
@@ -437,34 +454,38 @@ const SizeSettings = ({ appState, setAppState }) => {
                 as={motion.div}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ 
+                transition={{
                   delay: index * 0.05,
-                  type: "spring",
+                  type: 'spring',
                   stiffness: 300,
-                  damping: 25
+                  damping: 25,
                 }}
               >
                 <CategoryIcon color={category.color}>
                   {getCategoryIcon(category)}
                 </CategoryIcon>
-                
+
                 <CategoryInfo>
                   <CategoryName>{category.name}</CategoryName>
-                  <CategoryType>递增：{getActualIncrement(category)}cm</CategoryType>
+                  <CategoryType>
+                    递增：{getActualIncrement(category)}cm
+                  </CategoryType>
                 </CategoryInfo>
-                
+
                 <ValueInput
-                  type="number"
-                  step="0.5"
-                  min="0"
-                  max="200"
+                  type='number'
+                  step='0.5'
+                  min='0'
+                  max='200'
                   value={getCategoryStartValue(category)}
-                  onChange={(e) => updateCategoryStartValue(category.id, e.target.value)}
+                  onChange={(e) =>
+                    updateCategoryStartValue(category.id, e.target.value)
+                  }
                   placeholder={`默认 ${category.baseValue}`}
-                  size="small"
-                  autoComplete="off"
+                  size='small'
+                  autoComplete='off'
                 />
-                
+
                 <UnitLabel>cm</UnitLabel>
               </CategoryRow>
             ))}

@@ -4,18 +4,22 @@ import { motion } from 'framer-motion';
 
 const SegmentContainer = styled.div`
   display: inline-flex;
-  background: ${props => props.theme.colors.gray[100]};
-  border-radius: ${props => props.theme.borderRadius.md};
+  background: ${(props) => props.theme.colors.gray[100]};
+  border-radius: ${(props) => props.theme.borderRadius.md};
   padding: 2px;
-  border: 1px solid ${props => props.theme.colors.border.medium};
+  border: 1px solid ${(props) => props.theme.colors.border.medium};
   position: relative;
-  
-  ${props => props.$size === 'small' && `
+
+  ${(props) =>
+    props.$size === 'small' &&
+    `
     padding: 1px;
     border-radius: ${props.theme.borderRadius.sm};
   `}
 
-  ${props => props.$size === 'large' && `
+  ${(props) =>
+    props.$size === 'large' &&
+    `
     padding: 3px;
     border-radius: ${props.theme.borderRadius.lg};
   `}
@@ -26,50 +30,62 @@ const SegmentButton = styled(motion.button)`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: ${props => {
+  padding: ${(props) => {
     switch (props.$size) {
-      case 'small': return '4px 8px';
-      case 'large': return '10px 16px';
-      default: return '6px 12px';
+      case 'small':
+        return '4px 8px';
+      case 'large':
+        return '10px 16px';
+      default:
+        return '6px 12px';
     }
   }};
-  font-size: ${props => {
+  font-size: ${(props) => {
     switch (props.$size) {
-      case 'small': return '12px';
-      case 'large': return '16px';
-      default: return '14px';
+      case 'small':
+        return '12px';
+      case 'large':
+        return '16px';
+      default:
+        return '14px';
     }
   }};
   font-weight: 500;
-  font-family: ${props => props.theme.typography.fontFamily.sans.join(', ')};
+  font-family: ${(props) => props.theme.typography.fontFamily.sans.join(', ')};
   border: none;
-  border-radius: ${props => {
+  border-radius: ${(props) => {
     switch (props.$size) {
-      case 'small': return props.theme.borderRadius.sm;
-      case 'large': return props.theme.borderRadius.lg;
-      default: return props.theme.borderRadius.md;
+      case 'small':
+        return props.theme.borderRadius.sm;
+      case 'large':
+        return props.theme.borderRadius.lg;
+      default:
+        return props.theme.borderRadius.md;
     }
   }};
   background: transparent;
-  color: ${props => props.$active 
-    ? props.theme.colors.gray[700] 
-    : props.theme.colors.gray[500]
-  };
+  color: ${(props) =>
+    props.$active
+      ? props.theme.colors.gray[700]
+      : props.theme.colors.gray[500]};
   cursor: pointer;
   transition: all 0.2s ease-out;
   white-space: nowrap;
   user-select: none;
-  min-width: ${props => {
+  min-width: ${(props) => {
     switch (props.$size) {
-      case 'small': return '40px';
-      case 'large': return '80px';
-      default: return '60px';
+      case 'small':
+        return '40px';
+      case 'large':
+        return '80px';
+      default:
+        return '60px';
     }
   }};
   z-index: 1;
 
   &:hover {
-    color: ${props => props.theme.colors.gray[700]};
+    color: ${(props) => props.theme.colors.gray[700]};
   }
 
   &:focus {
@@ -83,24 +99,32 @@ const SegmentButton = styled(motion.button)`
   }
 
   /* 左侧圆角 */
-  ${props => props.$position === 'first' && `
+  ${(props) =>
+    props.$position === 'first' &&
+    `
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   `}
 
   /* 中间无圆角 */
-  ${props => props.$position === 'middle' && `
+  ${(props) =>
+    props.$position === 'middle' &&
+    `
     border-radius: 0;
   `}
 
   /* 右侧圆角 */
-  ${props => props.$position === 'last' && `
+  ${(props) =>
+    props.$position === 'last' &&
+    `
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   `}
 
   /* 单个按钮 */
-  ${props => props.$position === 'only' && `
+  ${(props) =>
+    props.$position === 'only' &&
+    `
     /* 保持默认圆角 */
   `}
 `;
@@ -109,23 +133,30 @@ const ActiveIndicator = styled(motion.div)`
   position: absolute;
   top: 2px;
   bottom: 2px;
-  background: ${props => props.theme.colors.background.primary};
-  border-radius: ${props => {
+  background: ${(props) => props.theme.colors.background.primary};
+  border-radius: ${(props) => {
     switch (props.$size) {
-      case 'small': return props.theme.borderRadius.sm;
-      case 'large': return props.theme.borderRadius.lg;
-      default: return props.theme.borderRadius.md;
+      case 'small':
+        return props.theme.borderRadius.sm;
+      case 'large':
+        return props.theme.borderRadius.lg;
+      default:
+        return props.theme.borderRadius.md;
     }
   }};
-  box-shadow: ${props => props.theme.shadows.sm};
+  box-shadow: ${(props) => props.theme.shadows.sm};
   z-index: 0;
-  
-  ${props => props.$size === 'small' && `
+
+  ${(props) =>
+    props.$size === 'small' &&
+    `
     top: 1px;
     bottom: 1px;
   `}
 
-  ${props => props.$size === 'large' && `
+  ${(props) =>
+    props.$size === 'large' &&
+    `
     top: 3px;
     bottom: 3px;
   `}
@@ -135,9 +166,15 @@ const ActiveIndicator = styled(motion.div)`
  * 获取按钮位置
  */
 const getPosition = (index, total) => {
-  if (total === 1) return 'only';
-  if (index === 0) return 'first';
-  if (index === total - 1) return 'last';
+  if (total === 1) {
+    return 'only';
+  }
+  if (index === 0) {
+    return 'first';
+  }
+  if (index === total - 1) {
+    return 'last';
+  }
   return 'middle';
 };
 
@@ -159,7 +196,7 @@ const SegmentedControl = ({
 
   // 计算当前选中项的索引
   React.useEffect(() => {
-    const index = options.findIndex(option => {
+    const index = options.findIndex((option) => {
       const optionValue = typeof option === 'object' ? option.value : option;
       return optionValue === value;
     });
@@ -168,7 +205,7 @@ const SegmentedControl = ({
 
   // 测量按钮宽度
   React.useEffect(() => {
-    const widths = buttonRefs.current.map(ref => 
+    const widths = buttonRefs.current.map((ref) =>
       ref ? ref.getBoundingClientRect().width : 0
     );
     setButtonWidths(widths);
@@ -189,7 +226,9 @@ const SegmentedControl = ({
   };
 
   const handleOptionClick = (option, index) => {
-    if (disabled) return;
+    if (disabled) {
+      return;
+    }
 
     const optionValue = typeof option === 'object' ? option.value : option;
     onChange?.(optionValue, option);
@@ -202,11 +241,7 @@ const SegmentedControl = ({
   const activeStyle = getActiveIndicatorStyle();
 
   return (
-    <SegmentContainer 
-      $size={size} 
-      className={className} 
-      {...props}
-    >
+    <SegmentContainer $size={size} className={className} {...props}>
       {/* 活动指示器 */}
       <ActiveIndicator
         $size={size}
@@ -216,9 +251,9 @@ const SegmentedControl = ({
         }}
         layout
         transition={{
-          type: "spring",
+          type: 'spring',
           stiffness: 300,
-          damping: 30
+          damping: 30,
         }}
       />
 
@@ -232,7 +267,7 @@ const SegmentedControl = ({
         return (
           <SegmentButton
             key={optionValue}
-            ref={el => buttonRefs.current[index] = el}
+            ref={(el) => (buttonRefs.current[index] = el)}
             $active={isActive}
             $position={position}
             $size={size}
