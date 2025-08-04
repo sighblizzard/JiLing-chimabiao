@@ -103,7 +103,10 @@ const fileAPI = {
   getAppDataPath: () => ipcRenderer.invoke('file:getAppDataPath'),
   
   // 打开文件夹
-  openFolder: (folderPath) => ipcRenderer.invoke('file:openFolder', folderPath)
+  openFolder: (folderPath) => ipcRenderer.invoke('file:openFolder', folderPath),
+  
+  // 保存图片到指定路径
+  saveImageToPath: (filePath, base64Data) => ipcRenderer.invoke('file:saveImage', filePath, base64Data)
 };
 
 // 应用程序 API
@@ -248,6 +251,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   // 向后兼容的顶级文件夹选择方法
   selectDirectory: (options) => ipcRenderer.invoke('file:selectDirectory', options),
+  
+  // 向后兼容的顶级通知方法
+  showNotification: (options) => ipcRenderer.invoke('notification:show', options),
+  
+  // 向后兼容的顶级文件存在检查方法
+  fileExists: (filePath) => ipcRenderer.invoke('file:exists', filePath),
   
   // 工具函数
   utils: {
