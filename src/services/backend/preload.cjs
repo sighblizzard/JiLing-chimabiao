@@ -84,6 +84,9 @@ const fileAPI = {
   // 选择文件
   selectFile: (options) => ipcRenderer.invoke('file:select', options),
   
+  // 选择文件夹
+  selectDirectory: (options) => ipcRenderer.invoke('file:selectDirectory', options),
+  
   // 选择保存位置
   selectSaveLocation: (options) => ipcRenderer.invoke('file:selectSave', options),
   
@@ -239,6 +242,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 开发和更新
   dev: devAPI,
   updater: updaterAPI,
+  
+  // 向后兼容的顶级文件夹选择方法
+  selectDirectory: (options) => ipcRenderer.invoke('file:selectDirectory', options),
   
   // 工具函数
   utils: {
