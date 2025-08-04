@@ -174,24 +174,24 @@ const TitleBar = ({
   const handleClose = () => {
     onClose?.();
     // 在 Electron 中关闭窗口
-    if (window.electron) {
-      window.electron.closeWindow();
+    if (window.electronAPI) {
+      window.electronAPI.window.close();
     }
   };
 
   const handleMinimize = () => {
     onMinimize?.();
     // 在 Electron 中最小化窗口
-    if (window.electron) {
-      window.electron.minimizeWindow();
+    if (window.electronAPI) {
+      window.electronAPI.window.minimize();
     }
   };
 
   const handleMaximize = () => {
     onMaximize?.();
     // 在 Electron 中最大化/还原窗口
-    if (window.electron) {
-      window.electron.toggleMaximizeWindow();
+    if (window.electronAPI) {
+      window.electronAPI.window.toggleMaximize();
     }
   };
 
