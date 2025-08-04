@@ -86,20 +86,20 @@ const TableHeader = styled.th`
       opacity: 0.3;
       
       ${
-        props.$sortDirection === 'asc' &&
+  props.$sortDirection === 'asc' &&
         `
         border-bottom: 4px solid currentColor;
         opacity: 1;
       `
-      }
+}
       
       ${
-        props.$sortDirection === 'desc' &&
+  props.$sortDirection === 'desc' &&
         `
         border-top: 4px solid currentColor;
         opacity: 1;
       `
-      }
+}
     }
   `}
 

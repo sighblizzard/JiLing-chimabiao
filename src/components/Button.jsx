@@ -10,22 +10,22 @@ const StyledButton = styled(motion.button)`
   gap: 8px;
   padding: ${(props) => {
     switch (props.$size) {
-      case 'small':
-        return '6px 12px';
-      case 'large':
-        return '12px 24px';
-      default:
-        return '8px 16px';
+    case 'small':
+      return '6px 12px';
+    case 'large':
+      return '12px 24px';
+    default:
+      return '8px 16px';
     }
   }};
   font-size: ${(props) => {
     switch (props.$size) {
-      case 'small':
-        return '12px';
-      case 'large':
-        return '16px';
-      default:
-        return '14px';
+    case 'small':
+      return '12px';
+    case 'large':
+      return '16px';
+    default:
+      return '14px';
     }
   }};
   font-weight: 500;
@@ -42,8 +42,8 @@ const StyledButton = styled(motion.button)`
   /* 变体样式 */
   ${(props) => {
     switch (props.$variant) {
-      case 'primary':
-        return `
+    case 'primary':
+      return `
           background: ${props.theme.colors.primary};
           color: white;
           
@@ -56,8 +56,8 @@ const StyledButton = styled(motion.button)`
             background: ${props.theme.colors.primary}bb;
           }
         `;
-      case 'secondary':
-        return `
+    case 'secondary':
+      return `
           background: ${props.theme.colors.gray[100]};
           color: ${props.theme.colors.gray[700]};
           
@@ -70,8 +70,8 @@ const StyledButton = styled(motion.button)`
             background: ${props.theme.colors.gray[300]};
           }
         `;
-      case 'outline':
-        return `
+    case 'outline':
+      return `
           background: transparent;
           color: ${props.theme.colors.primary};
           border: 1px solid ${props.theme.colors.border.medium};
@@ -86,8 +86,8 @@ const StyledButton = styled(motion.button)`
             background: ${props.theme.colors.primary}1a;
           }
         `;
-      case 'ghost':
-        return `
+    case 'ghost':
+      return `
           background: transparent;
           color: ${props.theme.colors.gray[600]};
           
@@ -99,8 +99,8 @@ const StyledButton = styled(motion.button)`
             background: ${props.theme.colors.gray[200]};
           }
         `;
-      case 'danger':
-        return `
+    case 'danger':
+      return `
           background: ${props.theme.colors.error};
           color: white;
           
@@ -113,8 +113,8 @@ const StyledButton = styled(motion.button)`
             background: ${props.theme.colors.error}bb;
           }
         `;
-      default:
-        return `
+    default:
+      return `
           background: ${props.theme.colors.gray[100]};
           color: ${props.theme.colors.gray[700]};
           

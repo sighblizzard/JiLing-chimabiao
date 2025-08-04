@@ -81,32 +81,32 @@ const CategoryIcon = styled.div`
   border-radius: ${(props) => props.theme.borderRadius.md};
   background: ${(props) => {
     switch (props.$type) {
-      case 'chest':
-        return '#FF6B6B';
-      case 'waist':
-        return '#4ECDC4';
-      case 'hip':
-        return '#45B7D1';
-      case 'hem':
-        return '#9C88FF';
-      case 'shoulder':
-        return '#96CEB4';
-      case 'sleeve':
-        return '#FECA57';
-      case 'shoulderSleeve':
-        return '#FF8A65';
-      case 'length':
-        return '#FF9FF3';
-      case 'pantLength':
-        return '#81C784';
-      case 'skirtLength':
-        return '#F48FB1';
-      case 'backLength':
-        return '#A1887F';
-      case 'frontLength':
-        return '#BCAAA4';
-      default:
-        return props.theme.colors.gray[400];
+    case 'chest':
+      return '#FF6B6B';
+    case 'waist':
+      return '#4ECDC4';
+    case 'hip':
+      return '#45B7D1';
+    case 'hem':
+      return '#9C88FF';
+    case 'shoulder':
+      return '#96CEB4';
+    case 'sleeve':
+      return '#FECA57';
+    case 'shoulderSleeve':
+      return '#FF8A65';
+    case 'length':
+      return '#FF9FF3';
+    case 'pantLength':
+      return '#81C784';
+    case 'skirtLength':
+      return '#F48FB1';
+    case 'backLength':
+      return '#A1887F';
+    case 'frontLength':
+      return '#BCAAA4';
+    default:
+      return props.theme.colors.gray[400];
     }
   }};
   display: flex;

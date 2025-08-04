@@ -87,7 +87,7 @@ export const highQualityInput = css`
   ${precisionBorder}
   
   padding: ${(props) => props.theme.spacing.sm} ${(props) =>
-    props.theme.spacing.md};
+  props.theme.spacing.md};
   border-radius: ${(props) => props.theme.borderRadius.md};
   font-family: ${(props) => props.theme.typography.fontFamily.sans.join(', ')};
   font-size: ${(props) => props.theme.typography.fontSize.sm};

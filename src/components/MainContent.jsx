@@ -97,47 +97,47 @@ const MainContent = ({ appState, setAppState }) => {
   // 渲染标签页内容
   const renderTabContent = () => {
     switch (activeTab) {
-      case 'settings':
-        return (
-          <TabContent
-            key='settings'
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <SizeSettings appState={appState} setAppState={setAppState} />
-          </TabContent>
-        );
+    case 'settings':
+      return (
+        <TabContent
+          key='settings'
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          <SizeSettings appState={appState} setAppState={setAppState} />
+        </TabContent>
+      );
 
-      case 'preview':
-        return (
-          <TabContent
-            key='preview'
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <PreviewPanel appState={appState} setAppState={setAppState} />
-          </TabContent>
-        );
+    case 'preview':
+      return (
+        <TabContent
+          key='preview'
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          <PreviewPanel appState={appState} setAppState={setAppState} />
+        </TabContent>
+      );
 
-      default:
-        return (
-          <TabContent
-            key='empty'
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <EmptyState>
-              <div className='icon'>📊</div>
-              <div className='title'>选择一个标签页</div>
-              <div className='description'>请从上方选择要使用的功能模块</div>
-            </EmptyState>
-          </TabContent>
-        );
+    default:
+      return (
+        <TabContent
+          key='empty'
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <EmptyState>
+            <div className='icon'>📊</div>
+            <div className='title'>选择一个标签页</div>
+            <div className='description'>请从上方选择要使用的功能模块</div>
+          </EmptyState>
+        </TabContent>
+      );
     }
   };
 

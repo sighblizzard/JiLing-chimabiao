@@ -104,32 +104,32 @@ const CategoryIcon = styled.div`
   border-radius: ${(props) => props.theme.borderRadius.md}; /* 稍微增大圆角 */
   background: ${(props) => {
     switch (props.$type) {
-      case 'chest':
-        return 'linear-gradient(135deg, #FF6B6B, #FF5252)';
-      case 'waist':
-        return 'linear-gradient(135deg, #4ECDC4, #26A69A)';
-      case 'hip':
-        return 'linear-gradient(135deg, #45B7D1, #2196F3)';
-      case 'hem':
-        return 'linear-gradient(135deg, #9C88FF, #7B68EE)';
-      case 'shoulder':
-        return 'linear-gradient(135deg, #96CEB4, #66BB6A)';
-      case 'sleeve':
-        return 'linear-gradient(135deg, #FECA57, #FFB300)';
-      case 'shoulderSleeve':
-        return 'linear-gradient(135deg, #FF8A65, #FF5722)';
-      case 'length':
-        return 'linear-gradient(135deg, #FF9FF3, #E91E63)';
-      case 'pantLength':
-        return 'linear-gradient(135deg, #81C784, #4CAF50)';
-      case 'skirtLength':
-        return 'linear-gradient(135deg, #F48FB1, #E91E63)';
-      case 'backLength':
-        return 'linear-gradient(135deg, #A1887F, #795548)';
-      case 'frontLength':
-        return 'linear-gradient(135deg, #BCAAA4, #8D6E63)';
-      default:
-        return `linear-gradient(135deg, ${props.theme.colors.gray[400]}, ${props.theme.colors.gray[500]})`;
+    case 'chest':
+      return 'linear-gradient(135deg, #FF6B6B, #FF5252)';
+    case 'waist':
+      return 'linear-gradient(135deg, #4ECDC4, #26A69A)';
+    case 'hip':
+      return 'linear-gradient(135deg, #45B7D1, #2196F3)';
+    case 'hem':
+      return 'linear-gradient(135deg, #9C88FF, #7B68EE)';
+    case 'shoulder':
+      return 'linear-gradient(135deg, #96CEB4, #66BB6A)';
+    case 'sleeve':
+      return 'linear-gradient(135deg, #FECA57, #FFB300)';
+    case 'shoulderSleeve':
+      return 'linear-gradient(135deg, #FF8A65, #FF5722)';
+    case 'length':
+      return 'linear-gradient(135deg, #FF9FF3, #E91E63)';
+    case 'pantLength':
+      return 'linear-gradient(135deg, #81C784, #4CAF50)';
+    case 'skirtLength':
+      return 'linear-gradient(135deg, #F48FB1, #E91E63)';
+    case 'backLength':
+      return 'linear-gradient(135deg, #A1887F, #795548)';
+    case 'frontLength':
+      return 'linear-gradient(135deg, #BCAAA4, #8D6E63)';
+    default:
+      return `linear-gradient(135deg, ${props.theme.colors.gray[400]}, ${props.theme.colors.gray[500]})`;
     }
   }};
   display: flex;
@@ -276,32 +276,32 @@ const CategoryItem = ({ category, isSelected, onToggle, mode }) => {
 
     // 根据类别类型返回更清晰的图标字符
     switch (category.type) {
-      case 'chest':
-        return '胸';
-      case 'waist':
-        return '腰';
-      case 'hip':
-        return '臀';
-      case 'hem':
-        return '摆';
-      case 'shoulder':
-        return '肩';
-      case 'sleeve':
-        return '袖';
-      case 'shoulderSleeve':
-        return '肩袖';
-      case 'length':
-        return '衣';
-      case 'pantLength':
-        return '裤';
-      case 'skirtLength':
-        return '裙';
-      case 'backLength':
-        return '后';
-      case 'frontLength':
-        return '前';
-      default:
-        return category.name.charAt(0); // 默认显示首字母
+    case 'chest':
+      return '胸';
+    case 'waist':
+      return '腰';
+    case 'hip':
+      return '臀';
+    case 'hem':
+      return '摆';
+    case 'shoulder':
+      return '肩';
+    case 'sleeve':
+      return '袖';
+    case 'shoulderSleeve':
+      return '肩袖';
+    case 'length':
+      return '衣';
+    case 'pantLength':
+      return '裤';
+    case 'skirtLength':
+      return '裙';
+    case 'backLength':
+      return '后';
+    case 'frontLength':
+      return '前';
+    default:
+      return category.name.charAt(0); // 默认显示首字母
     }
   };
 

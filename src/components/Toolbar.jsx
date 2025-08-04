@@ -58,23 +58,23 @@ const StatusIndicator = styled(motion.div)`
 
   ${(props) => {
     switch (props.$status) {
-      case 'ready':
-        return `
+    case 'ready':
+      return `
           background: ${props.theme.colors.success}20;
           color: ${props.theme.colors.success};
         `;
-      case 'generating':
-        return `
+    case 'generating':
+      return `
           background: ${props.theme.colors.warning}20;
           color: ${props.theme.colors.warning};
         `;
-      case 'error':
-        return `
+    case 'error':
+      return `
           background: ${props.theme.colors.error}20;
           color: ${props.theme.colors.error};
         `;
-      default:
-        return `
+    default:
+      return `
           background: ${props.theme.colors.gray[100]};
           color: ${props.theme.colors.gray[600]};
         `;

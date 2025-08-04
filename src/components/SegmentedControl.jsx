@@ -32,22 +32,22 @@ const SegmentButton = styled(motion.button)`
   justify-content: center;
   padding: ${(props) => {
     switch (props.$size) {
-      case 'small':
-        return '4px 8px';
-      case 'large':
-        return '10px 16px';
-      default:
-        return '6px 12px';
+    case 'small':
+      return '4px 8px';
+    case 'large':
+      return '10px 16px';
+    default:
+      return '6px 12px';
     }
   }};
   font-size: ${(props) => {
     switch (props.$size) {
-      case 'small':
-        return '12px';
-      case 'large':
-        return '16px';
-      default:
-        return '14px';
+    case 'small':
+      return '12px';
+    case 'large':
+      return '16px';
+    default:
+      return '14px';
     }
   }};
   font-weight: 500;
@@ -55,12 +55,12 @@ const SegmentButton = styled(motion.button)`
   border: none;
   border-radius: ${(props) => {
     switch (props.$size) {
-      case 'small':
-        return props.theme.borderRadius.sm;
-      case 'large':
-        return props.theme.borderRadius.lg;
-      default:
-        return props.theme.borderRadius.md;
+    case 'small':
+      return props.theme.borderRadius.sm;
+    case 'large':
+      return props.theme.borderRadius.lg;
+    default:
+      return props.theme.borderRadius.md;
     }
   }};
   background: transparent;
@@ -74,12 +74,12 @@ const SegmentButton = styled(motion.button)`
   user-select: none;
   min-width: ${(props) => {
     switch (props.$size) {
-      case 'small':
-        return '40px';
-      case 'large':
-        return '80px';
-      default:
-        return '60px';
+    case 'small':
+      return '40px';
+    case 'large':
+      return '80px';
+    default:
+      return '60px';
     }
   }};
   z-index: 1;
@@ -136,12 +136,12 @@ const ActiveIndicator = styled(motion.div)`
   background: ${(props) => props.theme.colors.background.primary};
   border-radius: ${(props) => {
     switch (props.$size) {
-      case 'small':
-        return props.theme.borderRadius.sm;
-      case 'large':
-        return props.theme.borderRadius.lg;
-      default:
-        return props.theme.borderRadius.md;
+    case 'small':
+      return props.theme.borderRadius.sm;
+    case 'large':
+      return props.theme.borderRadius.lg;
+    default:
+      return props.theme.borderRadius.md;
     }
   }};
   box-shadow: ${(props) => props.theme.shadows.sm};

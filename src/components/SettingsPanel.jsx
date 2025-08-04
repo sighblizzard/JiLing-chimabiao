@@ -99,278 +99,278 @@ const SettingsPanel = ({
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case 'categories':
-        return (
-          <CategoryManager
-            appState={appState}
-            setAppState={setAppState}
-            onCategoryAdd={onCategoryAdd}
-            onCategoryEdit={onCategoryEdit}
-            onCategoryDelete={onCategoryDelete}
-            showHeader={false}
-          />
-        );
-      case 'general':
-        return (
-          <div>
-            <h3
-              style={{
-                fontSize: '16px',
-                fontWeight: '600',
-                marginBottom: '16px',
-                color: '#374151',
-                fontFamily:
+    case 'categories':
+      return (
+        <CategoryManager
+          appState={appState}
+          setAppState={setAppState}
+          onCategoryAdd={onCategoryAdd}
+          onCategoryEdit={onCategoryEdit}
+          onCategoryDelete={onCategoryDelete}
+          showHeader={false}
+        />
+      );
+    case 'general':
+      return (
+        <div>
+          <h3
+            style={{
+              fontSize: '16px',
+              fontWeight: '600',
+              marginBottom: '16px',
+              color: '#374151',
+              fontFamily:
                   'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                WebkitFontSmoothing: 'antialiased',
-                MozOsxFontSmoothing: 'grayscale',
-              }}
-            >
+              WebkitFontSmoothing: 'antialiased',
+              MozOsxFontSmoothing: 'grayscale',
+            }}
+          >
               通用设置
-            </h3>
+          </h3>
 
-            {/* 导出路径设置 */}
+          {/* 导出路径设置 */}
+          <div
+            style={{
+              marginBottom: '20px',
+              padding: '16px',
+              background: '#F9FAFB',
+              borderRadius: '8px',
+              border: '1px solid #E5E7EB',
+            }}
+          >
             <div
               style={{
-                marginBottom: '20px',
-                padding: '16px',
-                background: '#F9FAFB',
-                borderRadius: '8px',
-                border: '1px solid #E5E7EB',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '12px',
               }}
             >
-              <div
+              <label
                 style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: '12px',
+                  fontWeight: '500',
+                  fontSize: '14px',
+                  color: '#374151',
+                  fontFamily:
+                      'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                  WebkitFontSmoothing: 'antialiased',
+                  MozOsxFontSmoothing: 'grayscale',
                 }}
               >
-                <label
-                  style={{
-                    fontWeight: '500',
-                    fontSize: '14px',
-                    color: '#374151',
-                    fontFamily:
-                      'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                    WebkitFontSmoothing: 'antialiased',
-                    MozOsxFontSmoothing: 'grayscale',
-                  }}
-                >
                   默认导出路径
-                </label>
-              </div>
-
-              <div
-                style={{
-                  display: 'flex',
-                  gap: '8px',
-                  alignItems: 'center',
-                }}
-              >
-                <div
-                  style={{
-                    flex: 1,
-                    padding: '8px 12px',
-                    border: '1px solid #D1D5DB',
-                    borderRadius: '6px',
-                    fontSize: '13px',
-                    background: '#F9FAFB',
-                    color: '#6B7280',
-                    fontFamily:
-                      'SF Mono, Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace',
-                    wordBreak: 'break-all',
-                    minHeight: '16px',
-                    WebkitFontSmoothing: 'antialiased',
-                    MozOsxFontSmoothing: 'grayscale',
-                  }}
-                >
-                  {appState.exportPath || '未设置（将使用系统默认下载位置）'}
-                </div>
-                <Button
-                  variant='outline'
-                  size='small'
-                  onClick={async () => {
-                    try {
-                      // 使用 Electron 的文件对话框选择文件夹
-                      if (window.electronAPI) {
-                        const result =
-                          await window.electronAPI.selectDirectory();
-                        if (result && !result.canceled) {
-                          setAppState((prev) => ({
-                            ...prev,
-                            exportPath: result.filePaths[0],
-                          }));
-                        }
-                      } else {
-                        // 浏览器环境，提示用户手动输入
-                        alert(
-                          '请手动输入保存路径，或在桌面应用中使用文件夹选择功能'
-                        );
-                      }
-                    } catch (error) {
-                      console.error('选择文件夹失败:', error);
-                      alert('选择文件夹失败，请手动输入路径');
-                    }
-                  }}
-                >
-                  选择路径
-                </Button>
-              </div>
-
-              <div
-                style={{
-                  fontSize: '12px',
-                  color: '#6B7280',
-                  marginTop: '8px',
-                  fontFamily:
-                    'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                  WebkitFontSmoothing: 'antialiased',
-                  MozOsxFontSmoothing: 'grayscale',
-                }}
-              >
-                设置后导出图片时将直接保存到此路径，无需每次选择。快捷键：Ctrl+S
-              </div>
+              </label>
             </div>
 
             <div
               style={{
-                padding: '16px',
-                background: '#F9FAFB',
-                borderRadius: '8px',
-                border: '1px solid #E5E7EB',
+                display: 'flex',
+                gap: '8px',
+                alignItems: 'center',
               }}
             >
               <div
                 style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: '8px',
-                }}
-              >
-                <span
-                  style={{
-                    fontWeight: '500',
-                    fontFamily:
-                      'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                    WebkitFontSmoothing: 'antialiased',
-                    MozOsxFontSmoothing: 'grayscale',
-                  }}
-                >
-                  程序名称
-                </span>
-                <span
-                  style={{
-                    color: '#374151',
-                    fontWeight: '600',
-                    fontFamily:
-                      'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                    WebkitFontSmoothing: 'antialiased',
-                    MozOsxFontSmoothing: 'grayscale',
-                  }}
-                >
-                  集领商品部尺码表
-                </span>
-              </div>
-
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: '8px',
-                }}
-              >
-                <span
-                  style={{
-                    fontWeight: '500',
-                    fontFamily:
-                      'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                    WebkitFontSmoothing: 'antialiased',
-                    MozOsxFontSmoothing: 'grayscale',
-                  }}
-                >
-                  开发者
-                </span>
-                <span
-                  style={{
-                    color: '#6B7280',
-                    fontFamily:
-                      'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                    WebkitFontSmoothing: 'antialiased',
-                    MozOsxFontSmoothing: 'grayscale',
-                  }}
-                >
-                  师兄
-                </span>
-              </div>
-
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: '8px',
-                }}
-              >
-                <span
-                  style={{
-                    fontWeight: '500',
-                    fontFamily:
-                      'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                    WebkitFontSmoothing: 'antialiased',
-                    MozOsxFontSmoothing: 'grayscale',
-                  }}
-                >
-                  应用版本
-                </span>
-                <span
-                  style={{
-                    color: '#6B7280',
-                    fontFamily:
-                      'SF Mono, Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace',
-                    WebkitFontSmoothing: 'antialiased',
-                    MozOsxFontSmoothing: 'grayscale',
-                  }}
-                >
-                  v1.0.0
-                </span>
-              </div>
-
-              <div
-                style={{
-                  fontSize: '12px',
+                  flex: 1,
+                  padding: '8px 12px',
+                  border: '1px solid #D1D5DB',
+                  borderRadius: '6px',
+                  fontSize: '13px',
+                  background: '#F9FAFB',
                   color: '#6B7280',
-                  marginTop: '8px',
-                  fontStyle: 'italic',
                   fontFamily:
-                    'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                      'SF Mono, Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace',
+                  wordBreak: 'break-all',
+                  minHeight: '16px',
                   WebkitFontSmoothing: 'antialiased',
                   MozOsxFontSmoothing: 'grayscale',
                 }}
               >
-                专业的服装尺码表生成工具，为集领商品部量身定制
+                {appState.exportPath || '未设置（将使用系统默认下载位置）'}
               </div>
+              <Button
+                variant='outline'
+                size='small'
+                onClick={async () => {
+                  try {
+                    // 使用 Electron 的文件对话框选择文件夹
+                    if (window.electronAPI) {
+                      const result =
+                          await window.electronAPI.selectDirectory();
+                      if (result && !result.canceled) {
+                        setAppState((prev) => ({
+                          ...prev,
+                          exportPath: result.filePaths[0],
+                        }));
+                      }
+                    } else {
+                      // 浏览器环境，提示用户手动输入
+                      alert(
+                        '请手动输入保存路径，或在桌面应用中使用文件夹选择功能'
+                      );
+                    }
+                  } catch (error) {
+                    console.error('选择文件夹失败:', error);
+                    alert('选择文件夹失败，请手动输入路径');
+                  }
+                }}
+              >
+                  选择路径
+              </Button>
             </div>
 
             <div
               style={{
-                marginTop: '20px',
-                fontSize: '14px',
+                fontSize: '12px',
                 color: '#6B7280',
+                marginTop: '8px',
                 fontFamily:
-                  'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                    'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
                 WebkitFontSmoothing: 'antialiased',
                 MozOsxFontSmoothing: 'grayscale',
               }}
             >
-              <p>其他设置选项将在后续版本中添加...</p>
+                设置后导出图片时将直接保存到此路径，无需每次选择。快捷键：Ctrl+S
             </div>
           </div>
-        );
-      default:
-        return null;
+
+          <div
+            style={{
+              padding: '16px',
+              background: '#F9FAFB',
+              borderRadius: '8px',
+              border: '1px solid #E5E7EB',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '8px',
+              }}
+            >
+              <span
+                style={{
+                  fontWeight: '500',
+                  fontFamily:
+                      'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                  WebkitFontSmoothing: 'antialiased',
+                  MozOsxFontSmoothing: 'grayscale',
+                }}
+              >
+                  程序名称
+              </span>
+              <span
+                style={{
+                  color: '#374151',
+                  fontWeight: '600',
+                  fontFamily:
+                      'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                  WebkitFontSmoothing: 'antialiased',
+                  MozOsxFontSmoothing: 'grayscale',
+                }}
+              >
+                  集领商品部尺码表
+              </span>
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '8px',
+              }}
+            >
+              <span
+                style={{
+                  fontWeight: '500',
+                  fontFamily:
+                      'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                  WebkitFontSmoothing: 'antialiased',
+                  MozOsxFontSmoothing: 'grayscale',
+                }}
+              >
+                  开发者
+              </span>
+              <span
+                style={{
+                  color: '#6B7280',
+                  fontFamily:
+                      'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                  WebkitFontSmoothing: 'antialiased',
+                  MozOsxFontSmoothing: 'grayscale',
+                }}
+              >
+                  师兄
+              </span>
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '8px',
+              }}
+            >
+              <span
+                style={{
+                  fontWeight: '500',
+                  fontFamily:
+                      'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                  WebkitFontSmoothing: 'antialiased',
+                  MozOsxFontSmoothing: 'grayscale',
+                }}
+              >
+                  应用版本
+              </span>
+              <span
+                style={{
+                  color: '#6B7280',
+                  fontFamily:
+                      'SF Mono, Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace',
+                  WebkitFontSmoothing: 'antialiased',
+                  MozOsxFontSmoothing: 'grayscale',
+                }}
+              >
+                  v1.0.0
+              </span>
+            </div>
+
+            <div
+              style={{
+                fontSize: '12px',
+                color: '#6B7280',
+                marginTop: '8px',
+                fontStyle: 'italic',
+                fontFamily:
+                    'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                WebkitFontSmoothing: 'antialiased',
+                MozOsxFontSmoothing: 'grayscale',
+              }}
+            >
+                专业的服装尺码表生成工具，为集领商品部量身定制
+            </div>
+          </div>
+
+          <div
+            style={{
+              marginTop: '20px',
+              fontSize: '14px',
+              color: '#6B7280',
+              fontFamily:
+                  'MiSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+              WebkitFontSmoothing: 'antialiased',
+              MozOsxFontSmoothing: 'grayscale',
+            }}
+          >
+            <p>其他设置选项将在后续版本中添加...</p>
+          </div>
+        </div>
+      );
+    default:
+      return null;
     }
   };
 

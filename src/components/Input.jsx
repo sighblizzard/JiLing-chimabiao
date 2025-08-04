@@ -11,22 +11,22 @@ const StyledInput = styled(motion.input)`
   width: 100%;
   padding: ${(props) => {
     switch (props.$size) {
-      case 'small':
-        return '6px 12px';
-      case 'large':
-        return '12px 16px';
-      default:
-        return '8px 12px';
+    case 'small':
+      return '6px 12px';
+    case 'large':
+      return '12px 16px';
+    default:
+      return '8px 12px';
     }
   }};
   font-size: ${(props) => {
     switch (props.$size) {
-      case 'small':
-        return '12px';
-      case 'large':
-        return '16px';
-      default:
-        return '14px';
+    case 'small':
+      return '12px';
+    case 'large':
+      return '16px';
+    default:
+      return '14px';
     }
   }};
   font-family: ${(props) => props.theme.typography.fontFamily.sans.join(', ')};

@@ -12,22 +12,22 @@ const SelectTrigger = styled(motion.button)`
   width: 100%;
   padding: ${(props) => {
     switch (props.$size) {
-      case 'small':
-        return '6px 28px 6px 12px';
-      case 'large':
-        return '12px 36px 12px 16px';
-      default:
-        return '8px 32px 8px 12px';
+    case 'small':
+      return '6px 28px 6px 12px';
+    case 'large':
+      return '12px 36px 12px 16px';
+    default:
+      return '8px 32px 8px 12px';
     }
   }};
   font-size: ${(props) => {
     switch (props.$size) {
-      case 'small':
-        return '12px';
-      case 'large':
-        return '16px';
-      default:
-        return '14px';
+    case 'small':
+      return '12px';
+    case 'large':
+      return '16px';
+    default:
+      return '14px';
     }
   }};
   font-family: ${(props) => props.theme.typography.fontFamily.sans.join(', ')};
@@ -298,18 +298,18 @@ const Select = ({
       }
 
       switch (event.key) {
-        case 'Escape':
-          setIsOpen(false);
-          break;
-        case 'ArrowDown':
-        case 'ArrowUp':
-          event.preventDefault();
-          // TODO: 添加键盘导航逻辑
-          break;
-        case 'Enter':
-          event.preventDefault();
-          // TODO: 添加选择逻辑
-          break;
+      case 'Escape':
+        setIsOpen(false);
+        break;
+      case 'ArrowDown':
+      case 'ArrowUp':
+        event.preventDefault();
+        // TODO: 添加键盘导航逻辑
+        break;
+      case 'Enter':
+        event.preventDefault();
+        // TODO: 添加选择逻辑
+        break;
       }
     };
 

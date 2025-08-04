@@ -33,8 +33,8 @@ const ControlButton = styled(motion.button)`
 
   ${(props) => {
     switch (props.$color) {
-      case 'red':
-        return `
+    case 'red':
+      return `
           background: ${props.theme.colors.controls.red};
           
           &:hover {
@@ -53,8 +53,8 @@ const ControlButton = styled(motion.button)`
             }
           }
         `;
-      case 'yellow':
-        return `
+    case 'yellow':
+      return `
           background: ${props.theme.colors.controls.yellow};
           
           &:hover {
@@ -73,8 +73,8 @@ const ControlButton = styled(motion.button)`
             }
           }
         `;
-      case 'green':
-        return `
+    case 'green':
+      return `
           background: ${props.theme.colors.controls.green};
           
           &:hover {
@@ -93,8 +93,8 @@ const ControlButton = styled(motion.button)`
             }
           }
         `;
-      default:
-        return '';
+    default:
+      return '';
     }
   }}
 
