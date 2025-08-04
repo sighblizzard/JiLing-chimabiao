@@ -114,7 +114,7 @@ class Application {
         nodeIntegration: false, // 禁用 Node.js 集成
         contextIsolation: true, // 启用上下文隔离
         enableRemoteModule: false, // 禁用远程模块
-        preload: path.join(__dirname, 'preload.cjs'), // 预加载脚本
+        preload: path.join(__dirname, 'src', 'services', 'backend', 'preload.cjs'), // 预加载脚本
         webSecurity: !isDev, // 开发环境禁用 Web 安全
         allowRunningInsecureContent: isDev,
         experimentalFeatures: true

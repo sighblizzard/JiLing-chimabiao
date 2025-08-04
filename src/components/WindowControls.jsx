@@ -69,42 +69,60 @@ const ControlButton = styled.button`
 
 const WindowControlsComponent = () => {
   const [isMaximized, setIsMaximized] = useState(false);
+  const [isFrameless, setIsFrameless] = useState(false);
 
   useEffect(() => {
     const checkMaximized = async () => {
       if (window.electronAPI?.window?.isMaximized) {
-        const maximized = await window.electronAPI.window.isMaximized();
-        setIsMaximized(maximized);
+        try {
+          const result = await window.electronAPI.window.isMaximized();
+          setIsMaximized(result.isMaximized || false);
+        } catch (error) {
+          console.error('检查窗口状态失败:', error);
+        }
+      }
+    };
+
+    const checkFrameless = async () => {
+      if (window.electronAPI?.window?.frameless?.isFrameless) {
+        try {
+          const frameless = await window.electronAPI.window.frameless.isFrameless();
+          setIsFrameless(frameless);
+        } catch (error) {
+          console.error('检查无边框状态失败:', error);
+        }
       }
     };
 
     checkMaximized();
+    checkFrameless();
 
     // 监听窗口状态变化
-    const handleWindowStateChange = (event) => {
-      if (event.detail && typeof event.detail.maximized !== 'undefined') {
-        setIsMaximized(event.detail.maximized);
-      }
-    };
-
-    // 使用全局事件监听
-    window.addEventListener('window-state-changed', handleWindowStateChange);
+    let unsubscribe;
+    if (window.electronAPI?.windowState?.onWindowStateChanged) {
+      unsubscribe = window.electronAPI.windowState.onWindowStateChanged((state) => {
+        if (typeof state.maximized !== 'undefined') {
+          setIsMaximized(state.maximized);
+        }
+      });
+    }
 
     // 备用轮询机制（降低频率以提高性能）
-    const interval = setInterval(checkMaximized, 1000);
+    const interval = setInterval(checkMaximized, 2000);
 
     return () => {
-      window.removeEventListener(
-        'window-state-changed',
-        handleWindowStateChange
-      );
+      if (unsubscribe) {
+        unsubscribe();
+      }
       clearInterval(interval);
     };
   }, []);
 
   const handleClose = () => {
     try {
-      if (window.electronAPI?.window?.close) {
+      if (isFrameless && window.electronAPI?.window?.frameless?.close) {
+        window.electronAPI.window.frameless.close();
+      } else if (window.electronAPI?.window?.close) {
         window.electronAPI.window.close();
       } else {
         console.warn('窗口控制 API 不可用');
@@ -117,7 +135,9 @@ const WindowControlsComponent = () => {
 
   const handleMinimize = () => {
     try {
-      if (window.electronAPI?.window?.minimize) {
+      if (isFrameless && window.electronAPI?.window?.frameless?.minimize) {
+        window.electronAPI.window.frameless.minimize();
+      } else if (window.electronAPI?.window?.minimize) {
         window.electronAPI.window.minimize();
       }
     } catch (error) {
@@ -127,7 +147,9 @@ const WindowControlsComponent = () => {
 
   const handleMaximize = () => {
     try {
-      if (window.electronAPI?.window?.toggleMaximize) {
+      if (isFrameless && window.electronAPI?.window?.frameless?.toggleMaximize) {
+        window.electronAPI.window.frameless.toggleMaximize();
+      } else if (window.electronAPI?.window?.toggleMaximize) {
         window.electronAPI.window.toggleMaximize();
       }
     } catch (error) {

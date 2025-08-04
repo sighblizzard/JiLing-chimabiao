@@ -84,6 +84,9 @@ const fileAPI = {
   // 选择文件
   selectFile: (options) => ipcRenderer.invoke('file:select', options),
   
+  // 选择文件夹
+  selectDirectory: (options) => ipcRenderer.invoke('file:selectDirectory', options),
+  
   // 选择保存位置
   selectSaveLocation: (options) => ipcRenderer.invoke('file:selectSave', options),
   
@@ -151,7 +154,20 @@ const windowAPI = {
   setSize: (width, height) => ipcRenderer.invoke('window:setSize', width, height),
   
   // 居中窗口
-  center: () => ipcRenderer.invoke('window:center')
+  center: () => ipcRenderer.invoke('window:center'),
+  
+  // 无边框窗口专用控制
+  frameless: {
+    close: () => ipcRenderer.invoke('window-close'),
+    minimize: () => ipcRenderer.invoke('window-minimize'),
+    maximize: () => ipcRenderer.invoke('window-maximize'),
+    unmaximize: () => ipcRenderer.invoke('window-unmaximize'),
+    toggleMaximize: () => ipcRenderer.invoke('window-toggle-maximize'),
+    isMaximized: () => ipcRenderer.invoke('window-is-maximized'),
+    isMinimized: () => ipcRenderer.invoke('window-is-minimized'),
+    setAlwaysOnTop: (flag) => ipcRenderer.invoke('window-set-always-on-top', flag),
+    isFrameless: () => ipcRenderer.invoke('window-is-frameless')
+  }
 };
 
 // 开发工具 API
@@ -199,6 +215,17 @@ const themeAPI = {
   setTheme: (theme) => ipcRenderer.invoke('theme:setTheme', theme)
 };
 
+// 窗口状态 API
+const windowStateAPI = {
+  // 监听窗口状态变化
+  onWindowStateChanged: (callback) => {
+    ipcRenderer.on('window-state-changed', (event, state) => {
+      callback(state);
+    });
+    return () => ipcRenderer.removeAllListeners('window-state-changed');
+  }
+};
+
 // 更新检查 API
 const updaterAPI = {
   // 检查更新
@@ -233,6 +260,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // 应用程序功能
   app: appAPI,
   window: windowAPI,
+  windowState: windowStateAPI,
   notification: notificationAPI,
   theme: themeAPI,
   

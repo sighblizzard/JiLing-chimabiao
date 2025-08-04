@@ -195,8 +195,8 @@ const SettingsPanel = ({
                     // 使用 Electron 的文件对话框选择文件夹
                     if (window.electronAPI) {
                       const result =
-                          await window.electronAPI.selectDirectory();
-                      if (result && !result.canceled) {
+                          await window.electronAPI.file.selectDirectory();
+                      if (result && result.success && !result.canceled) {
                         setAppState((prev) => ({
                           ...prev,
                           exportPath: result.filePaths[0],
